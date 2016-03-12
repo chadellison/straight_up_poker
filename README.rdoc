@@ -26,13 +26,10 @@ The Gem file is located [here](https://github.com/chadellison/straight_up_poker/
 * Database creation
 This app will use a postgres database
 * Database initialization
-Schema and wire frame to come
 
 * How to run the test suite
 The test suite can be run with rspec
 
 * Deployment instructions
-TBD
-
 
 <tt>rake doc:app</tt>.
