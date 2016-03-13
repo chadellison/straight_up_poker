@@ -24,7 +24,6 @@ RSpec.feature "user can play poker" do
     click_on "Play Poker"
 
     expect(page).to have_content "Opponents: Rosco"
-
     expect(page).to have_content "Little Blind: $50.00"
     expect(page).to have_content "Cash: $950.00"
     expect(page).to have_content "Pocket Cards: " + user.pocket_cards

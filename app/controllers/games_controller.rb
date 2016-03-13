@@ -5,8 +5,14 @@ class GamesController < ApplicationController
 
   def create
     game = Game.create(game_params)
+    current_user.games << game
     game.add_players
-    redirect_to game_path
+    # game.set_blinds
+    redirect_to game_path(game.id)
+  end
+
+  def show
+    @game = Game.find(params[:id])
   end
 
   private
