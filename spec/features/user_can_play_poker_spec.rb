@@ -2,28 +2,28 @@ require "rails_helper"
 
 RSpec.feature "user can play poker" do
   scenario "user sees results of the game" do
-    ai = AI.create(name: "Rosco",
-      name: "Rosco",
+    ai = AiPlayer.create(name: "Rosco",
       skill: 1,
       bet_style: "overly_safe",
       cash: 1000)
 
-    user = User.create(username: "Jones",
-      name: "Jones Smith",
-      password: "password",
-      email: "jones@gmail.com",
-      cash: 1000)
-
     visit root_path
-    click_on "Login"
+    click_on "Create Account"
+    fill_in "Username", with: "Jones"
+    fill_in "Name", with: "Jones Smith"
+    fill_in "Email", with: "Jones@gamil.com"
+    fill_in "Password", with: "password"
+    click_on "Create Account"
+
+    expect(page).to have_content "Welcome Jones"
+
     click_on "Play"
     expect(new_game_path).to eq current_path
 
-    expect(page).to have_content "How many players?"
-    expect(page).to have_content "Players: 2"
-    expect(page).to have_content "Opponents: Rosco"
-
+    select "2", from: "Player count"
     click_on "Play Poker"
+
+    expect(page).to have_content "Opponents: Rosco"
 
     expect(page).to have_content "Little Blind: $50.00"
     expect(page).to have_content "Cash: $950.00"
