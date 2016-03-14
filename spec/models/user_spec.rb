@@ -10,4 +10,11 @@ RSpec.describe User, type: :model do
     assert user.user_games
     assert user.games
   end
+
+  it "presents the cards" do
+    user = User.create(name: "Jones", username: "jones", password: "password")
+    cards = user.cards.create(value: "7", suit: "Hearts")
+    cards = user.cards.create(value: "9", suit: "Spades")
+    expect(user.present_cards).to eq "7 of Hearts, 9 of Spades"
+  end
 end

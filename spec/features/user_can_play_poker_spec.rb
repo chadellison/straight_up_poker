@@ -7,6 +7,14 @@ RSpec.feature "user can play poker" do
       bet_style: "overly_safe",
       cash: 1000)
 
+    values = (2..10).to_a + ["Ace", "King", "Queen", "Jack"]
+    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
+    values.each do |value|
+      suits.each do |suit|
+        Card.create(value: value, suit: suit)
+      end
+    end
+
     visit root_path
     click_on "Create Account"
     fill_in "Username", with: "Jones"
@@ -28,7 +36,7 @@ RSpec.feature "user can play poker" do
     expect(page).to have_content "Opponents: Rosco"
     expect(page).to have_content "Little Blind: $50.00"
     expect(page).to have_content "Cash: $950.00"
-    expect(page).to have_content "Pocket Cards: " + User.last.pocket_cards
+    expect(page).to have_content "Pocket: " + User.last.present_cards
 
     expect(page).to have_button "Raise"
     expect(page).to have_button "Call"

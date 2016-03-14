@@ -6,4 +6,8 @@ class User < ActiveRecord::Base
   has_many :cards
   has_many :user_games
   has_many :games, through: :user_games
+
+  def present_cards
+    "#{cards.first.value} of #{cards.first.suit}, #{cards.last.value} of #{cards.last.suit}"
+  end
 end

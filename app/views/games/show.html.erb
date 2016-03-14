@@ -5,3 +5,4 @@
 <h3>Big Blind: $<%= @game.big_blind %>.00</h3>
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>
+<h3>Pocket: <%= @game.users.last.present_cards %></h3>
