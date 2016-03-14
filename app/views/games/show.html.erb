@@ -1,3 +1,7 @@
 <h3>Opponents: <% @game.ai_players.each do |ai_player| %></h3>
   <%= ai_player.name %>
 <% end %>
+<h3>Little Blind: $<%= @game.little_blind %>.00</h3>
+<h3>Big Blind: $<%= @game.big_blind %>.00</h3>
+
+<h3>Cash: $<%= current_user.cash %>.00</h3>

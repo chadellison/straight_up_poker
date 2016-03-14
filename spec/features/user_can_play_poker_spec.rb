@@ -21,12 +21,14 @@ RSpec.feature "user can play poker" do
     expect(new_game_path).to eq current_path
 
     select "2", from: "Player count"
+    select "50", from: "Little blind"
+    select "100", from: "Big blind"
     click_on "Play Poker"
 
     expect(page).to have_content "Opponents: Rosco"
     expect(page).to have_content "Little Blind: $50.00"
     expect(page).to have_content "Cash: $950.00"
-    expect(page).to have_content "Pocket Cards: " + user.pocket_cards
+    expect(page).to have_content "Pocket Cards: " + User.last.pocket_cards
 
     expect(page).to have_button "Raise"
     expect(page).to have_button "Call"
