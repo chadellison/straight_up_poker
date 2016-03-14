@@ -6,3 +6,8 @@
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>
 <h3>Pocket: <%= @game.users.last.present_cards %></h3>
+
+<%= button_to "Raise" %>
+<%= button_to "Call", calls_path(game_id: @game.id) %>
+<%= button_to "Check" %>
+<%= button_to "Fold" %>

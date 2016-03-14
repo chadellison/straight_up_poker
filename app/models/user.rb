@@ -10,4 +10,10 @@ class User < ActiveRecord::Base
   def present_cards
     "#{cards.first.value} of #{cards.first.suit}, #{cards.last.value} of #{cards.last.suit}"
   end
+
+  def bet(amount)
+    update(last_bet: amount)
+    new_amount = cash - amount
+    update(cash: new_amount)
+  end
 end
