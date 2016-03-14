@@ -11,7 +11,6 @@ class Game < ActiveRecord::Base
   def set_blinds
 
     user = Game.last.users.first
-    binding.pry
     new_cash_amount = user.cash - little_blind
     user.update(cash: new_cash_amount)
     ai_player = Game.last.ai_players.first

@@ -16,7 +16,7 @@ RSpec.describe Game, type: :model do
   it "sets the blinds" do
     player = AiPlayer.create(name: "Trump")
     user = User.create(name: "frank", username: "frank", password: "password")
-    game = Game.create(player_count: 2)
+    game = Game.create(player_count: 2, little_blind: 50, big_blind: 100)
 
     game.ai_players << player
     game.users << user
