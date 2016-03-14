@@ -8,6 +8,7 @@ class GamesController < ApplicationController
     current_user.games << game
     game.add_players
     game.set_blinds
+    # game.load_deck
     # game.deal_pocket_cards
     redirect_to game_path(game.id)
   end
