@@ -52,7 +52,7 @@ RSpec.feature "user can play poker" do
     user = User.last
     expect(page).to have_content "Flop: " + game.present_flop
     expect(page).to have_content "Pocket: " + user.present_cards
-
+save_and_open_page
     click_on "Check"
 
     expect(page).to have_content "Rosco Checks"

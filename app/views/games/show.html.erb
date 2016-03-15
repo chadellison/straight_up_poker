@@ -10,7 +10,7 @@
 <h3>Flop: <%= @game.present_flop if !@game.flop_cards.empty? %></h3>
 <h3><%= flash[:ai_action] %></h3>
 
-<% if @game.pocket_cards && !@game.flop %>
+<% if @game.pocket_cards && @game.flop_cards.empty? %>
   <%= button_to "Deal Flop", game_path(@game.id), method: :patch %>
 <% else %>
   <%= button_to "Raise" %>
