@@ -34,6 +34,7 @@ class Game < ActiveRecord::Base
 
   def deal_flop
     flop_cards = []
+    burn_card
     3.times do
       flop_cards << cards.sample.id
       cards.delete(flop_cards.last)
@@ -41,10 +42,26 @@ class Game < ActiveRecord::Base
     update(flop_cards: flop_cards)
   end
 
+  def deal_turn
+    burn_card
+    turn_id = cards.sample.id
+    cards.delete(turn_id)
+    update(turn_card: turn_id)
+  end
+
+  def burn_card
+    burn = cards.sample.id
+    cards.delete(burn)
+  end
+
   def present_flop
     flop_cards.map do |card_id|
       Card.find(card_id).present_card
     end.join(", ")
+  end
+
+  def present_turn
+    Card.find(turn_card).present_card
   end
 
   def deal_pocket_cards_to_ai
@@ -65,7 +82,19 @@ class Game < ActiveRecord::Base
     end
   end
 
+  def user_action(action)
+    user = users.last
+    if action == "call"
+      call_amount = ai_players.maximum(:last_bet)
+      bet_amount = call_amount - user.last_bet
+      user.bet(bet_amount)
+    elsif action == "check"
+
+    end
+  end
+
   def ai_action
+    #if user_action == x ...
     ai_players.last.check
   end
 

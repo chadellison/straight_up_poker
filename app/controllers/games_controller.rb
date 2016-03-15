@@ -15,13 +15,25 @@ class GamesController < ApplicationController
   end
 
   def update
+    # action = params[:action] # fold, call, raise,
+    # game = session[:game]
+    # if action == :fold
+    #   game.update(player,:fold)
+
     game = Game.find(params[:id])
-    if !game.flop
-      game.deal_flop
-    # elsif !game.turn
-    #   game.deal_turn
+    if params[:user_action]
+      game.user_action(params[:user_action])
+      flash[:ai_action] = game.ai_action
+      game.update_game
+    else
+
+      if game.flop_cards.empty?
+        game.deal_flop
+      elsif !game.turn_card
+        game.deal_turn
     # else
     #   game.deal_river
+      end
     end
     redirect_to game_path(game.id)
   end

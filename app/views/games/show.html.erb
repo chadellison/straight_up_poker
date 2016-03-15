@@ -8,13 +8,16 @@
 <h3>Cash: $<%= current_user.cash %>.00</h3>
 <h3>Pocket: <%= @game.users.last.present_cards %></h3>
 <h3>Flop: <%= @game.present_flop if !@game.flop_cards.empty? %></h3>
+<h3>Turn: <%= @game.present_turn if @game.turn_card %></h3>
 <h3><%= flash[:ai_action] %></h3>
 
 <% if @game.pocket_cards && @game.flop_cards.empty? %>
   <%= button_to "Deal Flop", game_path(@game.id), method: :patch %>
+<% elsif @game.flop && !@game.turn_card %>
+  <%= button_to "Deal Turn", game_path(@game.id), method: :patch %>
 <% else %>
   <%= button_to "Raise" %>
-  <%= button_to "Call", calls_path(game_id: @game.id) %>
-  <%= button_to "Check" %>
+  <%= button_to "Call", game_path(game_id: @game.id, user_action: :call), method: :patch %>
+  <%= button_to "Check", game_path(game_id: @game.id, user_action: :check), method: :patch %>
   <%= button_to "Fold" %>
 <% end %>

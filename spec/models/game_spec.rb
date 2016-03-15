@@ -95,8 +95,24 @@ RSpec.describe Game, type: :model do
     game.load_deck
     expect(game.cards.count).to eq 52
     game.deal_flop
-    expect(game.cards.count).to eq 49
+    expect(game.cards.count).to eq 48
     expect(game.flop_cards.count).to eq 3
+  end
+
+  # it "takes a user action" do
+  #   game = Game.create
+  #   assert game.user_action("check")
+  # end
+
+  it "deals the turn" do
+    game = Game.create
+    create_cards
+    game.load_deck
+    expect(game.cards.count).to eq 52
+    refute game.turn_card
+    game.deal_turn
+    expect(game.cards.count).to eq 50
+    assert game.turn_card
   end
 
   private
