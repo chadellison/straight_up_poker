@@ -46,23 +46,27 @@ RSpec.feature "user can play poker" do
     click_on "Call"
     expect(page).to have_content "Cash: $900.00"
     expect(page).to have_content "Rosco Checks"
-    expect(page).to have_content "Flop: " + Game.last.flop
-    expect(page).to have_content "Pocket Cards: " + user.pocket_cards
+    click_on "Deal Flop"
+
+    game = Game.last
+    user = User.last
+    expect(page).to have_content "Flop: " + game.present_flop
+    expect(page).to have_content "Pocket: " + user.present_cards
 
     click_on "Check"
 
     expect(page).to have_content "Rosco Checks"
-    expect(page).to have_content "Turn: #{Game.last.turn Game.last.flop}"
+    expect(page).to have_content "Turn: #{game.turn_card game.flop_card}"
 
     click_on "Check"
 
     expect(page).to have_content "Rosco Checks"
 
-    expect(page).to have_content "River: #{Game.last.river Game.last.flop}"
+    expect(page).to have_content "River: #{game.river_card game.flop_card}"
 
     click_on "Check"
 
     expect(page).to have_content "Rosco Checks"
-    expect(page).to have_content "#{Game.last.winner} wins!"
+    expect(page).to have_content "#{game.winner} wins!"
   end
 end

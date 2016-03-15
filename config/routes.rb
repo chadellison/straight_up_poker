@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root "welcome#index"
-  resources :games, only: [:new, :create, :show]
+  resources :games, only: [:new, :create, :show, :update]
 
   resources :calls, only: [:create]
 

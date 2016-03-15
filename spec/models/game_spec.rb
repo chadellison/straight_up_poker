@@ -73,6 +73,32 @@ RSpec.describe Game, type: :model do
     expect(game.ai_action).to eq "Rosco Checks!"
   end
 
+  it "updates the state of the game" do
+    game = Game.create
+    expect(game.pocket_cards).to eq false
+    game.update_game
+    expect(game.pocket_cards).to eq true
+    expect(game.flop).to eq false
+    game.update_game
+    expect(game.flop).to eq true
+    expect(game.turn).to eq false
+    game.update_game
+    expect(game.turn).to eq true
+    expect(game.river).to eq false
+    game.update_game
+    expect(game.river).to eq true
+  end
+
+  it "deals flop" do
+    game = Game.create
+    create_cards
+    game.load_deck
+    expect(game.cards.count).to eq 52
+    game.deal_flop
+    expect(game.cards.count).to eq 49
+    expect(game.flop_cards.count).to eq 3
+  end
+
   private
 
   def create_cards

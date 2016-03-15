@@ -14,6 +14,18 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
   end
 
+  def update
+    game = Game.find(params[:id])
+    if !game.flop
+      game.deal_flop
+    # elsif !game.turn
+    #   game.deal_turn
+    # else
+    #   game.deal_river
+    end
+    redirect_to game_path(game.id)
+  end
+
   private
 
   def game_params

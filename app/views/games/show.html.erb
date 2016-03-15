@@ -4,10 +4,17 @@
 <h3>Little Blind: $<%= @game.little_blind %>.00</h3>
 <h3>Big Blind: $<%= @game.big_blind %>.00</h3>
 
+
 <h3>Cash: $<%= current_user.cash %>.00</h3>
 <h3>Pocket: <%= @game.users.last.present_cards %></h3>
+<h3>Flop: <%= @game.present_flop if !@game.flop_cards.empty? %></h3>
+<h3><%= flash[:ai_action] %></h3>
 
-<%= button_to "Raise" %>
-<%= button_to "Call", calls_path(game_id: @game.id) %>
-<%= button_to "Check" %>
-<%= button_to "Fold" %>
+<% if @game.pocket_cards && !@game.flop %>
+  <%= button_to "Deal Flop", game_path(@game.id), method: :patch %>
+<% else %>
+  <%= button_to "Raise" %>
+  <%= button_to "Call", calls_path(game_id: @game.id) %>
+  <%= button_to "Check" %>
+  <%= button_to "Fold" %>
+<% end %>

@@ -32,6 +32,21 @@ class Game < ActiveRecord::Base
     deal_pocket_cards_to_user
   end
 
+  def deal_flop
+    flop_cards = []
+    3.times do
+      flop_cards << cards.sample.id
+      cards.delete(flop_cards.last)
+    end
+    update(flop_cards: flop_cards)
+  end
+
+  def present_flop
+    flop_cards.map do |card_id|
+      Card.find(card_id).present_card
+    end.join(", ")
+  end
+
   def deal_pocket_cards_to_ai
     ai_players.each do |ai_player|
       ai_player.cards << cards.sample
@@ -52,5 +67,17 @@ class Game < ActiveRecord::Base
 
   def ai_action
     ai_players.last.check
+  end
+
+  def update_game
+    if !pocket_cards
+      update(pocket_cards: true)
+    elsif pocket_cards && !flop
+      update(flop: true)
+    elsif flop && !turn
+      update(turn: true)
+    else
+      update(river: true)
+    end
   end
 end
