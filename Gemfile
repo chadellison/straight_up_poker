@@ -7,6 +7,8 @@ gem "uglifier", ">= 1.3.0"
 gem "jquery-rails"
 gem "jbuilder", "~> 2.0"
 gem "sdoc", "~> 0.4.0", group: :doc
+gem "bcrypt", '~> 3.1.7'
+gem 'rails_12factor', group: :production
 
 group :development, :test do
   gem "byebug"
@@ -15,6 +17,8 @@ group :development, :test do
   gem "capybara"
   gem "launchy"
   gem "awesome_print"
+  gem 'database_cleaner'
+  gem 'shoulda-matchers', github: 'thoughtbot/shoulda-matchers'
 end
 
 group :development do
