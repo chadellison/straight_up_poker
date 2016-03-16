@@ -96,7 +96,7 @@ RSpec.describe Game, type: :model do
     expect(game.cards.count).to eq 52
     game.deal_flop
     expect(game.cards.count).to eq 48
-    expect(game.flop_cards.count).to eq 3
+    expect(game.flop_card_ids.count).to eq 3
   end
 
   # it "takes a user action" do
@@ -109,10 +109,51 @@ RSpec.describe Game, type: :model do
     create_cards
     game.load_deck
     expect(game.cards.count).to eq 52
-    refute game.turn_card
+    refute game.turn_card_id
     game.deal_turn
     expect(game.cards.count).to eq 50
-    assert game.turn_card
+    assert game.turn_card_id
+  end
+
+  it "deals the river" do
+    game = Game.create
+    create_cards
+    game.load_deck
+    expect(game.cards.count).to eq 52
+    refute game.river_card_id
+    game.deal_river
+    expect(game.cards.count).to eq 50
+    assert game.river_card_id
+  end
+
+  it "can determine the winner" do
+    game = Game.create
+    ai_player = game.ai_players.create(name: "Rosco")
+    user = game.users.create(name: "jones", username: "jones", password: "password")
+    ace = Card.new(value: "Ace", suit: "Hearts")
+    king = Card.new(value: "King", suit: "Hearts")
+    user.cards << ace
+    user.cards << king
+
+    two = Card.new(value: "2", suit: "Hearts")
+    three = Card.new(value: "3", suit: "clubs")
+    ai_player.cards << two
+    ai_player.cards << three
+
+    card1 = Card.create(value: "Ace", suit: "Spades")
+    card2 = Card.create(value: "King", suit: "Spades")
+    card3 = Card.create(value: "Ace", suit: "Clubs")
+
+    game.update(flop_card_ids: [card1.id, card2.id, card3.id])
+
+    card4 = Card.create(value: "7", suit: "Hearts")
+    game.update(turn_card_id: card4.id)
+
+    card5 = Card.create(value: "9", suit: "Clubs")
+
+    game.update(river_card_id: card5.id)
+
+    expect(game.determine_winner).to eq "jones wins!"
   end
 
   private

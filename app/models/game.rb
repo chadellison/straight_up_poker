@@ -39,14 +39,21 @@ class Game < ActiveRecord::Base
       flop_cards << cards.sample.id
       cards.delete(flop_cards.last)
     end
-    update(flop_cards: flop_cards)
+    update(flop_card_ids: flop_cards)
   end
 
   def deal_turn
     burn_card
     turn_id = cards.sample.id
     cards.delete(turn_id)
-    update(turn_card: turn_id)
+    update(turn_card_id: turn_id)
+  end
+
+  def deal_river
+    burn_card
+    river_id = cards.sample.id
+    cards.delete(river_id)
+    update(river_card_id: river_id)
   end
 
   def burn_card
@@ -55,13 +62,17 @@ class Game < ActiveRecord::Base
   end
 
   def present_flop
-    flop_cards.map do |card_id|
+    flop_card_ids.map do |card_id|
       Card.find(card_id).present_card
     end.join(", ")
   end
 
   def present_turn
-    Card.find(turn_card).present_card
+    Card.find(turn_card_id).present_card
+  end
+
+  def present_river
+    Card.find(river_card_id).present_card
   end
 
   def deal_pocket_cards_to_ai
@@ -89,13 +100,27 @@ class Game < ActiveRecord::Base
       bet_amount = call_amount - user.last_bet
       user.bet(bet_amount)
     elsif action == "check"
-
+      #more user actions here
     end
   end
 
   def ai_action
     #if user_action == x ...
     ai_players.last.check
+  end
+
+  def determine_winner
+    #game_cards = []
+    #flop_card_ids.each do |id|
+      # game_cards <<  #Card.find()
+    #end
+
+    #game_cards << Card.find(turn_card_id)
+    #game_cards << Card.find(river_card_id)
+    # user_hand = CardAnalyzer.new(users.last.cards + game_cards)
+    # ai_hand = CardAnalyzer.new(ai_players.last.cards + game_cards)
+
+
   end
 
   def update_game
@@ -105,8 +130,10 @@ class Game < ActiveRecord::Base
       update(flop: true)
     elsif flop && !turn
       update(turn: true)
-    else
+    elsif turn && !river
       update(river: true)
+    else
+      # update(winner: determine_winner)
     end
   end
 end
