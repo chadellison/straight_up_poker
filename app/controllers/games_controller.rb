@@ -26,8 +26,10 @@ class GamesController < ApplicationController
         game.deal_flop
       elsif !game.turn_card_id
         game.deal_turn
-      else
+      elsif !game.river_card_id
         game.deal_river
+      else
+        game.update(winner: game.determine_winner)
       end
     end
     redirect_to game_path(game.id)

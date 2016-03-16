@@ -78,6 +78,7 @@ RSpec.feature "user can play poker" do
     click_on "Check"
 
     expect(page).to have_content "Rosco Checks"
-    expect(page).to have_content game.winner + " wins!"
+    click_on "Show Winner"
+    expect(page).to have_content game.winner
   end
 end

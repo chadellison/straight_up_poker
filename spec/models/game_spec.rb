@@ -152,7 +152,6 @@ RSpec.describe Game, type: :model do
     card5 = Card.create(value: "9", suit: "Clubs")
 
     game.update(river_card_id: card5.id)
-
     expect(game.determine_winner).to eq "jones wins!"
   end
 
