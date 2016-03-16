@@ -21,16 +21,16 @@ class GamesController < ApplicationController
       flash[:ai_action] = game.ai_action
       game.update_game
     else
-
-      if game.flop_card_ids.empty?
-        game.deal_flop
-      elsif !game.turn_card_id
-        game.deal_turn
-      elsif !game.river_card_id
-        game.deal_river
-      else
-        game.update(winner: game.determine_winner)
-      end
+      game.game_action
+      # if game.flop_card_ids.empty?
+      #   game.deal_flop
+      # elsif !game.turn_card_id
+      #   game.deal_turn
+      # elsif !game.river_card_id
+      #   game.deal_river
+      # else
+      #   game.update(winner: game.determine_winner)
+      # end
     end
     redirect_to game_path(game.id)
   end

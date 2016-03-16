@@ -57,14 +57,15 @@ class RoyalFlush
   end
 
   def match?
-    StraightFlush.new(cards) &&
     potential_royal = cards.group_by(&:suit)
 
-    potential_royal.values.max_by do |cards|
+    cards = potential_royal.values.max_by do |cards|
       cards.size
-    end.map(&:value).uniq.select do |value|
-      value.class == String
-    end.size == 4
+    end.map(&:value)
+
+    ["Ace", "King", "Queen", "Jack", "10"].all? do |value|
+      cards.include?(value)
+    end
   end
 end
 
@@ -89,9 +90,11 @@ class Straight
 
   def match?
     straight = []
-    sorted_values = card_converter(cards).sort_by(&:value).map(&:value).uniq
-    while sorted_values.size > 0 do
+    sorted_values = card_converter(cards).sort_by do |card|
+      card.value.to_i
+    end.map(&:value).uniq
 
+    while sorted_values.size > 0 do
       if sorted_values[1].nil? || sorted_values.first.to_i + 1 == sorted_values[1].to_i
         straight << sorted_values.first
       else
@@ -120,7 +123,7 @@ class Straight
   end
 
   def ace_low?
-    card_values = cards.map(&:value)
+    card_values = cards.map { |card| card.value.to_i }
     [card_values.include?(2),
       card_values.include?(3),
       card_values.include?(4),
@@ -187,7 +190,7 @@ class CardAnalyzer
 
   def determine_winner(player_hands)
     player_hands.min_by do |player, hand|
-      HANDS.index(find_hand(hand).class)
+      HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
     end.first + " wins!"
   end
 end
