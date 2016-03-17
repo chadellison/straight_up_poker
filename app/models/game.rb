@@ -8,7 +8,8 @@ class Game < ActiveRecord::Base
     add_players
     set_blinds
     load_deck
-    deal_pocket_cards
+    deal_pocket_cards(ai_players)
+    deal_pocket_cards(users)
   end
 
   def add_players
@@ -25,11 +26,6 @@ class Game < ActiveRecord::Base
     Card.all.each do |card|
       cards << card
     end
-  end
-
-  def deal_pocket_cards
-    deal_pocket_cards_to_ai
-    deal_pocket_cards_to_user
   end
 
   def deal_flop
@@ -75,21 +71,11 @@ class Game < ActiveRecord::Base
     Card.find(river_card_id).present_card
   end
 
-  def deal_pocket_cards_to_ai
-    ai_players.each do |ai_player|
-      ai_player.cards << cards.sample
-      ai_player.cards << cards.sample
-      cards.delete(ai_player.cards.first.id)
-      cards.delete(ai_player.cards.last.id)
-    end
-  end
-
-  def deal_pocket_cards_to_user
-    users.each do |user|
-      user.cards << cards.sample
-      user.cards << cards.sample
-      cards.delete(user.cards.first.id)
-      cards.delete(user.cards.last.id)
+  def deal_pocket_cards(players)
+    players.each do |player|
+      2.times { player.cards << cards.sample }
+      cards.delete(player.cards.first.id)
+      cards.delete(player.cards.last.id)
     end
   end
 
@@ -100,7 +86,7 @@ class Game < ActiveRecord::Base
       bet_amount = call_amount - user.total_bet
       user.bet(bet_amount)
     elsif action == "bet"
-      user.bet(amount)
+      user.bet(amount[:current_bet])
     elsif action == "check"
       #more user actions here
     end

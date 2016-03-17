@@ -39,7 +39,8 @@ RSpec.describe Game, type: :model do
     expect(user.cards.count).to eq 0
     expect(ai.cards.count).to eq 0
     game.load_deck
-    game.deal_pocket_cards
+    game.deal_pocket_cards(game.users)
+    game.deal_pocket_cards(game.ai_players)
     expect(game.cards.count).to eq 48
     expect(user.cards.count).to eq 2
     expect(ai.cards.count).to eq 2
@@ -52,7 +53,8 @@ RSpec.describe Game, type: :model do
 
     four_player_game.load_deck
 
-    four_player_game.deal_pocket_cards
+    four_player_game.deal_pocket_cards(four_player_game.ai_players)
+    four_player_game.deal_pocket_cards(four_player_game.users)
     expect(user.cards.count).to eq 2
     expect(ai1.cards.count).to eq 2
     expect(ai2.cards.count).to eq 2

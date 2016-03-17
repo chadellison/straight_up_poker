@@ -21,9 +21,8 @@ class GamesController < ApplicationController
   def update
     game = Game.find(params[:id])
     if params[:user_action]
-      bet = params[:user][:current_bet] if params[:user]
-      game.user_action(params[:user_action], bet)
-      flash[:ai_action] = game.ai_action(params[:user_action], bet)
+      game.user_action(params[:user_action], params[:user])
+      flash[:ai_action] = game.ai_action(params[:user_action], params[:user])
       game.update_game
     else
       game.game_action
