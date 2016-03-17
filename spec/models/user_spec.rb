@@ -27,4 +27,12 @@ RSpec.describe User, type: :model do
     expect(user.total_bet).to eq 50
     expect(user.cash).to eq 950
   end
+
+  it "can fold" do
+    game = Game.create
+    ai_player = game.ai_players.create(name: "Rosco")
+    user = game.users.create(name: "Jones", username: "jones", password: "password")
+    user.fold
+    expect(Game.last.winner).to eq "Rosco wins!"
+  end
 end
