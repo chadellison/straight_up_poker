@@ -87,13 +87,15 @@ class Game < ActiveRecord::Base
       user.bet(bet_amount)
     elsif action == "bet"
       user.bet(amount[:current_bet])
-    elsif action == "check"
-      #more user actions here
+    elsif action == "fold"
+      user.fold
     end
   end
 
   def ai_action(user_action, amount = nil)
-    if user_action == "bet"
+    if user_action == "fold"
+      ai_players.last.make_snarky_remark
+    elsif user_action == "bet"
       ai_players.last.call
       #for multiple ai_players consider a loop that has an ai take an action based on attributes
     elsif user_action == "call" || "check"
@@ -139,7 +141,7 @@ class Game < ActiveRecord::Base
       update(flop: true)
     elsif flop && !turn
       update(turn: true)
-    else
+    else #make conditional for fold
       update(river: true)
     end
   end

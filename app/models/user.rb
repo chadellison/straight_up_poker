@@ -20,4 +20,10 @@ class User < ActiveRecord::Base
     total_ai_bets = game.ai_players.pluck(:total_bet).sum #look into more efficient way of doing this
     game.update(pot: total_ai_bets + total_bet)
   end
+
+  def fold
+    if games.last.ai_players.count == 1
+      games.last.update(winner: games.last.ai_players.last.name + " wins!")
+    end
+  end
 end

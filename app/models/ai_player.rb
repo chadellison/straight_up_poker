@@ -20,4 +20,8 @@ class AiPlayer < ActiveRecord::Base
   def check
     "#{name} Checks!"
   end
+
+  def make_snarky_remark
+    "That's what I thought"
+  end
 end
