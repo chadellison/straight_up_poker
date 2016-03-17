@@ -38,7 +38,7 @@ RSpec.feature "user can play poker" do
     expect(page).to have_content "Cash: $950.00"
     expect(page).to have_content "Pocket: " + User.last.present_cards
 
-    expect(page).to have_button "Raise"
+    expect(page).to have_button "Bet / Raise"
     expect(page).to have_button "Call"
     expect(page).to have_button "Check"
     expect(page).to have_button "Fold"

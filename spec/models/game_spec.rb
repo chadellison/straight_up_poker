@@ -67,10 +67,11 @@ RSpec.describe Game, type: :model do
     expect(game.cards).to eq Card.all
   end
 
-  it "ai's can perform an action " do
+  it "ai's can perform an action based on a user action" do
     game = Game.create
     game.ai_players.create(name: "Rosco")
-    expect(game.ai_action).to eq "Rosco Checks!"
+    user_action = "check"
+    expect(game.ai_action(user_action)).to eq "Rosco Checks!"
   end
 
   it "updates the state of the game" do
