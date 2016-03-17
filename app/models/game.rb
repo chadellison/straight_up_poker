@@ -109,15 +109,28 @@ class Game < ActiveRecord::Base
     ai_players.last.check
   end
 
-  def determine_winner
-    game_cards = []
-    flop_card_ids.each do |id|
-      game_cards <<  Card.find(id)
+  def game_action
+    if flop_card_ids.empty?
+      deal_flop
+    elsif !turn_card_id
+      deal_turn
+    elsif !river_card_id
+      deal_river
+    else
+      update(winner: determine_winner)
+    end
+  end
+
+  def game_cards
+    cards = flop_card_ids.map do |id|
+      Card.find(id)
     end
 
-    game_cards << Card.find(turn_card_id)
-    game_cards << Card.find(river_card_id)
+    cards << Card.find(turn_card_id)
+    cards << Card.find(river_card_id)
+  end
 
+  def determine_winner
     players = {}
     ai_players.each do |ai_player|
       players[ai_player.name] = ai_player.cards + game_cards
@@ -136,8 +149,6 @@ class Game < ActiveRecord::Base
       update(turn: true)
     else
       update(river: true)
-    # else
-    #   update(winner: determine_winner)
     end
   end
 end

@@ -1,177 +1,150 @@
-# require "rails_helper"
-#
-# class CardAnalyzerTest < MiniTest::Test
-#   def test_high_card
-#     cards = [
-#       Card.new(10, :diamonds),
-#       Card.new(7, :hearts),
-#       Card.new(2, :hearts)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal HighCard, card_analyzer.hand.class
-#
-#     pair = [
-#       Card.new(3, :clubs),
-#       Card.new(3, :hearts)
-#     ]
-#     card_analyzer2 = CardAnalyzer.new(pair)
-#     refute card_analyzer2.hand.class == HighCard
-#   end
-#
-#   def test_pair
-#     cards = [
-#       Card.new(2, :diamonds),
-#       Card.new(2, :hearts)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal TwoOfKind, card_analyzer.hand.class
-#   end
-#
-#   def test_two_pair
-#     cards = [
-#       Card.new(7, :clubs),
-#       Card.new(3, :clubs),
-#       Card.new(7, :hearts),
-#       Card.new(2, :clubs),
-#       Card.new(3, :clubs)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal TwoPair, card_analyzer.hand.class
-#   end
-#
-#   def test_three_of_a_kind
-#     cards = [
-#       Card.new(2, :diamonds),
-#       Card.new(2, :hearts),
-#       Card.new(2, :clubs)
-#     ]
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal ThreeOfKind, card_analyzer.hand.class
-#   end
-#
-#   def test_straight
-#     cards = [
-#       Card.new(5, :hearts),
-#       Card.new(6, :clubs),
-#       Card.new(9, :diamonds),
-#       Card.new(3, :hearts),
-#       Card.new(8, :spades),
-#       Card.new(7, :spades),
-#       Card.new(2, :spades)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal Straight, card_analyzer.hand.class
-#   end
-#
-#   def test_straight_with_face_cards
-#     cards = [
-#       Card.new(9, :clubs),
-#       Card.new(10, :hearts),
-#       Card.new("Jack", :hearts),
-#       Card.new("King", :hearts),
-#       Card.new("Queen", :spades)
-#     ]
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal Straight, card_analyzer.hand.class
-#
-#   end
-#
-#   def test_ace_low_straight
-#     cards = [
-#       Card.new("Ace", :clubs),
-#       Card.new(3, :hearts),
-#       Card.new(5, :hearts),
-#       Card.new(4, :hearts),
-#       Card.new(2, :spades)
-#     ]
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal Straight, card_analyzer.hand.class
-#
-#   end
-#
-#   def test_ace_high_straight
-#     cards = [
-#       Card.new("Ace", :clubs),
-#       Card.new(10, :hearts),
-#       Card.new("Jack", :hearts),
-#       Card.new("King", :spades),
-#       Card.new("King", :hearts),
-#       Card.new("Queen", :spades),
-#     ]
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal Straight, card_analyzer.hand.class
-#   end
-#
-#   def test_flush
-#     cards = [
-#       Card.new(5, :clubs),
-#       Card.new(3, :clubs),
-#       Card.new(7, :clubs),
-#       Card.new(3, :clubs),
-#       Card.new(3, :clubs)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal Flush, card_analyzer.hand.class
-#   end
-#
-#   def test_full_house
-#     cards = [
-#       Card.new(2, :diamonds),
-#       Card.new(2, :hearts),
-#       Card.new(2, :clubs),
-#       Card.new(3, :hearts),
-#       Card.new(3, :clubs)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal FullHouse, card_analyzer.hand.class
-#   end
-#
-#
-#
-#   def test_four_of_kind
-#     cards = [
-#       Card.new(5, :hearts),
-#       Card.new(5, :clubs),
-#       Card.new(5, :diamonds),
-#       Card.new(7, :hearts),
-#       Card.new(5, :spades)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal FourOfKind, card_analyzer.hand.class
-#
-#   end
-#
-#   def test_straight_flush
-#     cards = [
-#       Card.new(9, :clubs),
-#       Card.new(8, :clubs),
-#       Card.new(7, :clubs),
-#       Card.new(6, :clubs),
-#       Card.new(10, :clubs)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     assert_equal StraightFlush, card_analyzer.hand.class
-#   end
-#
-#   def test_royal_flush
-#     cards = [
-#       Card.new("King", :clubs),
-#       Card.new("Ace", :clubs),
-#       Card.new("Queen", :clubs),
-#       Card.new("Jack", :clubs),
-#       Card.new(10, :clubs)
-#     ]
-#
-#     card_analyzer = CardAnalyzer.new(cards)
-#     refute card_analyzer.hand.class == StraightFlush
-#     assert_equal RoyalFlush, card_analyzer.hand.class
-#   end
-# end
+require "rails_helper"
+
+RSpec.describe CardAnalyzer do
+  it "determines a high_card" do
+    cards = [
+      Card.new(value: "10", suit: "diamonds"),
+      Card.new(value: "7", suit: "hearts"),
+      Card.new(value: "2", suit: "hearts")
+    ]
+
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq HighCard
+
+    pair = [
+      Card.new(value: "3", suit: "clubs"),
+      Card.new(value: "3", suit: "hearts")
+    ]
+    expect(CardAnalyzer.new.find_hand(pair).class).to_not eq HighCard
+  end
+
+  it "determines a pair" do
+    cards = [
+      Card.new(value: "2", suit: "diamonds"),
+      Card.new(value: "2", suit: "hearts")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq TwoOfKind
+  end
+
+  it "determins two pair" do
+    cards = [
+      Card.new(value: "7", suit: "clubs"),
+      Card.new(value: "3", suit: "clubs"),
+      Card.new(value: "7", suit: "hearts"),
+      Card.new(value: "2", suit: "clubs"),
+      Card.new(value: "3", suit: "clubs")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq TwoPair
+  end
+
+  it "determines three of a kind" do
+    cards = [
+      Card.new(value: "2", suit: "diamonds"),
+      Card.new(value: "2", suit: "hearts"),
+      Card.new(value: "2", suit: "clubs")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq ThreeOfKind
+  end
+
+  it "determines a straight" do
+    cards = [
+      Card.new(value: "5", suit: "hearts"),
+      Card.new(value: "6", suit: "clubs"),
+      Card.new(value: "9", suit: "diamonds"),
+      Card.new(value: "3", suit: "hearts"),
+      Card.new(value: "8", suit: "spades"),
+      Card.new(value: "7", suit: "spades"),
+      Card.new(value: "2", suit: "spades")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq Straight
+  end
+
+  it "determines a straight with face cards" do
+    cards = [
+      Card.new(value: "9", suit: "clubs"),
+      Card.new(value: "10", suit: "hearts"),
+      Card.new(value: "Jack", suit: "hearts"),
+      Card.new(value: "King", suit: "hearts"),
+      Card.new(value: "Queen", suit: "spades")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq Straight
+  end
+
+  it "determines an ace low straight" do
+    cards = [
+      Card.new(value: "Ace", suit: "clubs"),
+      Card.new(value: "3", suit: "hearts"),
+      Card.new(value: "5", suit: "hearts"),
+      Card.new(value: "4", suit: "hearts"),
+      Card.new(value: "2", suit: "spades")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq Straight
+  end
+
+  it "determines an ace high straight" do
+    cards = [
+      Card.new(value: "Ace", suit: "clubs"),
+      Card.new(value: "10", suit: "hearts"),
+      Card.new(value: "Jack", suit: "hearts"),
+      Card.new(value: "King", suit: "spades"),
+      Card.new(value: "King", suit: "hearts"),
+      Card.new(value: "Queen", suit: "spades"),
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq Straight
+  end
+
+  it "determines a flush" do
+    cards = [
+      Card.new(value: "5", suit: "clubs"),
+      Card.new(value: "3", suit: "clubs"),
+      Card.new(value: "7", suit: "clubs"),
+      Card.new(value: "3", suit: "clubs"),
+      Card.new(value: "3", suit: "clubs")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq Flush
+  end
+
+  it "determines a full house" do
+    cards = [
+      Card.new(value: "2", suit: "diamonds"),
+      Card.new(value: "2", suit: "hearts"),
+      Card.new(value: "2", suit: "clubs"),
+      Card.new(value: "3", suit: "hearts"),
+      Card.new(value: "3", suit: "clubs")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq FullHouse
+  end
+
+  it "determines four of a kind" do
+    cards = [
+      Card.new(value: "5", suit: "hearts"),
+      Card.new(value: "5", suit: "clubs"),
+      Card.new(value: "5", suit: "diamonds"),
+      Card.new(value: "7", suit: "hearts"),
+      Card.new(value: "5", suit: "spades")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq FourOfKind
+  end
+
+  it "determines a straight flush" do
+    cards = [
+      Card.new(value: "9", suit: "clubs"),
+      Card.new(value: "8", suit: "clubs"),
+      Card.new(value: "7", suit: "clubs"),
+      Card.new(value: "6", suit: "clubs"),
+      Card.new(value: "10", suit: "clubs")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq StraightFlush
+  end
+
+  it "determines a royal flush" do
+    cards = [
+      Card.new(value: "King", suit: "clubs"),
+      Card.new(value: "Ace", suit: "clubs"),
+      Card.new(value: "Queen", suit: "clubs"),
+      Card.new(value: "Jack", suit: "clubs"),
+      Card.new(value: "10", suit: "clubs")
+    ]
+    expect(CardAnalyzer.new.find_hand(cards).class).to_not eq StraightFlush
+    expect(CardAnalyzer.new.find_hand(cards).class).to eq RoyalFlush
+  end
+end
