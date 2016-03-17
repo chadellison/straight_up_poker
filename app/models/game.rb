@@ -17,7 +17,7 @@ class Game < ActiveRecord::Base
   end
 
   def set_blinds
-    users.first.bet(little_blind)
+    users.last.bet(little_blind)
     ai_players.first.bet(big_blind)
   end
 
@@ -93,20 +93,26 @@ class Game < ActiveRecord::Base
     end
   end
 
-  def user_action(action)
+  def user_action(action, amount = nil)
     user = users.last
     if action == "call"
-      call_amount = ai_players.maximum(:last_bet)
-      bet_amount = call_amount - user.last_bet
+      call_amount = ai_players.maximum(:total_bet)
+      bet_amount = call_amount - user.total_bet
       user.bet(bet_amount)
+    elsif action == "bet"
+      user.bet(amount)
     elsif action == "check"
       #more user actions here
     end
   end
 
-  def ai_action
-    #if user_action == x ...
-    ai_players.last.check
+  def ai_action(user_action, amount = nil)
+    if user_action == "bet"
+      ai_players.last.call
+      #for multiple ai_players consider a loop that has an ai take an action based on attributes
+    elsif user_action == "call" || "check"
+      ai_players.last.check
+    end
   end
 
   def game_action

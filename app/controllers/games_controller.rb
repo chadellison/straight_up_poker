@@ -14,11 +14,16 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
   end
 
+  def edit
+    @game = Game.find(params[:id])
+  end
+
   def update
     game = Game.find(params[:id])
     if params[:user_action]
-      game.user_action(params[:user_action])
-      flash[:ai_action] = game.ai_action
+      bet = params[:user][:current_bet] if params[:user]
+      game.user_action(params[:user_action], bet)
+      flash[:ai_action] = game.ai_action(params[:user_action], bet)
       game.update_game
     else
       game.game_action
@@ -29,6 +34,6 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(:player_count, :little_blind, :big_blind)
+    params.require(:game).permit(:player_count, :little_blind, :big_blind, :current_bet)
   end
 end

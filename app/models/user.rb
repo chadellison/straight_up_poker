@@ -12,8 +12,12 @@ class User < ActiveRecord::Base
   end
 
   def bet(amount)
-    update(last_bet: amount)
-    new_amount = cash - amount
+    game = games.last
+    update(current_bet: amount)
+    update(total_bet: total_bet + amount.to_i)
+    new_amount = cash - amount.to_i
     update(cash: new_amount)
+    total_ai_bets = game.ai_players.pluck(:total_bet).sum #look into more efficient way of doing this
+    game.update(pot: total_ai_bets + total_bet)
   end
 end
