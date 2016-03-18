@@ -5,14 +5,6 @@ RSpec.feature "user can raise or bet" do
     user = User.create(name: "Oscar", username: "oscar", password: "password")
     ai_player = AiPlayer.create(name: "Rosco")
 
-    values = (2..10).to_a + ["Ace", "King", "Queen", "Jack"]
-    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
-    values.each do |value|
-      suits.each do |suit|
-        Card.create(value: value, suit: suit)
-      end
-    end
-
     visit root_path
 
     click_on "Login"
@@ -31,7 +23,7 @@ RSpec.feature "user can raise or bet" do
     expect(page).to have_content "How much would you like to bet?"
     fill_in "Current bet", with: "200"
     click_on "Submit"
-    
+
     expect(page).to have_content "Rosco Calls!"
     expect(User.last.cash).to eq 700
     expect(AiPlayer.last.cash).to eq 700

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AiPlayer, type: :model do
-  it {should have_many(:cards)}
   it {should belong_to(:game)}
 
   it "can bet" do

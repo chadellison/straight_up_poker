@@ -4,7 +4,6 @@ RSpec.describe Game, type: :model do
 
   it {should have_many(:ai_players)}
   it {should have_many(:users)}
-  it {should have_many(:cards)}
 
   it "adds players to a game" do
     player = AiPlayer.create(name: "Rosco")
@@ -34,8 +33,6 @@ RSpec.describe Game, type: :model do
     user = game.users.create(name: "Markus", username: "markus", password: "password")
     ai = game.ai_players.create(name: "Trump")
 
-    create_cards
-
     expect(user.cards.count).to eq 0
     expect(ai.cards.count).to eq 0
     game.load_deck
@@ -64,9 +61,13 @@ RSpec.describe Game, type: :model do
 
   it "loads a new deck for every game" do
     game = Game.create(player_count: 2, little_blind: 50, big_blind: 100)
-    create_cards
     game.load_deck
-    expect(game.cards).to eq Card.all
+    expect(game.cards.count).to eq 52
+    game.deal_flop
+    expect(game.cards.count).to eq 48
+    game = Game.create
+    game.load_deck
+    expect(game.cards.count).to eq 52
   end
 
   it "ai's can perform an action based on a user action" do
@@ -94,79 +95,59 @@ RSpec.describe Game, type: :model do
 
   it "deals flop" do
     game = Game.create
-    create_cards
     game.load_deck
     expect(game.cards.count).to eq 52
     game.deal_flop
     expect(game.cards.count).to eq 48
-    expect(game.flop_card_ids.count).to eq 3
+    expect(game.flop_cards.count).to eq 3
   end
-
-  # it "takes a user action" do
-  #   game = Game.create
-  #   assert game.user_action("check")
-  # end
 
   it "deals the turn" do
     game = Game.create
-    create_cards
     game.load_deck
     expect(game.cards.count).to eq 52
-    refute game.turn_card_id
+    refute game.turn_card
     game.deal_turn
     expect(game.cards.count).to eq 50
-    assert game.turn_card_id
+    assert game.turn_card
   end
 
   it "deals the river" do
     game = Game.create
-    create_cards
     game.load_deck
     expect(game.cards.count).to eq 52
-    refute game.river_card_id
+    refute game.river_card
     game.deal_river
     expect(game.cards.count).to eq 50
-    assert game.river_card_id
+    assert game.river_card
   end
 
   it "can determine the winner" do
     game = Game.create
     ai_player = game.ai_players.create(name: "Rosco")
     user = game.users.create(name: "jones", username: "jones", password: "password")
-    ace = Card.new(value: "Ace", suit: "Hearts")
-    king = Card.new(value: "King", suit: "Hearts")
+    ace = Card.new("Ace", "Hearts").present_card
+    king = Card.new("King", "Hearts").present_card
     user.cards << ace
     user.cards << king
 
-    two = Card.new(value: "2", suit: "Hearts")
-    three = Card.new(value: "3", suit: "clubs")
+    two = Card.new("2", "Hearts").present_card
+    three = Card.new("3", "clubs").present_card
     ai_player.cards << two
     ai_player.cards << three
 
-    card1 = Card.create(value: "Ace", suit: "Spades")
-    card2 = Card.create(value: "King", suit: "Spades")
-    card3 = Card.create(value: "Ace", suit: "Clubs")
+    card1 = Card.new("Ace", "Spades").present_card
+    card2 = Card.new("King", "Spades").present_card
+    card3 = Card.new("Ace", "Clubs").present_card
 
-    game.update(flop_card_ids: [card1.id, card2.id, card3.id])
+    game.update(flop_cards: [card1, card2, card3])
 
-    card4 = Card.create(value: "7", suit: "Hearts")
-    game.update(turn_card_id: card4.id)
+    card4 = Card.new("7", "Hearts").present_card
+    game.update(turn_card: card4)
 
-    card5 = Card.create(value: "9", suit: "Clubs")
+    card5 = Card.new("9", "Clubs").present_card
 
-    game.update(river_card_id: card5.id)
+    game.update(river_card: card5)
     expect(game.determine_winner).to eq "jones wins!"
-  end
-
-  private
-
-  def create_cards
-    values = (2..10).to_a + ["Ace", "King", "Queen", "Jack"]
-    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
-    values.each do |value|
-      suits.each do |suit|
-        Card.create(value: value, suit: suit)
-      end
-    end
   end
 end

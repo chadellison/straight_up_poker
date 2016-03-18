@@ -1,5 +1,5 @@
 class AiPlayer < ActiveRecord::Base
-  has_many :cards
+  # has_many :cards
   belongs_to :game
 
   def bet(amount)
@@ -23,5 +23,9 @@ class AiPlayer < ActiveRecord::Base
 
   def make_snarky_remark
     "That's what I thought"
+  end
+
+  def present_cards
+    cards.join(", ")
   end
 end

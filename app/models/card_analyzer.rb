@@ -109,13 +109,13 @@ class Straight
     cards.map do |card|
       case card.value
       when "Ace"
-        ace_low? ? Card.new(value: 1, suit: card.suit) : Card.new(value: 14, suit: card.suit)
+        ace_low? ? Card.new(1, card.suit) : Card.new(14, card.suit)
       when "King"
-        Card.new(value: 13, suit: card.suit)
+        Card.new(13, card.suit)
       when "Queen"
-        Card.new(value: 12, suit: card.suit)
+        Card.new(12, card.suit)
       when "Jack"
-        Card.new(value: 11, suit: card.suit)
+        Card.new(11, card.suit)
       else
         card
       end
@@ -176,12 +176,6 @@ class CardAnalyzer
   # the order of this collection is important. it is in order by hands' values
   HANDS = [RoyalFlush, StraightFlush, FourOfKind, FullHouse, Flush, Straight, ThreeOfKind, TwoPair, TwoOfKind, HighCard]
 
-  # attr_reader :cards
-
-  # def initialize(cards)
-  #   @cards = cards
-  # end
-
   def find_hand(cards)
     HANDS
       .map { |hand| hand.new(cards) }
@@ -190,7 +184,14 @@ class CardAnalyzer
 
   def determine_winner(player_hands)
     player_hands.min_by do |player, hand|
+      hand = make_card_objects(hand)
       HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
     end.first + " wins!"
+  end
+
+  def make_card_objects(cards)
+    cards.map do |card|
+      Card.new(card.split.first, card.split.last)
+    end
   end
 end

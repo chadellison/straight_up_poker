@@ -7,19 +7,20 @@
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>
 <h3>Pocket: <%= @game.users.last.present_cards %></h3>
-<h3>Flop: <%= @game.present_flop if !@game.flop_card_ids.empty? %></h3>
-<h3>Turn: <%= @game.present_turn if @game.turn_card_id %></h3>
-<h3>River: <%= @game.present_river if @game.river_card_id %></h3>
+<h3>Flop: <%= @game.present_flop unless @game.flop_cards.empty? %></h3>
+<h3>Turn: <%= @game.turn_card if @game.turn_card %></h3>
+<h3>River: <%= @game.river_card if @game.river_card %></h3>
 <h3><%= flash[:ai_action] %></h3>
 
 
 <% if @game.winner %>
   <h1><%= @game.winner %> </h1>
-<% elsif @game.pocket_cards && @game.flop_card_ids.empty? %>
+  <p><%= @game.ai_players.last.present_cards %></p>
+<% elsif @game.pocket_cards && @game.flop_cards.empty? %>
   <%= button_to "Deal Flop", game_path(@game.id), method: :patch %>
-<% elsif @game.flop && !@game.turn_card_id %>
+<% elsif @game.flop && @game.turn_card.nil? %>
   <%= button_to "Deal Turn", game_path(@game.id), method: :patch %>
-<% elsif @game.turn && !@game.river_card_id %>
+<% elsif @game.turn && !@game.river_card %>
   <%= button_to "Deal River", game_path(@game.id), method: :patch %>
 <% elsif @game.river && !@game.winner %>
   <%= button_to "Show Winner", game_path(@game.id), method: :patch %>
