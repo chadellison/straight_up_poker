@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root "welcome#index"
-  resources :games, only: [:new, :create, :show, :edit, :update]
+  resources :games, only: [:new, :create, :edit, :update]
+
+  get "/game", to: "games#show"
 
   get "/register", to: "users#new"
 

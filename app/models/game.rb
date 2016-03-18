@@ -1,8 +1,29 @@
-class Game < ActiveRecord::Base
-  has_many :ai_players
-  has_many :user_games
-  has_many :cards
-  has_many :users, through: :user_games
+class Game
+  # has_many :ai_players
+  # has_many :user_games
+  # has_many :cards
+  # has_many :users, through: :user_games
+
+  attr_reader :player_count, :little_blind, :big_blind, :ai_players, :pocket_cards, :flop_cards, :cards, :turn_card, :river_card, :flop, :turn, :river
+  attr_accessor :user, :winner, :pot
+
+  def initialize(player_count = 2, little_blind = 50)
+    @winner
+    @player_count = player_count
+    @little_blind = little_blind
+    @big_blind = little_blind * 2
+    @ai_players = []
+    @user = []
+    @cards = []
+    @flop_cards = []
+    @turn_card
+    @river_card
+    @pocket_cards = false
+    @flop = false
+    @turn = false
+    @river = false
+    @pot = 0
+  end
 
   def set_up_game
     add_players
@@ -13,79 +34,77 @@ class Game < ActiveRecord::Base
   end
 
   def add_players
-    players = AiPlayer.first(Game.last.player_count - 1)
-    players.each { |player| Game.last.ai_players << player }
+    players = AiPlayer.first(player_count - 1)
+    players.each { |player| @ai_players << player }
   end
 
   def set_blinds
-    users.last.bet(little_blind)
+    user.last.bet(little_blind)
     ai_players.first.bet(big_blind)
+    pot = little_blind + big_blind
   end
 
   def load_deck
-    Card.all.each do |card|
-      cards << card
+    values = (2..10).to_a + ["Ace", "King", "Queen", "Jack"]
+    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
+    values.each do |value|
+      suits.each do |suit|
+        cards << Card.new(value, suit)
+      end
+    end
+  end
+
+  def deal_pocket_cards(players)
+    player_cards = []
+    players.each do |player|
+      2.times { player_cards << cards.shuffle!.pop.present_card }
+      player.update(cards: player_cards)
     end
   end
 
   def deal_flop
-    flop_cards = []
     burn_card
     3.times do
-      flop_cards << cards.sample.id
-      cards.delete(flop_cards.last)
+      flop_cards << cards.shuffle!.pop
     end
-    update(flop_card_ids: flop_cards)
   end
 
   def deal_turn
     burn_card
-    turn_id = cards.sample.id
-    cards.delete(turn_id)
-    update(turn_card_id: turn_id)
+    @turn_card = cards.shuffle!.pop
   end
 
   def deal_river
     burn_card
-    river_id = cards.sample.id
-    cards.delete(river_id)
-    update(river_card_id: river_id)
+    @river_card = cards.shuffle!.pop
   end
 
   def burn_card
-    burn = cards.sample.id
-    cards.delete(burn)
+    burn = cards.pop
   end
 
   def present_flop
-    flop_card_ids.map do |card_id|
-      Card.find(card_id).present_card
+    flop_cards.map do |card|
+      card.present_card
     end.join(", ")
   end
 
   def present_turn
-    Card.find(turn_card_id).present_card
+    turn_card.present_card
   end
 
   def present_river
-    Card.find(river_card_id).present_card
+    river_card.present_card
   end
 
-  def deal_pocket_cards(players)
-    players.each do |player|
-      2.times { player.cards << cards.sample }
-      cards.delete(player.cards.first.id)
-      cards.delete(player.cards.last.id)
-    end
-  end
 
   def user_action(action, amount = nil)
-    user = users.last
     if action == "call"
       call_amount = ai_players.maximum(:total_bet)
       bet_amount = call_amount - user.total_bet
       user.bet(bet_amount)
     elsif action == "bet"
+      #pot += amount
       user.bet(amount[:current_bet])
     elsif action == "fold"
       user.fold
@@ -97,6 +116,7 @@ class Game < ActiveRecord::Base
       ai_players.last.make_snarky_remark
     elsif user_action == "bet"
       ai_players.last.call
+      # math for this...
       #for multiple ai_players consider a loop that has an ai take an action based on attributes
     elsif user_action == "call" || "check"
       ai_players.last.check
@@ -104,11 +124,11 @@ class Game < ActiveRecord::Base
   end
 
   def game_action
-    if flop_card_ids.empty?
+    if flop_cards.empty?
       deal_flop
-    elsif !turn_card_id
+    elsif turn_card.nil?
       deal_turn
-    elsif !river_card_id
+    elsif river_card_id.nil?
       deal_river
     else
       update(winner: determine_winner)
@@ -116,12 +136,7 @@ class Game < ActiveRecord::Base
   end
 
   def game_cards
-    cards = flop_card_ids.map do |id|
-      Card.find(id)
-    end
-
-    cards << Card.find(turn_card_id)
-    cards << Card.find(river_card_id)
+    flop_cards + [turn_card, river_card]
   end
 
   def determine_winner
@@ -130,19 +145,19 @@ class Game < ActiveRecord::Base
       players[ai_player.name] = ai_player.cards + game_cards
     end
 
-    players[users.last.name] = users.last.cards + game_cards
+    players[user.name] = user.cards + game_cards
     CardAnalyzer.new.determine_winner(players)
   end
 
   def update_game
     if !pocket_cards
-      update(pocket_cards: true)
+      @pocket_cards = true
     elsif pocket_cards && !flop
-      update(flop: true)
+      @flop = true
     elsif flop && !turn
-      update(turn: true)
+      @turn = true
     else #make conditional for fold
-      update(river: true)
+      @river = true
     end
   end
 end

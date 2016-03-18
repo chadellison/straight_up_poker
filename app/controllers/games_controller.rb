@@ -4,22 +4,25 @@ class GamesController < ApplicationController
   end
 
   def create
-    game = Game.create(game_params)
-    current_user.games << game
+    game = Game.new(params[:player_count], [:little_blind])
+    binding.pry
+    # current_user.games << game
+    game.user << current_user
     game.set_up_game
-    redirect_to game_path(game.id)
+    session[:game] = game
+    redirect_to game_path
   end
 
   def show
-    @game = Game.find(params[:id])
+    # @game = Game.find(params[:id])
   end
 
   def edit
-    @game = Game.find(params[:id])
+    # @game = Game.find(params[:id])
   end
 
   def update
-    game = Game.find(params[:id])
+    # game = Game.find(params[:id])
     if params[:user_action]
       game.user_action(params[:user_action], params[:user])
       flash[:ai_action] = game.ai_action(params[:user_action], params[:user])
