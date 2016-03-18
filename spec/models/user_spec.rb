@@ -4,7 +4,6 @@ RSpec.describe User, type: :model do
   it { validate_presence_of(:username) }
   it { validate_uniqueness_of(:username) }
   # it { validate_presence_of(:password) }
-  it { should have_many(:cards)}
   it "has many games" do
     user = User.create(username: "jones", name: "Jones", password: "password")
     assert user.user_games
@@ -13,8 +12,9 @@ RSpec.describe User, type: :model do
 
   it "presents the cards" do
     user = User.create(name: "frank", username: "frank", password: "password")
-    cards = user.cards.create(value: "7", suit: "Hearts")
-    cards = user.cards.create(value: "9", suit: "Spades")
+    card1 = Card.new("7", "Hearts").present_card
+    card2 = Card.new("9", "Spades").present_card
+    user.update(cards: [card1, card2])
     expect(user.present_cards).to eq "7 of Hearts, 9 of Spades"
   end
 

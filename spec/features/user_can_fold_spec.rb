@@ -5,14 +5,6 @@ RSpec.feature "user can fold" do
     User.create(name: "Jones", username: "jones", password: "password")
     AiPlayer.create(name: "Rosco")
 
-    values = (2..10).to_a + ["Ace", "King", "Queen", "Jack"]
-    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
-    values.each do |value|
-      suits.each do |suit|
-        Card.create(value: value, suit: suit)
-      end
-    end
-
     visit root_path
     click_on "Login"
     fill_in "Username", with: "jones"
