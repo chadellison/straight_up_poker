@@ -183,10 +183,18 @@ class CardAnalyzer
   end
 
   def determine_winner(player_hands)
-    player_hands.min_by do |player, hand|
+    winner = player_hands.min_by do |player, hand|
       hand = make_card_objects(hand)
       HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
-    end.first + " wins!"
+    end
+
+    if winner.first.last == AiPlayer
+      ai_player = [Game.last.ai_players.find(winner.first.first)].first
+      ai_player.take_winnings
+    else
+      user = [Game.last.users.find(winner.first.first)]
+      user.first.take_winnings
+    end
   end
 
   def make_card_objects(cards)

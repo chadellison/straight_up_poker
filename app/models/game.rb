@@ -39,18 +39,21 @@ class Game < ActiveRecord::Base
       flop_cards << cards.shuffle!.pop
     end
     update(flop_cards: flop_cards)
+    update(cards: cards)
   end
 
   def deal_turn
     burn_card
     turn_card = cards.shuffle!.pop
     update(turn_card: turn_card)
+    update(cards: cards)
   end
 
   def deal_river
     burn_card
     river_card = cards.shuffle!.pop
     update(river_card: river_card)
+    update(cards: cards)
   end
 
   def burn_card
@@ -70,6 +73,7 @@ class Game < ActiveRecord::Base
       pocket_cards = []
       2.times { pocket_cards << cards.shuffle!.pop }
       player.update(cards: pocket_cards)
+      update(cards: cards)
     end
   end
 
@@ -116,7 +120,7 @@ class Game < ActiveRecord::Base
   def determine_winner
     players = {}
     (ai_players + users).each do |player|
-      players[player.name] = player.cards + game_cards
+      players[[player.id, player.class]] = player.cards + game_cards
     end
 
     CardAnalyzer.new.determine_winner(players)
