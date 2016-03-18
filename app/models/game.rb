@@ -116,7 +116,7 @@ class Game < ActiveRecord::Base
   def determine_winner
     players = {}
     (ai_players + users).each do |player|
-      players[player.name] = player.cards + game_cards
+      players[[player.id, player.class]] = player.cards + game_cards
     end
 
     CardAnalyzer.new.determine_winner(players)

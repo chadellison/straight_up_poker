@@ -28,4 +28,10 @@ class AiPlayer < ActiveRecord::Base
   def present_cards
     cards.join(", ")
   end
+
+  def take_winnings
+    winnings = Game.last.pot
+    update(cash: cash + winnings)
+    name + " wins!"
+  end
 end

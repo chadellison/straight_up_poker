@@ -25,4 +25,10 @@ class User < ActiveRecord::Base
       games.last.update(winner: games.last.ai_players.last.name + " wins!")
     end
   end
+
+  def take_winnings
+    winnings = Game.last.pot
+    update(cash: cash + winnings)
+    name + " wins!"
+  end
 end
