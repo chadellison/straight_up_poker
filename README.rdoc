@@ -1,6 +1,6 @@
 == README
 
-Overview
+* Overview
 This app was designed to create an interface for users to play Texas Holdem agains an
 AI and / or other people. This app will utilize java script, rails, and active record. Users can play
 with or without an account; however, only users who are logged in will have a record of their
