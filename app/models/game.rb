@@ -87,6 +87,7 @@ class Game < ActiveRecord::Base
       user.bet(amount[:current_bet])
     elsif action == "fold"
       user.fold
+      #update game here
     end
   end
 
@@ -153,6 +154,11 @@ class Game < ActiveRecord::Base
                            turn_card: nil,
                            river_card: nil
                            )
+
+    (ai_players + users).each { |player| player.refresh }
     load_deck
+    set_blinds
+    deal_pocket_cards(ai_players)
+    deal_pocket_cards(users)
   end
 end

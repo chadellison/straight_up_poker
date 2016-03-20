@@ -1,18 +1,16 @@
 class AiPlayer < ActiveRecord::Base
-  # has_many :cards
   belongs_to :game
 
   def bet(amount)
-    update(current_bet: amount)
+    update(current_bet: amount.to_i)
     update(total_bet: total_bet + amount)
-    new_amount = cash - amount
+    new_amount = cash - amount.to_i
     update(cash: new_amount)
-    total_ai_bets = game.ai_players.pluck(:total_bet).sum #look into more efficient way of doing this
-    game.update(pot: total_ai_bets + game.users.last.total_bet)
+    Game.last.update(pot: Game.last.pot + amount.to_i)
   end
 
   def call
-    bet_amount = game.users.last.total_bet - total_bet
+    bet_amount = User.maximum(:total_bet) - total_bet
     bet(bet_amount)
     "#{name} Calls!"
   end
@@ -27,6 +25,13 @@ class AiPlayer < ActiveRecord::Base
 
   def present_cards
     cards.join(", ")
+  end
+
+  def refresh
+    update(cards: [],
+            current_bet: 0,
+            total_bet: 0,
+          )
   end
 
   def take_winnings

@@ -23,4 +23,23 @@ RSpec.describe AiPlayer, type: :model do
     ai = AiPlayer.new
     expect(ai.make_snarky_remark).to eq "That's what I thought"
   end
+
+  it "resets ai_players cards and bets" do
+    AiPlayer.create(name: "Martha",
+                  cards: ["King of Hearts", "2 of Spades"],
+                  cash: 800,
+                  current_bet: 200,
+                  total_bet: 400,
+                )
+    expect(AiPlayer.last.cards.count).to eq 2
+    expect(AiPlayer.last.current_bet).to eq 200
+    expect(AiPlayer.last.total_bet).to eq 400
+
+    AiPlayer.last.refresh
+    expect(AiPlayer.last.name).to eq "Martha"
+    expect(AiPlayer.last.cards.count).to eq 0
+    expect(AiPlayer.last.current_bet).to eq 0
+    expect(AiPlayer.last.total_bet).to eq 0
+    expect(AiPlayer.last.cash).to eq 800
+  end
 end
