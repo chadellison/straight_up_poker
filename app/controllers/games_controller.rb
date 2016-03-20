@@ -27,6 +27,7 @@ class GamesController < ApplicationController
     else
       game.game_action
     end
+    game.refresh if params["refresh"]
     redirect_to game_path(game.id)
   end
 
