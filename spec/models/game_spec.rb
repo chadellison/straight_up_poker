@@ -150,4 +150,79 @@ RSpec.describe Game, type: :model do
     game.update(river_card: card5)
     expect(game.determine_winner).to eq "jones wins!"
   end
+
+  it "resets all the game values except player count and blinds" do
+    User.create(name: "Rosco",
+                                   username: "Rosco",
+                                   password: "Rosco",
+                                   current_bet: 200,
+                                   total_bet: 400)
+
+    AiPlayer.create(name: "Mia",
+                                 current_bet: 200,
+                                 total_bet: 400)
+
+    Game.create(winner: "Rosco wins!",
+    player_count: 4,
+    little_blind: 150,
+    big_blind: 300,
+    bets: nil,
+    hands: nil,
+    pocket_cards: true,
+    flop: true,
+    turn: true,
+    river: true,
+    pot: 1200,
+    cards: ["Ace of Hearts", "King of Spades", "9 of Diamonds"],
+    flop_cards: ["Three of Hearts", "King of Hearts", "10 of Clubs"],
+    turn_card: "7 of Spades",
+    river_card: "6 of Diamonds"
+    )
+    User.create(name: "Rosco",
+                                   username: "Rosco",
+                                   password: "Rosco",
+                                   current_bet: 200,
+                                   total_bet: 400)
+
+    AiPlayer.create(name: "Mia",
+                                 current_bet: 200,
+                                 total_bet: 400)
+
+    Game.last.users << User.last
+    Game.last.ai_players << AiPlayer.last
+
+    expect(Game.last.winner).to eq "Rosco wins!"
+    expect(Game.last.pocket_cards).to eq true
+    expect(Game.last.flop).to eq true
+    expect(Game.last.turn).to eq true
+    expect(Game.last.river).to eq true
+    expect(Game.last.pot).to eq 1200
+    expect(Game.last.cards.count).to eq 3
+    expect(Game.last.flop_cards.count).to eq 3
+    expect(Game.last.turn_card).to eq "7 of Spades"
+    expect(Game.last.river_card).to eq "6 of Diamonds"
+
+    expect(User.last.current_bet).to eq 200
+    expect(User.last.total_bet).to eq 400
+
+    Game.last.refresh
+    expect(Game.last.player_count).to eq 4
+    expect(Game.last.little_blind).to eq 150
+    expect(Game.last.big_blind).to eq 300
+    expect(Game.last.pot).to eq 450
+    expect(Game.last.flop_cards).to eq []
+    refute Game.last.turn_card
+    refute Game.last.river_card
+    refute Game.last.flop
+    refute Game.last.turn
+    refute Game.last.river
+    refute Game.last.winner
+    expect(Game.last.cards.count).to eq 48
+
+    expect(User.last.current_bet).to eq 150
+    expect(User.last.total_bet).to eq 150
+
+    expect(AiPlayer.last.current_bet).to eq 300
+    expect(AiPlayer.last.total_bet).to eq 300
+  end
 end

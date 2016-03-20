@@ -31,8 +31,8 @@ RSpec.feature "user can keep playing" do
     click_on "Deal River"
     click_on "Check"
 
-    expect(User.last.total_bet).to eq 400
-    expect(AiPlayer.last.total_bet).to eq 400
+    expect(User.last.current_bet).to eq 200
+    expect(AiPlayer.last.current_bet).to eq 200
 
     click_on "Show Winner"
 
@@ -42,10 +42,10 @@ RSpec.feature "user can keep playing" do
 
     click_on "Continue"
 
-    expect(Game.last.pot).to eq 0
     expect(Game.last.little_blind).to eq 100
     expect(Game.last.big_blind).to eq 200
     expect(Game.last.player_count).to eq 2
+    expect(Game.last.pot).to eq 300
     expect(Game.last.flop_cards).to eq []
     refute Game.last.turn_card
     refute Game.last.river_card
@@ -53,13 +53,12 @@ RSpec.feature "user can keep playing" do
     refute Game.last.turn
     refute Game.last.river
     refute Game.last.winner
-    expect(Game.last.cards.count).to eq 52
-    expect(Game.last)
+    expect(Game.last.cards.count).to eq 48
 
-    expect(user.current_bet).to eq 0
-    expect(user.total_bet).to eq 0
-    expect(ai_player.current_bet).to eq 0
-    expect(ai_player.total_bet).to eq 0
+    expect(User.last.current_bet).to eq 100
+    # expect(User.last.total_bet).to eq 100
+    expect(AiPlayer.last.current_bet).to eq 200
+    # expect(AiPlayer.last.total_bet).to eq 200
 
     click_on "Fold"
 

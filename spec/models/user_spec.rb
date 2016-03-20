@@ -35,4 +35,26 @@ RSpec.describe User, type: :model do
     user.fold
     expect(Game.last.winner).to eq "Rosco wins!"
   end
+
+  it "resets players cards and bets" do
+    game = Game.create(little_blind: 30, big_blind: 60)
+    game.users.create(username: "jones",
+                            name: "jones",
+                            password: "password",
+                            cards: ["King of Hearts", "2 of Spades"],
+                            cash: 1100,
+                            current_bet: 200,
+                            total_bet: 400,
+                            )
+    expect(User.last.cards.count).to eq 2
+    expect(User.last.current_bet).to eq 200
+    expect(User.last.total_bet).to eq 400
+
+    User.last.refresh
+    expect(User.last.name).to eq "jones"
+    expect(User.last.cards.count).to eq 0
+    expect(User.last.current_bet).to eq 0
+    expect(User.last.total_bet).to eq 0
+    expect(User.last.cash).to eq 1100
+  end
 end

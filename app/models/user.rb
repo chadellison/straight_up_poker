@@ -11,13 +11,11 @@ class User < ActiveRecord::Base
   end
 
   def bet(amount)
-    game = games.last
     update(current_bet: amount)
     update(total_bet: total_bet + amount.to_i)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
-    total_ai_bets = game.ai_players.pluck(:total_bet).sum #look into more efficient way of doing this
-    game.update(pot: total_ai_bets + total_bet)
+    Game.last.update(pot: Game.last.pot + amount.to_i)
   end
 
   def fold
@@ -30,5 +28,12 @@ class User < ActiveRecord::Base
     winnings = Game.last.pot
     update(cash: cash + winnings)
     name + " wins!"
+  end
+
+  def refresh
+    update(cards: [],
+            current_bet: 0,
+            total_bet: 0,
+          )
   end
 end
