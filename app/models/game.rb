@@ -7,8 +7,7 @@ class Game < ActiveRecord::Base
     add_players
     set_blinds
     load_deck
-    deal_pocket_cards(ai_players)
-    deal_pocket_cards(users)
+    deal_pocket_cards(ai_players + users)
   end
 
   def add_players
@@ -80,8 +79,8 @@ class Game < ActiveRecord::Base
   def user_action(action, amount = nil)
     user = users.last
     if action == "call"
-      call_amount = ai_players.maximum(:total_bet)
-      bet_amount = call_amount - user.total_bet
+      total_amount = ai_players.maximum(:total_bet)
+      bet_amount = total_amount - user.total_bet
       user.bet(bet_amount)
     elsif action == "bet"
       user.bet(amount[:current_bet])
@@ -99,6 +98,18 @@ class Game < ActiveRecord::Base
       #for multiple ai_players consider a loop that has an ai take an action based on attributes
     elsif user_action == "call" || "check"
       ai_players.last.check
+    end
+  end
+
+  def display_button
+    if pocket_cards && flop_cards.empty?
+      "Deal Flop"
+    elsif flop && turn_card.nil?
+      "Deal Turn"
+    elsif turn && !river_card
+      "Deal River"
+    elsif river && !winner
+      "Show Winner"
     end
   end
 
@@ -166,7 +177,6 @@ class Game < ActiveRecord::Base
     (ai_players + users).each { |player| player.refresh }
     load_deck
     set_blinds
-    deal_pocket_cards(ai_players)
-    deal_pocket_cards(users)
+    deal_pocket_cards(ai_players + users)
   end
 end

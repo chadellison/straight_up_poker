@@ -59,7 +59,6 @@ RSpec.feature "user can keep playing" do
     expect(User.last.total_bet).to eq 100
     expect(AiPlayer.last.current_bet).to eq 200
     expect(AiPlayer.last.total_bet).to eq 200
-
     click_on "Fold"
 
     click_on "Quit"
