@@ -56,9 +56,9 @@ RSpec.feature "user can keep playing" do
     expect(Game.last.cards.count).to eq 48
 
     expect(User.last.current_bet).to eq 100
-    # expect(User.last.total_bet).to eq 100
+    expect(User.last.total_bet).to eq 100
     expect(AiPlayer.last.current_bet).to eq 200
-    # expect(AiPlayer.last.total_bet).to eq 200
+    expect(AiPlayer.last.total_bet).to eq 200
 
     click_on "Fold"
 

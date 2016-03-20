@@ -114,6 +114,14 @@ class Game < ActiveRecord::Base
     end
   end
 
+  def call_or_check
+    if User.last.total_bet != AiPlayer.maximum(:total_bet)
+      "Call"
+    else
+      "Check"
+    end
+  end
+
   def game_cards
     flop_cards + [turn_card, river_card]
   end
