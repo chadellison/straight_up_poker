@@ -16,7 +16,7 @@
 <% if @game.winner %>
   <h1><%= @game.winner %></h1>
   <p><%= @game.ai_players.last.present_cards %></p>
-  <%= button_to "Continue", games_path("game" => {"player_count" => "#{@game.player_count}", "little_blind" => "#{@game.little_blind}", "big_blind" => "#{@game.big_blind}"}) %>
+  <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch %>
   <%= button_to "Quit", dashboard_path, method: :get %>
 <% elsif @game.pocket_cards && @game.flop_cards.empty? %>
   <%= button_to "Deal Flop", game_path(@game.id), method: :patch %>

@@ -137,4 +137,22 @@ class Game < ActiveRecord::Base
       update(river: true)
     end
   end
+
+  def refresh
+    update(
+                           winner: nil,
+                           bets: nil,
+                           hands: nil,
+                           pocket_cards: false,
+                           flop: false,
+                           turn: false,
+                           river: false,
+                           pot: 0,
+                           cards: [],
+                           flop_cards: [],
+                           turn_card: nil,
+                           river_card: nil
+                           )
+    load_deck
+  end
 end

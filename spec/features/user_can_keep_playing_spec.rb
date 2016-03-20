@@ -32,10 +32,26 @@ RSpec.feature "user can keep playing" do
 
     click_on "Show Winner"
 
+    expect(Game.last.pot).to eq 800
     expect(page).to have_button "Continue"
     expect(page).to have_button "Quit"
 
     click_on "Continue"
+
+    expect(Game.last.pot).to eq 0
+    expect(Game.last.little_blind).to eq 100
+    expect(Game.last.big_blind).to eq 200
+    expect(Game.last.player_count).to eq 2
+    expect(Game.last.flop_cards).to eq []
+    refute Game.last.turn_card
+    refute Game.last.river_card
+    refute Game.last.flop
+    refute Game.last.turn
+    refute Game.last.river
+    refute Game.last.winner
+    expect(Game.last.cards.count).to eq 52
+    expect(Game.last)
+
     click_on "Fold"
 
     click_on "Quit"
