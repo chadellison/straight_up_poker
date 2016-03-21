@@ -6,8 +6,20 @@ class Game < ActiveRecord::Base
   def set_up_game
     add_players
     set_blinds
+    #ais take action here...
+    #all_players[2]..
     load_deck
-    deal_pocket_cards(ai_players + users)
+    deal_pocket_cards(all_players)
+  end
+
+  def initial_actions
+    player = 2
+    actions = []
+    until all_players[player].class == User do
+      actions << all_players[player].take_action
+      player += 1
+    end if all_players.count > 2
+    actions.join("\n")
   end
 
   def add_players
@@ -16,8 +28,10 @@ class Game < ActiveRecord::Base
   end
 
   def set_blinds
-    users.last.bet(little_blind)
-    ai_players.first.bet(big_blind)
+    all_players.first.bet(little_blind)
+    all_players[1].bet(big_blind)
+    # users.last.bet(little_blind)
+    # ai_players.first.bet(big_blind)
   end
 
   def load_deck
@@ -29,6 +43,10 @@ class Game < ActiveRecord::Base
       end
     end
     update(cards: cards)
+  end
+
+  def all_players
+    users + ai_players
   end
 
   def deal_flop
@@ -90,15 +108,33 @@ class Game < ActiveRecord::Base
     end
   end
 
-  def ai_action(user_action, amount = nil)
-    if user_action == "fold"
-      ai_players.last.make_snarky_remark
-    elsif user_action == "bet"
-      ai_players.last.call
-      #for multiple ai_players consider a loop that has an ai take an action based on attributes
-    elsif user_action == "call" || "check"
-      ai_players.last.check
+  def ai_action(user_action = nil, amount = nil)
+    first_two = []
+    first_two = all_players.first(2) if all_players.index(users.last) > 1
+
+    if user_action
+      (all_players[(all_players.index(users.last) + 1)..-1] + first_two).map do |player|
+        player.take_action(user_action, amount)
+      end.join("\n")
+    else
+      all_players[0...all_players.index(users.last)].map do |player|
+        player.take_action
+      end.join("\n")
     end
+    # ai_players.map do |player|
+    #   player.take_action(user_action, amount)
+    # end.join("\n")
+    # if user_action == "fold"
+    #   ai_players.last.make_snarky_remark
+    # elsif user_action == "bet"
+    #   ai_players.last.call
+    #   #for multiple ai_players consider a loop that has an ai take an action based on attributes
+    # elsif user_action == "call" || "check"
+    #   ai_players.last.check
+    # elsif user_action.nil?
+    #   ai_players.last.call if ai_players.maximum(:total_bet) > ai_players.last.total_bet
+    #   ai_players.last.check if ai_players.maximum(:total_bet) == ai_players.last.total_bet
+    # end
   end
 
   def display_button
