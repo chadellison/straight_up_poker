@@ -65,5 +65,21 @@ RSpec.feature "user can keep playing" do
 
     expect(page).to have_content "Welcome Oscar"
     expect(current_path).to eq dashboard_path
+
+    click_on "Play"
+    select "2", from: "Player count"
+    select "75", from: "Little blind"
+    select "150", from: "Big blind"
+    click_on "Play Poker"
+
+    expect(Game.last.little_blind).to eq 75
+    expect(Game.last.big_blind).to eq 150
+    expect(Game.last.pot).to eq 225
+    expect(User.last.current_bet).to eq 75
+    expect(User.last.total_bet).to eq 75
+
+    click_on "Call"
+    expect(User.last.current_bet).to eq 75
+    expect(User.last.total_bet).to eq 150
   end
 end

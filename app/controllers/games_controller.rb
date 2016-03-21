@@ -5,7 +5,7 @@ class GamesController < ApplicationController
 
   def create
     game = Game.create(game_params)
-    current_user.games << game
+    current_user.refresh.games << game
     game.set_up_game
     redirect_to game_path(game.id)
   end
@@ -20,8 +20,9 @@ class GamesController < ApplicationController
 
   def update
     game = Game.find(params[:id])
-    if params[:user_action]
-      game.user_action(params[:user_action], params[:user])
+    if game.user_action(params[:user_action], params[:user]) == "Error"
+      flash[:error] = "You cannot bet less than the little blind or more than you have"
+    elsif params[:user_action]
       flash[:ai_action] = game.ai_action(params[:user_action], params[:user])
       game.update_game
     else

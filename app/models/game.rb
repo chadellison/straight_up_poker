@@ -12,7 +12,7 @@ class Game < ActiveRecord::Base
 
   def add_players
     players = AiPlayer.first(Game.last.player_count - 1)
-    players.each { |player| Game.last.ai_players << player }
+    players.each { |player| Game.last.ai_players << player.refresh }
   end
 
   def set_blinds
