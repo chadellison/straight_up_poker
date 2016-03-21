@@ -32,6 +32,7 @@ class AiPlayer < ActiveRecord::Base
             current_bet: 0,
             total_bet: 0,
           )
+    self
   end
 
   def take_winnings
