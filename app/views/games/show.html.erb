@@ -23,6 +23,6 @@
   <%= button_to @game.display_button, game_path(@game.id), method: :patch %>
 <% else %>
   <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get %>
-  <%= button_to @game.call_or_check, game_path(game_id: @game.id, user_action: @game.call_or_check.downcase.to_sym), method: :patch %>
+  <%= button_to call_or_check(current_user), game_path(game_id: @game.id, user_action: call_or_check(current_user).downcase.to_sym), method: :patch %>
   <%= button_to "Fold", game_path(game_id: @game.id, user_action: :fold), method: :patch %>
 <% end %>
