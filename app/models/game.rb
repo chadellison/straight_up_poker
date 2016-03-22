@@ -45,7 +45,11 @@ class Game < ActiveRecord::Base
   end
 
   def order_players
-    ordered_players = (ai_players.map(&:id).insert(users.last.round, users.last.id))
+    if all_players.empty?
+      ordered_players = ([users.last.id] + ai_players.map(&:id))
+    else
+      ordered_players = all_players.rotate(-1)
+    end
     update(all_players: ordered_players)
   end
 
