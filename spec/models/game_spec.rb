@@ -81,14 +81,14 @@ RSpec.describe Game, type: :model do
     expect(game.ai_action(user_action)).to eq "Rosco Checks!"
   end
 
-  it "can perform an action based on other ais actions" do
-    game = Game.create
-    game.users.create(name: "jones", username: "jones", password: "password", round: 2)
-    game.ai_players.create(name: "Rosco")
-    game.ai_players.create(name: "Oscar")
-    game.order_players
-    expect(game.ai_action).to eq "Rosco Checks!""\n""Oscar Checks!"
-  end
+  # it "can perform an action based on other ais actions" do
+  #   game = Game.create
+  #   game.users.create(name: "jones", username: "jones", password: "password", round: 2)
+  #   game.ai_players.create(name: "Rosco")
+  #   game.ai_players.create(name: "Oscar")
+  #   game.order_players
+  #   expect(game.ai_action).to eq "Rosco Checks!""\n""Oscar Checks!"
+  # end
 
   it "updates the state of the game" do
     game = Game.create
