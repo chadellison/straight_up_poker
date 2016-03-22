@@ -5,6 +5,7 @@ class Game < ActiveRecord::Base
 
   def set_up_game
     add_players
+    order_players
     set_blinds
     #ais take action here...
     #all_players[2]..
@@ -15,8 +16,8 @@ class Game < ActiveRecord::Base
   def initial_actions
     player = 2
     actions = []
-    until all_players[player].class == User do
-      actions << all_players[player].take_action
+    until ordered_players[player].class == User || player == all_players.size do
+      actions << ordered_players[player].take_action
       player += 1
     end if all_players.count > 2
     actions.join("\n")
@@ -28,7 +29,8 @@ class Game < ActiveRecord::Base
   end
 
   def set_blinds
-    all_players.first.bet(little_blind)
+
+    all_players[0].bet(little_blind)
     all_players[1].bet(big_blind)
     # users.last.bet(little_blind)
     # ai_players.first.bet(big_blind)
@@ -45,8 +47,13 @@ class Game < ActiveRecord::Base
     update(cards: cards)
   end
 
-  def all_players
-    users + ai_players
+  # def all_players
+  #   ai_players + users
+  # end
+
+  def order_players
+    ordered_players = (ai_players + users).rotate(users.last.round * -1)
+    update(all_players: ordered_players)
   end
 
   def deal_flop
@@ -109,13 +116,21 @@ class Game < ActiveRecord::Base
   end
 
   def ai_action(user_action = nil, amount = nil)
-    first_two = []
-    first_two = all_players.first(2) if all_players.index(users.last) > 1
+    first_two = {}
+    user_number = ordered_players.detect { |index, player| player.class == User }.first
+    first_two = ordered_players.first(2) if user_number > 1
 
     if user_action
-      (all_players[(all_players.index(users.last) + 1)..-1] + first_two).map do |player|
+      # binding.pry
+      (ordered_players.merge(first_two)).select do |index, player|
+        index > user_number
+      end.map do |index, player|
         player.take_action(user_action, amount)
-      end.join("\n")
+      end.join(" ")
+      # (user_number + 1)..-1 +
+      # (all_players[(all_players.index(users.last) + 1)..-1] + first_two).map do |player|
+      #   player.take_action(user_action, amount)
+      # end.join("\n")
     else
       all_players[0...all_players.index(users.last)].map do |player|
         player.take_action

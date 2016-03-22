@@ -20,11 +20,12 @@ RSpec.feature "user can play multiple ais" do
     select "100", from: "Big blind"
     click_on "Play Poker"
 
-    expect(Game.last.all_players[-2]).to eq User.last
+    expect(Game.last.ordered_players[0]).to eq User.last
+# save_and_open_page
     expect(page).to have_content "Martha Calls!"
+# save_and_open_page
     click_on "Call"
     expect(User.last.cash).to eq 900
-# save_and_open_page
     expect(page).to have_content "Mary Calls"
     expect(page).to have_content "Frank Calls"
     expect(page).to have_content "Oscar Checks"
