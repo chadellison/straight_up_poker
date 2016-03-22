@@ -17,6 +17,7 @@ RSpec.feature "user cannot bet less than little blind or more than total cash" d
     select "2", from: "Player count"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
+    # binding.pry
     click_on "Play Poker"
 
     click_button "Bet / Raise"

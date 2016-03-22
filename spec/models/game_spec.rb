@@ -14,11 +14,13 @@ RSpec.describe Game, type: :model do
 
   it "sets the blinds" do
     player = AiPlayer.create(name: "Trump")
-    user = User.create(name: "frank", username: "frank", password: "password")
+    user = User.create(name: "frank", username: "frank", password: "password", round: 0)
     game = Game.create(player_count: 2, little_blind: 50, big_blind: 100)
 
     game.ai_players << player
     game.users << user
+    game.order_players
+
     expect(player.cash).to eq 1000
     expect(user.cash).to eq 1000
     game.set_blinds
@@ -70,11 +72,22 @@ RSpec.describe Game, type: :model do
     expect(game.cards.count).to eq 52
   end
 
-  it "ai's can perform an action based on a user action" do
+  it "can perform an action based on a user action" do
     game = Game.create
+    game.users.create(name: "jones", username: "jones", password: "password", round: 0)
     game.ai_players.create(name: "Rosco")
+    game.order_players
     user_action = "check"
     expect(game.ai_action(user_action)).to eq "Rosco Checks!"
+  end
+
+  it "can perform an action based on other ais actions" do
+    game = Game.create
+    game.users.create(name: "jones", username: "jones", password: "password", round: 2)
+    game.ai_players.create(name: "Rosco")
+    game.ai_players.create(name: "Oscar")
+    game.order_players
+    expect(game.ai_action).to eq "Rosco Checks!""\n""Oscar Checks!"
   end
 
   it "updates the state of the game" do
@@ -151,12 +164,21 @@ RSpec.describe Game, type: :model do
     expect(game.determine_winner).to eq "jones wins!"
   end
 
+  it "finds all players by id" do
+    game = Game.create
+    user = game.users.create(name: "frank", username: "frank", password: "password", round: 0)
+    ai_player = game.ai_players.create(name: "jill")
+    game.order_players
+    expect(Game.last.find_players).to eq [User.find(user.id), AiPlayer.find(ai_player.id)]
+  end
+
   it "resets all the game values except player count and blinds" do
     User.create(name: "Rosco",
                                    username: "Rosco",
                                    password: "Rosco",
                                    current_bet: 200,
-                                   total_bet: 400)
+                                   total_bet: 400,
+                                   round: 0)
 
     AiPlayer.create(name: "Mia",
                                  current_bet: 200,
@@ -191,6 +213,8 @@ RSpec.describe Game, type: :model do
     Game.last.users << User.last
     Game.last.ai_players << AiPlayer.last
 
+    Game.last.order_players
+
     expect(Game.last.winner).to eq "Rosco wins!"
     expect(Game.last.pocket_cards).to eq true
     expect(Game.last.flop).to eq true
@@ -219,10 +243,10 @@ RSpec.describe Game, type: :model do
     refute Game.last.winner
     expect(Game.last.cards.count).to eq 48
 
-    expect(User.last.current_bet).to eq 150
-    expect(User.last.total_bet).to eq 150
+    expect(User.last.current_bet).to eq 300
+    expect(User.last.total_bet).to eq 300
 
-    expect(AiPlayer.last.current_bet).to eq 300
-    expect(AiPlayer.last.total_bet).to eq 300
+    expect(AiPlayer.last.current_bet).to eq 150
+    expect(AiPlayer.last.total_bet).to eq 150
   end
 end

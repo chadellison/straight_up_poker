@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318183811) do
+ActiveRecord::Schema.define(version: 20160322053814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,13 +20,14 @@ ActiveRecord::Schema.define(version: 20160318183811) do
     t.string   "name"
     t.integer  "skill"
     t.string   "bet_style"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "game_id"
     t.integer  "cash",        default: 1000
     t.integer  "current_bet", default: 0
     t.integer  "total_bet",   default: 0
-    t.string   "cards",       default: [],                array: true
+    t.string   "cards",       default: [],                 array: true
+    t.boolean  "action",      default: false
   end
 
   create_table "games", force: :cascade do |t|
@@ -47,6 +48,7 @@ ActiveRecord::Schema.define(version: 20160318183811) do
     t.string   "flop_cards",   default: [],                 array: true
     t.string   "turn_card"
     t.string   "river_card"
+    t.string   "all_players",  default: [],                 array: true
   end
 
   create_table "user_games", force: :cascade do |t|
@@ -67,6 +69,9 @@ ActiveRecord::Schema.define(version: 20160318183811) do
     t.integer  "current_bet",     default: 0
     t.integer  "total_bet",       default: 0
     t.string   "cards",           default: [],                array: true
+    t.integer  "integer",         default: 0
+    t.integer  "round",           default: -1
+    t.boolean  "action",          default: true
   end
 
 end

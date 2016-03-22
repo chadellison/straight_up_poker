@@ -35,6 +35,32 @@ class AiPlayer < ActiveRecord::Base
     self
   end
 
+  def take_action(user_action = nil, amount = nil)
+    if user_action.nil? && Game.last.ai_players.maximum(:total_bet) > total_bet
+      call_ai
+      # else
+      #   check
+      # end
+
+    elsif user_action == "fold"
+      make_snarky_remark
+    elsif user_action == "bet" || "call"
+      if total_bet == User.last.total_bet
+        check
+      else
+        call
+      end
+    else
+      check
+    end
+  end
+
+  def call_ai
+    bet_amount = game.ai_players.maximum(:total_bet) - total_bet
+    bet(bet_amount)
+    "#{name} Calls!"
+  end
+
   def take_winnings
     winnings = Game.last.pot
     update(cash: cash + winnings)

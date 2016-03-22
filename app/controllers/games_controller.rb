@@ -7,6 +7,7 @@ class GamesController < ApplicationController
     game = Game.create(game_params)
     current_user.refresh.games << game
     game.set_up_game
+    flash[:initial_actions] = game.initial_actions
     redirect_to game_path(game.id)
   end
 

@@ -5,9 +5,22 @@ class Game < ActiveRecord::Base
 
   def set_up_game
     add_players
+    order_players
     set_blinds
     load_deck
-    deal_pocket_cards(ai_players + users)
+    deal_pocket_cards(find_players)
+  end
+
+  def initial_actions
+    player = 2
+    actions = []
+
+    until player == users.last.round || player == find_players.size do
+      find_players[player].update(action: true)
+      actions << find_players[player].take_action
+      player += 1
+    end if find_players.count > 2
+    actions.join("\n")
   end
 
   def add_players
@@ -16,8 +29,8 @@ class Game < ActiveRecord::Base
   end
 
   def set_blinds
-    users.last.bet(little_blind)
-    ai_players.first.bet(big_blind)
+    find_players[0].bet(little_blind)
+    find_players[1].bet(big_blind)
   end
 
   def load_deck
@@ -29,6 +42,11 @@ class Game < ActiveRecord::Base
       end
     end
     update(cards: cards)
+  end
+
+  def order_players
+    ordered_players = (ai_players.map(&:id).insert(users.last.round, users.last.id))
+    update(all_players: ordered_players)
   end
 
   def deal_flop
@@ -76,6 +94,18 @@ class Game < ActiveRecord::Base
     end
   end
 
+  def find_players
+    all_players[users.last.round] = all_players[users.last.round].to_i
+
+    all_players.map do |id|
+      if id.class == Fixnum
+        User.find(id)
+      else
+        AiPlayer.find(id)
+      end
+    end
+  end
+
   def user_action(action, amount = nil)
     user = users.last
     if action == "call"
@@ -86,19 +116,16 @@ class Game < ActiveRecord::Base
       user.bet(amount[:current_bet])
     elsif action == "fold"
       user.fold
-      #update game here
     end
   end
 
-  def ai_action(user_action, amount = nil)
-    if user_action == "fold"
-      ai_players.last.make_snarky_remark
-    elsif user_action == "bet"
-      ai_players.last.call
-      #for multiple ai_players consider a loop that has an ai take an action based on attributes
-    elsif user_action == "call" || "check"
-      ai_players.last.check
-    end
+  def ai_action(user_action = nil, amount = nil)
+    find_players.select do |player|
+      player.action == false
+    end.map do |player|
+      player.update(action: true)
+      player.take_action(user_action, amount)
+    end.join("\n")
   end
 
   def display_button
@@ -123,6 +150,7 @@ class Game < ActiveRecord::Base
     else
       update(winner: determine_winner)
     end
+    ai_players.each { |player| player.update(action: false) }
   end
 
   def call_or_check
@@ -174,8 +202,10 @@ class Game < ActiveRecord::Base
                            river_card: nil
                            )
 
-    (ai_players + users).each { |player| player.refresh }
+    find_players.each { |player| player.refresh }
     load_deck
+    users.last.update(round: users.last.round + 1)
+    order_players
     set_blinds
     deal_pocket_cards(ai_players + users)
   end
