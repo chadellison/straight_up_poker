@@ -18,7 +18,6 @@ RSpec.feature "user can keep playing" do
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"
-
     click_on "Call"
     click_on "Deal Flop"
     click_on "Check"
@@ -55,10 +54,11 @@ RSpec.feature "user can keep playing" do
     refute Game.last.winner
     expect(Game.last.cards.count).to eq 48
 
-    expect(User.last.current_bet).to eq 100
-    expect(User.last.total_bet).to eq 100
-    expect(AiPlayer.last.current_bet).to eq 200
-    expect(AiPlayer.last.total_bet).to eq 200
+    expect(User.last.current_bet).to eq 200
+    expect(User.last.total_bet).to eq 200
+    expect(AiPlayer.last.current_bet).to eq 100
+    expect(AiPlayer.last.total_bet).to eq 100
+
     click_on "Fold"
 
     click_on "Quit"

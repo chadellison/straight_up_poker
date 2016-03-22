@@ -7,19 +7,19 @@ class Game < ActiveRecord::Base
     add_players
     order_players
     set_blinds
-    #ais take action here...
-    #all_players[2]..
     load_deck
-    deal_pocket_cards(all_players)
+    deal_pocket_cards(find_players)
   end
 
   def initial_actions
     player = 2
     actions = []
-    until ordered_players[player].class == User || player == all_players.size do
-      actions << ordered_players[player].take_action
+
+    until player == users.last.round || player == find_players.size do
+      find_players[player].update(action: true)
+      actions << find_players[player].take_action
       player += 1
-    end if all_players.count > 2
+    end if find_players.count > 2
     actions.join("\n")
   end
 
@@ -29,11 +29,8 @@ class Game < ActiveRecord::Base
   end
 
   def set_blinds
-
-    all_players[0].bet(little_blind)
-    all_players[1].bet(big_blind)
-    # users.last.bet(little_blind)
-    # ai_players.first.bet(big_blind)
+    find_players[0].bet(little_blind)
+    find_players[1].bet(big_blind)
   end
 
   def load_deck
@@ -47,12 +44,8 @@ class Game < ActiveRecord::Base
     update(cards: cards)
   end
 
-  # def all_players
-  #   ai_players + users
-  # end
-
   def order_players
-    ordered_players = (ai_players + users).rotate(users.last.round * -1)
+    ordered_players = (ai_players.map(&:id).insert(users.last.round, users.last.id))
     update(all_players: ordered_players)
   end
 
@@ -101,6 +94,18 @@ class Game < ActiveRecord::Base
     end
   end
 
+  def find_players
+    all_players[users.last.round] = all_players[users.last.round].to_i
+
+    all_players.map do |id|
+      if id.class == Fixnum
+        User.find(id)
+      else
+        AiPlayer.find(id)
+      end
+    end
+  end
+
   def user_action(action, amount = nil)
     user = users.last
     if action == "call"
@@ -111,45 +116,16 @@ class Game < ActiveRecord::Base
       user.bet(amount[:current_bet])
     elsif action == "fold"
       user.fold
-      #update game here
     end
   end
 
   def ai_action(user_action = nil, amount = nil)
-    first_two = {}
-    user_number = ordered_players.detect { |index, player| player.class == User }.first
-    first_two = ordered_players.first(2) if user_number > 1
-
-    if user_action
-      # binding.pry
-      (ordered_players.merge(first_two)).select do |index, player|
-        index > user_number
-      end.map do |index, player|
-        player.take_action(user_action, amount)
-      end.join(" ")
-      # (user_number + 1)..-1 +
-      # (all_players[(all_players.index(users.last) + 1)..-1] + first_two).map do |player|
-      #   player.take_action(user_action, amount)
-      # end.join("\n")
-    else
-      all_players[0...all_players.index(users.last)].map do |player|
-        player.take_action
-      end.join("\n")
-    end
-    # ai_players.map do |player|
-    #   player.take_action(user_action, amount)
-    # end.join("\n")
-    # if user_action == "fold"
-    #   ai_players.last.make_snarky_remark
-    # elsif user_action == "bet"
-    #   ai_players.last.call
-    #   #for multiple ai_players consider a loop that has an ai take an action based on attributes
-    # elsif user_action == "call" || "check"
-    #   ai_players.last.check
-    # elsif user_action.nil?
-    #   ai_players.last.call if ai_players.maximum(:total_bet) > ai_players.last.total_bet
-    #   ai_players.last.check if ai_players.maximum(:total_bet) == ai_players.last.total_bet
-    # end
+    find_players.select do |player|
+      player.action == false
+    end.map do |player|
+      player.update(action: true)
+      player.take_action(user_action, amount)
+    end.join("\n")
   end
 
   def display_button
@@ -174,6 +150,7 @@ class Game < ActiveRecord::Base
     else
       update(winner: determine_winner)
     end
+    ai_players.each { |player| player.update(action: false) }
   end
 
   def call_or_check
@@ -225,8 +202,10 @@ class Game < ActiveRecord::Base
                            river_card: nil
                            )
 
-    (ai_players + users).each { |player| player.refresh }
+    find_players.each { |player| player.refresh }
     load_deck
+    users.last.update(round: users.last.round + 1)
+    order_players
     set_blinds
     deal_pocket_cards(ai_players + users)
   end

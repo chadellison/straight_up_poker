@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
     update(cards: [],
             current_bet: 0,
             total_bet: 0,
+            round: 0,
           )
     self
   end

@@ -20,37 +20,54 @@ RSpec.feature "user can play multiple ais" do
     select "100", from: "Big blind"
     click_on "Play Poker"
 
-    expect(Game.last.ordered_players[0]).to eq User.last
-# save_and_open_page
+    expect(Game.last.find_players[0]).to eq User.last
+
+    expect(User.last.cash).to eq 950
+    expect(Game.last.find_players[1].cash).to eq 900
+    expect(page).to have_content "Frank Calls!"
+    expect(page).to have_content "Oscar Calls!"
     expect(page).to have_content "Martha Calls!"
-# save_and_open_page
     click_on "Call"
-    expect(User.last.cash).to eq 900
-    expect(page).to have_content "Mary Calls"
-    expect(page).to have_content "Frank Calls"
-    expect(page).to have_content "Oscar Checks"
+    expect(page).to have_content "Mary Checks"
 
     click_on "Deal Flop"
-    click_on "Fold"
+    click_on "Check"
 
     expect(page).to have_content "Mary Checks"
     expect(page).to have_content "Frank Checks"
     expect(page).to have_content "Oscar Checks"
     expect(page).to have_content "Martha Checks"
 
-    expect(page).to have_content Game.last.winner
+    click_on "Deal Turn"
 
-    click_on "Continue"
+    click_on "Bet / Raise"
+    fill_in "Current bet", with: "200"
+    click_on "Submit"
 
-    expect(Game.last.all_players[-3]).to eq User.last
-    expect(User.last.cash).to eq 800
-    expect(page).to have_content "Mary Calls"
-    expect(page).to have_content "Frank Calls"
-    expect(page).to have_content "Oscar Calls"
-    expect(page).to have_content "Martha Calls"
+    expect(page).to have_content "Mary Calls!"
+    expect(page).to have_content "Frank Calls!"
+    expect(page).to have_content "Oscar Calls!"
+    expect(page).to have_content "Martha Calls!"
+
+    click_on "Deal River"
 
     click_on "Check"
 
-    click_on "Deal Flop"
+    expect(page).to have_content "Mary Checks"
+    expect(page).to have_content "Frank Checks"
+    expect(page).to have_content "Oscar Checks"
+    expect(page).to have_content "Martha Checks"
+
+    refute Game.last.winner
+
+    click_on "Show Winner"
+
+    assert Game.last.winner
+
+    expect(Game.last.find_players.first).to eq User.last
+    
+    click_on "Continue"
+
+    expect(Game.last.find_players[1]).to eq User.last
   end
 end
