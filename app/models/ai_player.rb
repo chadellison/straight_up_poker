@@ -64,6 +64,6 @@ class AiPlayer < ActiveRecord::Base
   def take_winnings
     winnings = Game.last.pot
     update(cash: cash + winnings)
-    name + " wins!"
+    "#{id} ai_player"
   end
 end

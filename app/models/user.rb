@@ -25,14 +25,14 @@ class User < ActiveRecord::Base
 
   def fold
     if games.last.ai_players.count == 1
-      games.last.update(winner: games.last.ai_players.last.name + " wins!")
+      games.last.update(winner: "#{games.last.ai_players.last.id} ai_player")
     end
   end
 
   def take_winnings
     winnings = Game.last.pot
     update(cash: cash + winnings)
-    name + " wins!"
+    "#{id} user"
   end
 
   def refresh

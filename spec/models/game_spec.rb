@@ -161,7 +161,7 @@ RSpec.describe Game, type: :model do
     card5 = Card.new("9", "Clubs").present_card
 
     game.update(river_card: card5)
-    expect(game.determine_winner).to eq "jones wins!"
+    expect(game.determine_winner).to eq "#{user.id} user"
   end
 
   it "finds all players by id" do

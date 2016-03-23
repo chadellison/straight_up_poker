@@ -41,7 +41,7 @@ RSpec.feature "user can play poker" do
     game = Game.last
     user = User.last
     expect(page).to have_content "Pocket: " + user.present_cards
-    expect(page).to have_content "Flop: " + game.present_flop
+    expect(page).to have_content "Flop: " + Game.last.flop_cards.join(", ")
 
     click_on "Check"
     expect(page).to have_content "Rosco Checks"
@@ -50,7 +50,7 @@ RSpec.feature "user can play poker" do
     game_w_turn = Game.last
 
     expect(page).to have_content "Pocket: " + user.present_cards
-    expect(page).to have_content "Flop: " + game.present_flop
+    expect(page).to have_content "Flop: " + Game.last.flop_cards.join(", ")
     expect(page).to have_content "Turn: " + game_w_turn.turn_card
 
     click_on "Check"
@@ -61,7 +61,7 @@ RSpec.feature "user can play poker" do
     game_w_river = Game.last
 
     expect(page).to have_content "Pocket: " + user.present_cards
-    expect(page).to have_content "Flop: " + game.present_flop
+    expect(page).to have_content "Flop: " + Game.last.flop_cards.join(", ")
     expect(page).to have_content "Turn: " + game_w_turn.turn_card
     expect(page).to have_content "River: " + game_w_river.river_card
 
