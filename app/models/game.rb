@@ -81,14 +81,6 @@ class Game < ActiveRecord::Base
     cards.pop
   end
 
-  def present_flop
-    flop_cards.join(", ")
-  end
-
-  def present_river
-    Card.find(river_card_id).present_card
-  end
-
   def deal_pocket_cards(players)
     players.each do |player|
       pocket_cards = []
@@ -130,18 +122,6 @@ class Game < ActiveRecord::Base
       player.update(action: true)
       player.take_action(user_action, amount)
     end.join("\n")
-  end
-
-  def display_button
-    if pocket_cards && flop_cards.empty?
-      "Deal Flop"
-    elsif flop && turn_card.nil?
-      "Deal Turn"
-    elsif turn && !river_card
-      "Deal River"
-    elsif river && !winner
-      "Show Winner"
-    end
   end
 
   def game_action

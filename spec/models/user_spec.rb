@@ -33,7 +33,7 @@ RSpec.describe User, type: :model do
     ai_player = game.ai_players.create(name: "Rosco")
     user = game.users.create(name: "Jones", username: "jones", password: "password")
     user.fold
-    expect(Game.last.winner).to eq "Rosco wins!"
+    expect(AiPlayer.find(Game.last.winner.split.first).name + " wins!").to eq "Rosco wins!"
   end
 
   it "resets players cards and bets" do

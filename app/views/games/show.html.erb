@@ -7,7 +7,7 @@
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>
 <h3>Pocket: <%= @game.users.last.present_cards %></h3>
-<h3>Flop: <%= @game.present_flop %></h3>
+<h3>Flop: <%= present_flop(@game) %></h3>
 <h3>Turn: <%= @game.turn_card %></h3>
 <h3>River: <%= @game.river_card %></h3>
 <h3><%= flash[:initial_actions] %></h3>
@@ -15,12 +15,12 @@
 <h3><%= flash[:ai_action] %></h3>
 
 <% if @game.winner %>
-  <h1><%= @game.winner %></h1>
-  <p><%= @game.ai_players.last.present_cards %></p>
+  <h1><%= declare_winner(@game) %></h1>
+  <p><%= winning_hand(@game) %></p>
   <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch %>
   <%= button_to "Quit", dashboard_path, method: :get %>
-<% elsif @game.display_button %>
-  <%= button_to @game.display_button, game_path(@game.id), method: :patch %>
+<% elsif display_button(@game) %>
+  <%= button_to display_button(@game), game_path(@game.id), method: :patch %>
 <% else %>
   <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get %>
   <%= button_to call_or_check(current_user), game_path(game_id: @game.id, user_action: call_or_check(current_user).downcase.to_sym), method: :patch %>
