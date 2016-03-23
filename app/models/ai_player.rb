@@ -66,12 +66,6 @@ class AiPlayer < ActiveRecord::Base
     end
   end
 
-  # def call_ai
-  #   bet_amount = game.ai_players.maximum(:total_bet) - total_bet
-  #   bet(bet_amount)
-  #   "#{name} Calls!"
-  # end
-
   def take_winnings
     winnings = Game.last.pot
     update(cash: cash + winnings)

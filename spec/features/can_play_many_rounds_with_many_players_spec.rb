@@ -54,8 +54,8 @@ RSpec.feature "user can play many rounds with many players" do
     expect(Game.last.find_players[2]).to eq AiPlayer.first
 # save_and_open_page
 # binding.pry
-    expect(page).to have_content "Frank Calls"
     expect(page).to have_content "Mary Calls"
+    expect(page).to have_content "Frank Calls"
     click_on "Check"
 
     click_on "Deal Flop"

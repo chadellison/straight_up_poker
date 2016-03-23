@@ -20,6 +20,7 @@ class GamesController < ApplicationController
   end
 
   def update
+    # binding.pry
     game = Game.find(params[:id])
     if game.user_action(params[:user_action], params[:user]) == "Error"
       flash[:error] = "You cannot bet less than the little blind or more than you have"
@@ -30,6 +31,7 @@ class GamesController < ApplicationController
       game.game_action
     end
     game.refresh if params["refresh"]
+    # flash[:initial_actions] = game.initial_actions  <--- this is the right direction... i think
     redirect_to game_path(game.id)
   end
 
