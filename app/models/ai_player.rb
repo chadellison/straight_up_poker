@@ -6,12 +6,11 @@ class AiPlayer < ActiveRecord::Base
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
-    Game.last.update(pot: Game.last.pot + amount.to_i)
+    game.update(pot: game.pot + amount.to_i)
   end
 
-  def call
-    bet_amount = User.maximum(:total_bet) - total_bet
-    bet(bet_amount)
+  def call(amount)
+    bet(amount)
     "#{name} Calls!"
   end
 
@@ -36,30 +35,42 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def take_action(user_action = nil, amount = nil)
-    if user_action.nil? && Game.last.ai_players.maximum(:total_bet) > total_bet
-      call_ai
-      # else
-      #   check
-      # end
+    # highest_bet = 0
+    # if game.ai_players.maximum(:total_bet) > game.users.maximum(:total_bet)
+    #   highest_bet = game.ai_players.maximum(:total_bet)
+    # else
+    #   highest_bet = game.users.maximum(:total_bet)
+    # end
+    #
+    # if highest_bet > total_bet
+    #   # binding.pry
+    #   call(highest_bet - total_bet)
+    # elsif user_action == "fold"
+    #   make_snarky_remark
+    # else
+    #   check
+    # end
 
+    if user_action.nil? && game.ai_players.maximum(:total_bet) > total_bet
+      call(game.ai_players.maximum(:total_bet) - total_bet)
     elsif user_action == "fold"
       make_snarky_remark
     elsif user_action == "bet" || "call"
-      if total_bet == User.last.total_bet
+      if total_bet == game.users.maximum(:total_bet)
         check
       else
-        call
+        call(game.users.maximum(:total_bet) - total_bet)
       end
     else
       check
     end
   end
 
-  def call_ai
-    bet_amount = game.ai_players.maximum(:total_bet) - total_bet
-    bet(bet_amount)
-    "#{name} Calls!"
-  end
+  # def call_ai
+  #   bet_amount = game.ai_players.maximum(:total_bet) - total_bet
+  #   bet(bet_amount)
+  #   "#{name} Calls!"
+  # end
 
   def take_winnings
     winnings = Game.last.pot

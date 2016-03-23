@@ -65,7 +65,7 @@ RSpec.feature "user can play multiple ais" do
     assert Game.last.winner
 
     expect(Game.last.find_players.first).to eq User.last
-    
+
     click_on "Continue"
 
     expect(Game.last.find_players[1]).to eq User.last
