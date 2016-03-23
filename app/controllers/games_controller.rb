@@ -28,8 +28,9 @@ class GamesController < ApplicationController
       game.update_game
     else
       game.game_action
+      game.refresh if params["refresh"]
+      flash[:initial_actions] = game.initial_actions
     end
-    game.refresh if params["refresh"]
     redirect_to game_path(game.id)
   end
 

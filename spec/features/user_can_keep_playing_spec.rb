@@ -44,7 +44,7 @@ RSpec.feature "user can keep playing" do
     expect(Game.last.little_blind).to eq 100
     expect(Game.last.big_blind).to eq 200
     expect(Game.last.player_count).to eq 2
-    expect(Game.last.pot).to eq 300
+    expect(Game.last.pot).to eq 400
     expect(Game.last.flop_cards).to eq []
     refute Game.last.turn_card
     refute Game.last.river_card
@@ -57,7 +57,7 @@ RSpec.feature "user can keep playing" do
     expect(User.last.current_bet).to eq 200
     expect(User.last.total_bet).to eq 200
     expect(AiPlayer.last.current_bet).to eq 100
-    expect(AiPlayer.last.total_bet).to eq 100
+    expect(AiPlayer.last.total_bet).to eq 200
 
     click_on "Fold"
 

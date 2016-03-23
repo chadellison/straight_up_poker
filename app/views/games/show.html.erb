@@ -1,4 +1,4 @@
-<h3>Opponents: <% @game.ai_players.each do |ai_player| %></h3>
+<h3>Opponents: <% @game.find_players.reject { |p| p.class == User }.each do |ai_player| %></h3>
   <%= ai_player.name %>
 <% end %>
 <h3>Little Blind: $<%= @game.little_blind %>.00</h3>

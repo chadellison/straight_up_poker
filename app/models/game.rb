@@ -12,20 +12,32 @@ class Game < ActiveRecord::Base
   end
 
   def initial_actions
-    player = 2
     actions = []
+    if users.last.round == 1
+      find_players[2..-1].each do |player|
+        player.update(action: true)
+        actions << player.take_action
+      end
+      find_players.first.update(action: true)
+      actions << find_players.first.take_action
+      actions.join("\n")
+    else
 
-    until player == users.last.round || player == find_players.size do
-      find_players[player].update(action: true)
-      actions << find_players[player].take_action
-      player += 1
-    end if find_players.count > 2
-    actions.join("\n")
+      player = 2
+      actions = []
+
+      until player == index_user || player == find_players.size do
+        find_players[player].update(action: true)
+        actions << find_players[player].take_action
+        player += 1
+      end if find_players.count > 2
+      actions.join("\n")
+    end
   end
 
   def add_players
-    players = AiPlayer.first(Game.last.player_count - 1)
-    players.each { |player| Game.last.ai_players << player.refresh }
+    players = AiPlayer.first(player_count - 1)
+    players.each { |player| ai_players << player.refresh }
   end
 
   def set_blinds
@@ -91,7 +103,7 @@ class Game < ActiveRecord::Base
   end
 
   def find_players
-    all_players[users.last.round] = all_players[users.last.round].to_i
+    all_players[index_user] = all_players[index_user].to_i
 
     all_players.map do |id|
       if id.class == Fixnum
@@ -100,6 +112,10 @@ class Game < ActiveRecord::Base
         AiPlayer.find(id)
       end
     end
+  end
+
+  def index_user
+    users.last.round % all_players.size
   end
 
   def user_action(action, amount = nil)
@@ -116,6 +132,10 @@ class Game < ActiveRecord::Base
   end
 
   def ai_action(user_action = nil, amount = nil)
+    ai_players.each do |player|
+      player.update(action: false) if user_action == "bet" && users.last.total_bet > player.total_bet
+    end
+
     find_players.select do |player|
       player.action == false
     end.map do |player|
