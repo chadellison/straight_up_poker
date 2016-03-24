@@ -1,9 +1,10 @@
-<h3>Opponents: <% @game.find_players.reject { |p| p.class == User }.each do |ai_player| %></h3>
-  <%= ai_player.name %>
+<h3>Opponents: </h3>
+<% display_opponents(@game).each do |opponent| %>
+  <p><%= opponent.name %>: $<%= opponent.cash %>.00</p>
 <% end %>
-<h3>Little Blind: $<%= @game.little_blind %>.00</h3>
-<h3>Big Blind: $<%= @game.big_blind %>.00</h3>
-
+<h3>Little Blind: <%= @game.find_players.first.name %>, $<%= @game.little_blind %>.00</h3>
+<h3>Big Blind: <%= @game.find_players[1].name %>, $<%= @game.big_blind %>.00</h3>
+<h1>Pot: $<%= @game.pot %>.00</h1>
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>
 <h3>Pocket: <%= @game.users.last.present_cards %></h3>
