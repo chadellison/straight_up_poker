@@ -5,6 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-AiPlayer.where(name: "Jones").first_or_create
+AiPlayer.where(name: "Hillary Clinton").first_or_create
 AiPlayer.where(name: "Donald Trump").first_or_create
-AiPlayer.where(name: "Hg man").first_or_create
+AiPlayer.where(name: "Bernie Sanders").first_or_create
+AiPlayer.where(name: "Rosco").first_or_create
