@@ -7,6 +7,12 @@ module GameHelper
     end
   end
 
+  def display_opponents(game)
+    game.find_players.reject do |player|
+      player.class == User
+    end
+  end
+
   def present_flop(game)
     game.flop_cards.join(", ")
   end
