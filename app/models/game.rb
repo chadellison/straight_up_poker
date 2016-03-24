@@ -114,8 +114,7 @@ class Game < ActiveRecord::Base
   def user_action(action, amount = nil)
     user = users.last
     if action == "call"
-      total_amount = ai_players.maximum(:total_bet)
-      bet_amount = total_amount - user.total_bet
+      bet_amount = highest_bet - user.total_bet
       user.bet(bet_amount)
     elsif action == "bet"
       user.bet(amount[:current_bet])
