@@ -11,28 +11,21 @@ class Game < ActiveRecord::Base
     deal_pocket_cards(find_players)
   end
 
-  def initial_actions
-    actions = []
-    if users.last.round == 1
-      find_players[2..-1].each do |player|
-        player.update(action: true)
-        actions << player.take_action
-      end
-      find_players.first.update(action: true)
-      actions << find_players.first.take_action
-      actions.join("\n")
+  def find_range
+    if index_user == 1
+      find_players[(index_user + 1)..-1] + find_players[0...index_user]
+    elsif index_user == 2
+      find_players[3...index_user]
     else
-
-      player = 2
-      actions = []
-
-      until player == index_user || player == find_players.size do
-        find_players[player].update(action: true)
-        actions << find_players[player].take_action
-        player += 1
-      end if find_players.count > 2
-      actions.join("\n")
+      find_players[2..-1]
     end
+  end
+
+  def initial_actions
+    player_actions = find_range.map do |player|
+      player.update(action: true)
+      player.take_action
+    end.join("\n")
   end
 
   def add_players
@@ -133,7 +126,7 @@ class Game < ActiveRecord::Base
 
   def ai_action(user_action = nil, amount = nil)
     ai_players.each do |player|
-      player.update(action: false) if user_action == "bet" && users.last.total_bet > player.total_bet
+      player.update(action: false) if highest_bet > player.total_bet
     end
 
     find_players.select do |player|
@@ -142,6 +135,14 @@ class Game < ActiveRecord::Base
       player.update(action: true)
       player.take_action(user_action, amount)
     end.join("\n")
+  end
+
+  def highest_bet
+    if ai_players.maximum(:total_bet) > users.maximum(:total_bet)
+      ai_players.maximum(:total_bet)
+    else
+      users.maximum(:total_bet)
+    end
   end
 
   def game_action
