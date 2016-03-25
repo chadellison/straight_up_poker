@@ -12,7 +12,9 @@ class Game < ActiveRecord::Base
   end
 
   def find_range
-    if index_user == 1
+    if users.last.folded == true
+      find_players.reject { |player| player.class == User }
+    elsif index_user == 1
       find_players[(index_user + 1)..-1] + find_players[0...index_user]
     elsif index_user == 2
       find_players[3...index_user]
@@ -155,6 +157,7 @@ class Game < ActiveRecord::Base
       update(winner: determine_winner)
     end
     ai_players.each { |player| player.update(action: false) }
+    update_game if users.last.folded == true
   end
 
   def game_cards
@@ -163,8 +166,10 @@ class Game < ActiveRecord::Base
 
   def determine_winner
     players = {}
-    (ai_players + users).each do |player|
-      players[[player.id, player.class]] = player.cards + game_cards
+    user = [] if users.last.folded == true
+    user = users if users.last.folded == false
+    (ai_players + user).each do |player|
+      players[player] = player.cards + game_cards
     end
 
     CardAnalyzer.new.determine_winner(players)

@@ -20,8 +20,11 @@ RSpec.feature "user can fold vs multiple ais" do
     click_on "Play Poker"
 
     click_on "Fold"
-
+    click_on "Deal Flop"
+    click_on "Deal Turn"
+    click_on "Deal River"
+    click_on "Show Winner"
     assert Game.last.winner
-    expect(page).to have_content "#{User.find(Game.last.winner.split.first).name} wins!"
+    expect(page).to have_content "#{AiPlayer.find(Game.last.winner.split.first).name} wins!"
   end
 end

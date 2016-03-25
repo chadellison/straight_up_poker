@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   end
 
   def fold
+    update(folded: true)
     if games.last.ai_players.count == 1
       games.last.update(winner: "#{games.last.ai_players.last.id} ai_player")
     end
