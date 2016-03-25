@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160322053814) do
+ActiveRecord::Schema.define(version: 20160325065245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,16 +62,17 @@ ActiveRecord::Schema.define(version: 20160322053814) do
     t.string   "username"
     t.string   "password_digest"
     t.string   "email"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.string   "name"
     t.integer  "cash",            default: 1000
     t.integer  "current_bet",     default: 0
     t.integer  "total_bet",       default: 0
-    t.string   "cards",           default: [],                array: true
+    t.string   "cards",           default: [],                 array: true
     t.integer  "integer",         default: 0
-    t.integer  "round",           default: -1
     t.boolean  "action",          default: true
+    t.boolean  "folded",          default: false
+    t.integer  "round",           default: 0
   end
 
 end

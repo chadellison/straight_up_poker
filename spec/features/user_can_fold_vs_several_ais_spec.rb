@@ -1,9 +1,10 @@
 require "rails_helper"
 
-RSpec.feature "users sees game info" do
-  scenario "users sees game stats for each stage of the game" do
+RSpec.feature "user can fold vs multiple ais" do
+  scenario "user sees the remainder of the game" do
     AiPlayer.create(name: "Mary")
     AiPlayer.create(name: "Frank")
+    AiPlayer.create(name: "Rosco")
     User.create(name: "jones", username: "jones", password: "password")
 
     visit root_path
@@ -13,16 +14,17 @@ RSpec.feature "users sees game info" do
     click_on "Login"
 
     click_on "Play"
-
-    select "3", from: "Player count"
+    select "4", from: "Player count"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"
-    expect(page).to have_content "Little Blind: jones, $100.00"
-    expect(page).to have_content "Big Blind: Frank, $200.00"
 
-    expect(page).to have_content "Pot: $500"
-    expect(page).to have_content "Frank: $800.00"
-    expect(page).to have_content "Mary: $800.00"
+    click_on "Fold"
+    click_on "Deal Flop"
+    click_on "Deal Turn"
+    click_on "Deal River"
+    click_on "Show Winner"
+    assert Game.last.winner
+    expect(page).to have_content "#{AiPlayer.find(Game.last.winner.split.first).name} wins!"
   end
 end

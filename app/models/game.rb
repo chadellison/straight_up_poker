@@ -5,20 +5,27 @@ class Game < ActiveRecord::Base
 
   def set_up_game
     add_players
-    order_players
     set_blinds
     load_deck
     deal_pocket_cards(find_players)
   end
 
   def find_range
-    if index_user == 1
-      find_players[(index_user + 1)..-1] + find_players[0...index_user]
-    elsif index_user == 2
-      find_players[3...index_user]
-    else
+    if users.last.folded == true
+      find_players.reject { |player| player.class == User }
+    elsif user_index == 1
+      find_players[2..-1] + find_players[0...user_index]
+    elsif user_index == 2
+      find_players[3..-1]
+    elsif user_index == 0
       find_players[2..-1]
+    else
+      find_players[(user_index + 1)..-1] || find_players[2...user_index]
     end
+  end
+
+  def user_index
+    users.last.round % find_players.length
   end
 
   def initial_actions
@@ -49,13 +56,8 @@ class Game < ActiveRecord::Base
     update(cards: cards)
   end
 
-  def order_players
-    if all_players.empty?
-      ordered_players = ([users.last.id] + ai_players.map(&:id))
-    else
-      ordered_players = all_players.rotate(-1)
-    end
-    update(all_players: ordered_players)
+  def find_players
+    (users + ai_players.order(:name)).rotate(users.last.round * -1)
   end
 
   def deal_flop
@@ -93,22 +95,6 @@ class Game < ActiveRecord::Base
       player.update(cards: pocket_cards)
       update(cards: cards)
     end
-  end
-
-  def find_players
-    all_players[index_user] = all_players[index_user].to_i
-
-    all_players.map do |id|
-      if id.class == Fixnum
-        User.find(id)
-      else
-        AiPlayer.find(id)
-      end
-    end
-  end
-
-  def index_user
-    users.last.round % all_players.size
   end
 
   def user_action(action, amount = nil)
@@ -155,6 +141,7 @@ class Game < ActiveRecord::Base
       update(winner: determine_winner)
     end
     ai_players.each { |player| player.update(action: false) }
+    update_game if users.last.folded == true
   end
 
   def game_cards
@@ -163,8 +150,10 @@ class Game < ActiveRecord::Base
 
   def determine_winner
     players = {}
-    (ai_players + users).each do |player|
-      players[[player.id, player.class]] = player.cards + game_cards
+    user = [] if users.last.folded == true
+    user = users if users.last.folded == false
+    (ai_players + user).each do |player|
+      players[player] = player.cards + game_cards
     end
 
     CardAnalyzer.new.determine_winner(players)
@@ -201,8 +190,7 @@ class Game < ActiveRecord::Base
     find_players.each { |player| player.refresh }
     load_deck
     users.last.update(round: users.last.round + 1)
-    order_players
     set_blinds
-    deal_pocket_cards(ai_players + users)
+    deal_pocket_cards(find_players)
   end
 end

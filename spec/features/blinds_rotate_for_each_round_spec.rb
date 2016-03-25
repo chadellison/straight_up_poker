@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.feature "blinds rotate for each round" do
   scenario "different players have blinds each round" do
     user = User.create(name: "oscar", username: "oscar", password: "password")
-    ai_player1 = AiPlayer.create(name: "Rosco")
+    ai_player1 = AiPlayer.create(name: "Arnold")
     ai_player2 = AiPlayer.create(name: "Jackie")
-    ai_player3 = AiPlayer.create(name: "Arnold")
+    ai_player3 = AiPlayer.create(name: "Rosco")
 
     visit root_path
 
@@ -22,7 +22,7 @@ RSpec.feature "blinds rotate for each round" do
     click_on "Play Poker"
 
     expect(Game.last.find_players.first.name).to eq "oscar"
-    expect(Game.last.find_players[1].name).to eq "Rosco"
+    expect(Game.last.find_players[1].name).to eq "Arnold"
     expect(User.last.current_bet).to eq 100
     expect(AiPlayer.find(ai_player1.id).current_bet).to eq 200
 
@@ -37,7 +37,7 @@ RSpec.feature "blinds rotate for each round" do
     click_on "Show Winner"
     click_on "Continue"
 
-    expect(Game.last.find_players.first.name).to eq "Arnold"
+    expect(Game.last.find_players.first.name).to eq "Rosco"
     expect(Game.last.find_players[1].name).to eq "oscar"
     expect(AiPlayer.find(ai_player3.id).current_bet).to eq 100
     expect(User.last.current_bet).to eq 200
@@ -51,10 +51,9 @@ RSpec.feature "blinds rotate for each round" do
     click_on "Check"
 
     click_on "Show Winner"
-
     click_on "Continue"
     expect(Game.last.find_players.first.name).to eq "Jackie"
-    expect(Game.last.find_players[1].name).to eq "Arnold"
+    expect(Game.last.find_players[1].name).to eq "Rosco"
     expect(Game.last.find_players[2].name).to eq "oscar"
     expect(AiPlayer.find(ai_player2.id).current_bet).to eq 100
     expect(AiPlayer.find(ai_player3.id).current_bet).to eq 200

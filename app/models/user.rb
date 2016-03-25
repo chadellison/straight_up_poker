@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
   end
 
   def fold
+    update(folded: true)
     if games.last.ai_players.count == 1
       games.last.update(winner: "#{games.last.ai_players.last.id} ai_player")
     end
@@ -39,7 +40,7 @@ class User < ActiveRecord::Base
     update(cards: [],
             current_bet: 0,
             total_bet: 0,
-            round: 0,
+            folded: false,
           )
     self
   end
