@@ -19,10 +19,10 @@ RSpec.feature "users sees game info" do
     select "200", from: "Big blind"
     click_on "Play Poker"
     expect(page).to have_content "Little Blind: jones, $100.00"
-    expect(page).to have_content "Big Blind: Mary, $200.00"
+    expect(page).to have_content "Big Blind: Frank, $200.00"
 
     expect(page).to have_content "Pot: $500"
-    expect(page).to have_content "Mary: $800.00"
     expect(page).to have_content "Frank: $800.00"
+    expect(page).to have_content "Mary: $800.00"
   end
 end

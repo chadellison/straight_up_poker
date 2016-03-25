@@ -19,7 +19,6 @@ RSpec.describe Game, type: :model do
 
     game.ai_players << player
     game.users << user
-    game.order_players
 
     expect(player.cash).to eq 1000
     expect(user.cash).to eq 1000
@@ -76,7 +75,7 @@ RSpec.describe Game, type: :model do
     game = Game.create
     game.users.create(name: "jones", username: "jones", password: "password", round: 0)
     game.ai_players.create(name: "Rosco")
-    game.order_players
+
     user_action = "check"
     expect(game.ai_action(user_action)).to eq "Rosco Checks!"
   end
@@ -86,7 +85,7 @@ RSpec.describe Game, type: :model do
   #   game.users.create(name: "jones", username: "jones", password: "password", round: 2)
   #   game.ai_players.create(name: "Rosco")
   #   game.ai_players.create(name: "Oscar")
-  #   game.order_players
+  #
   #   expect(game.ai_action).to eq "Rosco Checks!""\n""Oscar Checks!"
   # end
 
@@ -168,7 +167,7 @@ RSpec.describe Game, type: :model do
     game = Game.create
     user = game.users.create(name: "frank", username: "frank", password: "password", round: 0)
     ai_player = game.ai_players.create(name: "jill")
-    game.order_players
+
     expect(Game.last.find_players).to eq [User.find(user.id), AiPlayer.find(ai_player.id)]
   end
 
@@ -212,8 +211,6 @@ RSpec.describe Game, type: :model do
 
     Game.last.users << User.last
     Game.last.ai_players << AiPlayer.last
-
-    Game.last.order_players
 
     expect(Game.last.winner).to eq "Rosco wins!"
     expect(Game.last.pocket_cards).to eq true

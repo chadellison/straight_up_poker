@@ -16,7 +16,6 @@ RSpec.feature "user can fold" do
     select "75", from: "Little blind"
     select "150", from: "Big blind"
     click_on "Play Poker"
-
     expect(Game.last.pot).to eq 225
     click_on "Fold"
     expect(page).to have_content "That's what I thought"

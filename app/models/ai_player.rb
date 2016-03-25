@@ -6,7 +6,7 @@ class AiPlayer < ActiveRecord::Base
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
-    game.update(pot: game.pot + amount.to_i)
+    Game.last.update(pot: Game.last.pot + amount.to_i)
   end
 
   def call(amount)
