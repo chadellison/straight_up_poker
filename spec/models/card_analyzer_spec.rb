@@ -147,4 +147,11 @@ RSpec.describe CardAnalyzer do
     expect(CardAnalyzer.new.find_hand(cards).class).to_not eq StraightFlush
     expect(CardAnalyzer.new.find_hand(cards).class).to eq RoyalFlush
   end
+
+  # make tests for analyzing the same kinds of hands
+
+  # 1 determine what kind of hand it is
+  # 2 sort that hand by its values
+  # 3 select only those cards necessary to retain that hand
+  # 4 compare the last card across different hands to see which is highest
 end
