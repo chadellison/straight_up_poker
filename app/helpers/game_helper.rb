@@ -24,7 +24,7 @@ module GameHelper
       "Deal Turn"
     elsif game.turn && !game.river_card
       "Deal River"
-    elsif game.river && !game.winner 
+    elsif game.river && !game.winner
       "Show Winner"
     end
   end

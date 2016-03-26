@@ -138,7 +138,7 @@ class Game < ActiveRecord::Base
     elsif !river_card
       deal_river
     else
-      update(winner: determine_winner)
+      update(winner: determine_winner) unless winner
     end
     ai_players.each { |player| player.update(action: false) }
     update_game if users.last.folded == true
@@ -155,7 +155,6 @@ class Game < ActiveRecord::Base
     (ai_players + user).each do |player|
       players[player] = player.cards + game_cards
     end
-
     CardAnalyzer.new.determine_winner(players)
   end
 

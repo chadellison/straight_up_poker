@@ -56,6 +56,10 @@ RSpec.feature "user can win the pot" do
     expect(page).to have_content "jones wins!"
     expect(Game.last.pot).to eq 400
     expect(User.last.cash).to eq 1200
+
+    click_on "Continue"
+
+    expect(User.last.cash).to eq 1000
   end
 
   scenario "takes the pot" do
@@ -112,5 +116,9 @@ RSpec.feature "user can win the pot" do
     expect(User.last.cash).to eq 800
     expect(Game.last.pot).to eq 400
     expect(AiPlayer.last.cash).to eq 1200
+
+    click_on "Continue"
+
+    expect(AiPlayer.last.cash).to eq 1000
   end
 end
