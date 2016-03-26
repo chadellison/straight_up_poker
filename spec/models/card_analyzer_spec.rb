@@ -148,10 +148,31 @@ RSpec.describe CardAnalyzer do
     expect(CardAnalyzer.new.find_hand(cards).class).to eq RoyalFlush
   end
 
-  # make tests for analyzing the same kinds of hands
+  it "determines a winner between two high card hands" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
 
-  # 1 determine what kind of hand it is
-  # 2 sort that hand by its values
-  # 3 select only those cards necessary to retain that hand
-  # 4 compare the last card across different hands to see which is highest
+    player1_cards = [
+      "5 of Clubs",
+      "4 of Clubs",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player2_cards = [
+      "King of Clubs",
+      "5 Clubs",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+    high_card_winner = CardAnalyzer.new
+    expect("#{jannet.id} ai_player").to eq high_card_winner.determine_winner({ frank => player1_cards, jannet => player2_cards })
+  end
 end

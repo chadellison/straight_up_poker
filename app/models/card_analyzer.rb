@@ -183,10 +183,34 @@ class CardAnalyzer
   end
 
   def determine_winner(player_hands)
-    player_hands.min_by do |player, hand|
+    # player_hands.min_by do |player, hand|
+    #   hand = make_card_objects(hand)
+    #   HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
+    # end.first.take_winnings
+    all_players = player_hands.sort_by do |player, hand|
       hand = make_card_objects(hand)
       HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
-    end.first.take_winnings
+    end
+    best_hands = all_players.map do |player_hand|
+      hand = make_card_objects(player_hand.last)
+      [player_hand.first, hand]
+    end
+    best_hands = best_hands.select do |player_hand|
+      HANDS.index(find_hand(player_hand.last).class) == HANDS.index(find_hand(best_hands.first.last).class)
+    end
+
+    if best_hands.size == 1
+      best_hands.first.first.take_winnings
+    else
+      best_hands = best_hands.map do |player_hand|
+        # hand = make_card_objects(player_hand.last)
+        # binding.pry
+        hand = card_converter(player_hand.last).sort_by(&:value)
+        [player_hand.first, hand] #find_best(hand)] <-- make this method
+      end.sort_by do |best_hand|
+        best_hand.last.last.value
+      end.last.first.take_winnings #this needs to handle ties
+    end
   end
 
   def make_card_objects(cards)
@@ -194,4 +218,35 @@ class CardAnalyzer
       Card.new(card.split.first, card.split.last)
     end
   end
+
+  def card_converter(cards)
+    cards.map do |card|
+      case card.value
+      when "Ace"
+        ace_low?(cards) ? Card.new(1, card.suit) : Card.new(14, card.suit)
+      when "King"
+        Card.new(13, card.suit)
+      when "Queen"
+        Card.new(12, card.suit)
+      when "Jack"
+        Card.new(11, card.suit)
+      else
+        Card.new(card.value.to_i, card.suit)
+      end
+    end
+  end
+
+  def ace_low?(cards)
+    card_values = cards.map { |card| card.value.to_i }
+    [card_values.include?(2),
+      card_values.include?(3),
+      card_values.include?(4),
+      card_values.include?(5)].all?
+  end
+  # make tests for analyzing the same kinds of hands
+
+  # 1 determine what kind of hand it is
+  # 2 sort that hand by its values
+  # 3 select only those cards necessary to retain that hand
+  # 4 compare the last card across different hands to see which is highest
 end
