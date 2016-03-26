@@ -15,8 +15,6 @@ class Game < ActiveRecord::Base
       find_players.reject { |player| player.class == User }
     elsif user_index == 1
       find_players[2..-1] + find_players[0...user_index]
-    elsif user_index == 2
-      find_players[3..-1]
     elsif user_index == 0
       find_players[2..-1]
     else
