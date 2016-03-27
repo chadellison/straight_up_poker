@@ -189,17 +189,17 @@ class CardAnalyzer
       HANDS.index(find_hand(player_hand.last).class)
     end
 
-    best_cards = all_players.select do |player_hand|
+    best_hand = all_players.select do |player_hand|
       index_hand(player_hand.last) == index_hand(all_players.first.last)
     end
 
-    if best_cards.size == 1
-      best_cards.first.first.take_winnings
+    if best_hand.size == 1
+      best_hand.first.first.take_winnings
     else
-      best_cards.map do |player_hand|
-        [player_hand.first, find_best(player_hand.last)]
-      end.sort_by do |best_hand|
-        [best_hand.last.last.value, best_hand.last.map { |c| c.value }]
+      best_hand.map do |player_hand|
+        [player_hand.first, find_best(player_hand.last)] #sort_by value here
+      end.sort_by do |best_cards|
+        best_cards.last.map(&:value)
       end.last.first.take_winnings #this needs to handle ties
     end
   end
@@ -216,10 +216,9 @@ class CardAnalyzer
       find_hand(cards.reject do |c|
         c == card
       end).class != hand
-    end
-    remaining = 4 - best_cards.count
-    return cards.reverse[0..remaining] + best_cards if best_cards.count < 5
-    best_cards
+    end.reverse
+    remaining = cards.reject { |card| best_cards.map(&:value).include?(card.value)}.reverse
+    (best_cards + remaining)[0..4]
   end
 
   def make_card_objects(cards)
@@ -252,10 +251,4 @@ class CardAnalyzer
       card_values.include?(4),
       card_values.include?(5)].all?
   end
-  # make tests for analyzing the same kinds of hands
-
-  # 1 determine what kind of hand it is
-  # 2 sort that hand by its values
-  # 3 select only those cards necessary to retain that hand
-  # 4 compare the last card across different hands to see which is highest
 end

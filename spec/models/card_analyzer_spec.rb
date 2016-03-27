@@ -211,8 +211,8 @@ RSpec.describe CardAnalyzer do
       "2 of Hearts",
       "3 of Hearts"
     ]
-    high_card_winner = CardAnalyzer.new
-    winner = high_card_winner.determine_winner({
+    pair_winner = CardAnalyzer.new
+    winner = pair_winner.determine_winner({
       frank => player1_cards,
       jannet => player2_cards,
       bob => player3_cards
@@ -334,11 +334,275 @@ RSpec.describe CardAnalyzer do
       "3 of Hearts"
     ]
 
-    high_card_winner = CardAnalyzer.new
-    winner = high_card_winner.determine_winner({
+    three_of_a_kind_winner = CardAnalyzer.new
+    winner = three_of_a_kind_winner.determine_winner({
       frank => player1_cards,
       jannet => player2_cards
       })
     expect("#{frank.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between multiple of the same high three of a kind hand" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "King of Clubs",
+      "King of Diamonds",
+      "Queen Diamonds",
+      "Ace of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "Ace of Hearts"
+    ]
+
+    player2_cards = [
+      "King of Clubs",
+      "Ace of Diamonds",
+      "Queen Diamonds",
+      "Ace of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "Ace of Hearts"
+    ]
+    player3_cards = [
+      "2 of Clubs",
+      "Ace of Clubs",
+      "Queen Diamonds",
+      "Ace of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "Ace of Hearts"
+    ]
+
+    three_of_a_kind_winner = CardAnalyzer.new
+    winner = three_of_a_kind_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between straights" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "7 of Clubs",
+      "8 of Diamonds",
+      "Queen Diamonds",
+      "Ace of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "Jack of Hearts"
+    ]
+
+    player2_cards = [
+      "King of Clubs",
+      "Jack of Diamonds",
+      "Queen Diamonds",
+      "8 of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "Jack of Hearts"
+    ]
+    player3_cards = [
+      "2 of Clubs",
+      "Ace of Clubs",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "5 of Hearts",
+      "4 of Hearts"
+    ]
+
+    straight_winner = CardAnalyzer.new
+    winner = straight_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between flushes" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "6 of Hearts",
+      "3 of Hearts",
+      "Queen Hearts",
+      "Ace of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "Jack of Hearts"
+    ]
+
+    player2_cards = [
+      "King of Diamonds",
+      "10 of Diamonds",
+      "Queen Diamonds",
+      "8 of Spades",
+      "10 of Diamonds",
+      "9 of Diamonds",
+      "6 of Hearts"
+    ]
+    player3_cards = [
+      "2 of Clubs",
+      "Ace of Clubs",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "6 of Clubs",
+      "4 of Clubs"
+    ]
+
+    flush_winner = CardAnalyzer.new
+    winner = flush_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{bob.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between full houses" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "6 of Hearts",
+      "3 of Hearts",
+      "Queen Hearts",
+      "3 of Spades",
+      "10 of Clubs",
+      "3 of Spades",
+      "6 of Clubs"
+    ]
+
+    player2_cards = [
+      "Queen of Diamonds",
+      "2 of Diamonds",
+      "Queen Diamonds",
+      "8 of Spades",
+      "2 of Clubs",
+      "9 of Diamonds",
+      "2 of Hearts"
+    ]
+    player3_cards = [
+      "9 of Clubs",
+      "Ace of Clubs",
+      "Queen Diamonds",
+      "9 of Spades",
+      "10 of Clubs",
+      "10 of Hearts",
+      "10 of Spades"
+    ]
+
+    full_house_winner = CardAnalyzer.new
+    winner = full_house_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between multiple four of a kind hands" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "6 of Hearts",
+      "6 of Diamonds",
+      "Queen Hearts",
+      "3 of Spades",
+      "10 of Clubs",
+      "6 of Spades",
+      "6 of Clubs"
+    ]
+
+    player2_cards = [
+      "Queen of Diamonds",
+      "2 of Diamonds",
+      "Queen Clubs",
+      "8 of Spades",
+      "2 of Clubs",
+      "Queen of Spades",
+      "Queen of Hearts"
+    ]
+    player3_cards = [
+      "10 of Clubs",
+      "Ace of Clubs",
+      "Queen Diamonds",
+      "9 of Spades",
+      "10 of Diamonds",
+      "10 of Hearts",
+      "10 of Spades"
+    ]
+
+    four_of_kind_winner = CardAnalyzer.new
+    winner = four_of_kind_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between straight flushes" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "6 of Hearts",
+      "5 of Hearts",
+      "Queen Hearts",
+      "3 of Hearts",
+      "4 of Hearts",
+      "Ace of Hearts",
+      "2 of Hearts"
+    ]
+
+    player2_cards = [
+      "Queen of Clubs",
+      "2 of Diamonds",
+      "Jack Clubs",
+      "10 of Clubs",
+      "2 of Clubs",
+      "9 of Clubs",
+      "8 of Clubs"
+    ]
+    player3_cards = [
+      "10 of Spades",
+      "9 of Spades",
+      "Queen Diamonds",
+      "8 of Spades",
+      "7 of Spades",
+      "10 of Hearts",
+      "6 of Spades"
+    ]
+
+    straight_flush_winner = CardAnalyzer.new
+    winner = straight_flush_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
   end
 end
