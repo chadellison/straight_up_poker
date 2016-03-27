@@ -26,27 +26,20 @@ module CardHelper
 
   def find_best(cards)
     sorted_cards = card_converter(cards).sort_by(&:value)
-    # sorted_cards = card_converter(cards).sort_by(&:value)
     hand = find_hand(cards).class
-    # check_cards = sorted_cards
     return sorted_cards.reverse[0..4] if hand == HighCard
-    # best_cards = sorted_cards.select do |card|
-      # if find_hand(sorted_cards.reject { |match| match == card }).class != hand
-      #   sorted_cards[sorted_cards.index(card)] = Card.new(0, nil)
-      #
-      # end
       best_cards = []
+      place_holder = 0
       sorted_cards.each do |card|
         if find_hand(sorted_cards.reject { |match| match == card }).class != hand
           best_cards << card
         else
-          sorted_cards[sorted_cards.index(card)] = Card.new(nil, nil)
+          sorted_cards[sorted_cards.index(card)] = Card.new(place_holder, place_holder)
         end
+        place_holder -= 1
       end
       best_cards
-    # end.reverse
     sorted_cards = card_converter(cards).sort_by(&:value)
-    # binding.pry
     remaining = sorted_cards.reject { |card| best_cards.map(&:value).include?(card.value)}.reverse
     (best_cards.reverse + remaining)[0..4]
   end
