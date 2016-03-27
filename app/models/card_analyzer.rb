@@ -45,7 +45,7 @@ class HighCard
   end
 
   def match?
-    cards.size > 1
+    cards.size > 0
   end
 end
 
@@ -183,34 +183,43 @@ class CardAnalyzer
   end
 
   def determine_winner(player_hands)
-    # player_hands.min_by do |player, hand|
-    #   hand = make_card_objects(hand)
-    #   HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
-    # end.first.take_winnings
-    all_players = player_hands.sort_by do |player, hand|
-      hand = make_card_objects(hand)
-      HANDS.index(find_hand(hand).class) #this needs to handle ties and hands that are the same
-    end
-    best_hands = all_players.map do |player_hand|
-      hand = make_card_objects(player_hand.last)
-      [player_hand.first, hand]
-    end
-    best_hands = best_hands.select do |player_hand|
-      HANDS.index(find_hand(player_hand.last).class) == HANDS.index(find_hand(best_hands.first.last).class)
+    all_players = player_hands.map do |player, hand|
+      [player, make_card_objects(hand)]
+    end.sort_by do |player_hand|
+      HANDS.index(find_hand(player_hand.last).class)
     end
 
-    if best_hands.size == 1
-      best_hands.first.first.take_winnings
+    best_cards = all_players.select do |player_hand|
+      index_hand(player_hand.last) == index_hand(all_players.first.last)
+    end
+
+    if best_cards.size == 1
+      best_cards.first.first.take_winnings
     else
-      best_hands = best_hands.map do |player_hand|
-        # hand = make_card_objects(player_hand.last)
-        # binding.pry
-        hand = card_converter(player_hand.last).sort_by(&:value)
-        [player_hand.first, hand] #find_best(hand)] <-- make this method
+      best_cards.map do |player_hand|
+        [player_hand.first, find_best(player_hand.last)]
       end.sort_by do |best_hand|
-        best_hand.last.last.value
+        [best_hand.last.last.value, best_hand.last.map { |c| c.value }]
       end.last.first.take_winnings #this needs to handle ties
     end
+  end
+
+  def index_hand(cards)
+    HANDS.index(find_hand(cards).class)
+  end
+
+  def find_best(cards)
+    cards = card_converter(cards).sort_by(&:value)
+    hand = find_hand(cards).class
+    return [cards.last] if hand == HighCard
+    best_cards = cards.select do |card|
+      find_hand(cards.reject do |c|
+        c == card
+      end).class != hand
+    end
+    remaining = 4 - best_cards.count
+    return cards.reverse[0..remaining] + best_cards if best_cards.count < 5
+    best_cards
   end
 
   def make_card_objects(cards)

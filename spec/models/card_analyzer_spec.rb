@@ -175,4 +175,170 @@ RSpec.describe CardAnalyzer do
     high_card_winner = CardAnalyzer.new
     expect("#{jannet.id} ai_player").to eq high_card_winner.determine_winner({ frank => player1_cards, jannet => player2_cards })
   end
+
+  it "determines a winner between multiple two of a kind hands" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "5 of Clubs",
+      "5 of Clubs",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player2_cards = [
+      "Queen of Clubs",
+      "5 spades",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player3_cards = [
+      "King of Clubs",
+      "3 Clubs",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+    high_card_winner = CardAnalyzer.new
+    winner = high_card_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between multiple two pair hands" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "2 of Clubs",
+      "3 of Clubs",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player2_cards = [
+      "Queen of Clubs",
+      "3 Spades",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player3_cards = [
+      "7 of Clubs",
+      "3 Diamonds",
+      "Queen Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+    high_card_winner = CardAnalyzer.new
+    winner = high_card_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between multiple three of a kind hands" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "2 of Clubs",
+      "3 of Clubs",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player2_cards = [
+      "Ace of Clubs",
+      "3 of Diamonds",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player3_cards = [
+      "9 of Spades",
+      "9 of Clubs",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "3 of Hearts"
+    ]
+    high_card_winner = CardAnalyzer.new
+    winner = high_card_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{bob.id} ai_player").to eq winner
+  end
+
+  it "determines a winner between multiple of the same three of a kind hand" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "Ace of Clubs",
+      "3 of Diamonds",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player2_cards = [
+      "2 of Clubs",
+      "3 of Clubs",
+      "Queen Diamonds",
+      "3 of Spades",
+      "10 of Clubs",
+      "9 of Hearts",
+      "3 of Hearts"
+    ]
+
+    high_card_winner = CardAnalyzer.new
+    winner = high_card_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards
+      })
+    expect("#{frank.id} ai_player").to eq winner
+  end
 end
