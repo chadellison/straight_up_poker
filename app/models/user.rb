@@ -36,6 +36,12 @@ class User < ActiveRecord::Base
     "#{id} user"
   end
 
+  def split_pot(number_of_players)
+    winnings = Game.last.pot / number_of_players.to_f.round(2)
+    update(cash: cash + winnings)
+    "#{id} user"
+  end
+
   def refresh
     update(cards: [],
             current_bet: 0,

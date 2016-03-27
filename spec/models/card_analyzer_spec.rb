@@ -184,7 +184,7 @@ RSpec.describe CardAnalyzer do
 
     player1_cards = [
       "5 of Clubs",
-      "5 of Clubs",
+      "5 of Hearts",
       "Queen Diamonds",
       "7 of Spades",
       "10 of Clubs",
@@ -604,5 +604,48 @@ RSpec.describe CardAnalyzer do
       bob => player3_cards
       })
     expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "handles a tie game" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "6 of Hearts",
+      "5 of Hearts",
+      "Queen Hearts",
+      "3 of Hearts",
+      "4 of Hearts",
+      "Ace of Hearts",
+      "2 of Hearts"
+    ]
+
+    player2_cards = [
+      "6 of Clubs",
+      "5 of Clubs",
+      "Queen Clubs",
+      "3 of Clubs",
+      "4 of Clubs",
+      "10 of Clubs",
+      "2 of Clubs"
+    ]
+    player3_cards = [
+      "2 of Spades",
+      "4 of Spades",
+      "Queen Diamonds",
+      "9 of Spades",
+      "5 of Spades",
+      "3 of Spades",
+      "6 of Spades"
+    ]
+    tie = CardAnalyzer.new
+    winner = tie.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{frank.id} ai_player, #{jannet.id} ai_player, #{bob.id} ai_player").to eq winner
   end
 end
