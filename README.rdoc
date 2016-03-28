@@ -1,13 +1,12 @@
 == README
 
 * Overview
-This app was designed to create an interface for users to play Texas Holdem agains an
-AI and / or other people. This app will utilize java script, rails, and active record. Users can play
-with or without an account; however, only users who are logged in will have a record of their
-cash--both winnings and losings. Users should simply be able to click play poker and then
+This app was designed to create an interface for users to play Texas Holdem against various
+AIs and at some point other users. This app will utilize java script, rails, and active record.
+Users should simply be able to click play poker and then
 select a number of players and click start to play.
 
-Users will be able to select a number of opponents, place bets and play holdem with
+Users will be able to select a number of opponents, place bets and play hold'em
 just as one would expect. Registered users will have access to a history of all past
 games and the hands of all players' of past games. AI's will make bets according to
 the strength of their hands with a percentage(based on how good or bad a hand is) to
