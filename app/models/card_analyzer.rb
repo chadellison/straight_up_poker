@@ -33,7 +33,12 @@ class FullHouse
   end
 
   def match?
-    [ThreeOfKind.new(cards), TwoOfKind.new(cards)].all?(&:match?)
+    full_house = cards.group_by do |card|
+      card.value
+    end.values.select { |cards| cards.size > 1 }
+
+    full_house.size > 1 &&
+    full_house.any? { |cards| cards.size == 3 }
   end
 end
 
@@ -165,11 +170,9 @@ class CardAnalyzer
     end.sort_by do |player_hand|
       HANDS.index(find_hand(player_hand.last).class)
     end
-
     best_hand = all_players.select do |player_hand|
       index_hand(player_hand.last) == index_hand(all_players.first.last)
     end
-
     if best_hand.size == 1
       best_hand.first.first.take_winnings
     else

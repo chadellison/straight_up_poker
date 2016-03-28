@@ -8,4 +8,9 @@
 AiPlayer.where(name: "Hillary Clinton").first_or_create
 AiPlayer.where(name: "Donald Trump").first_or_create
 AiPlayer.where(name: "Bernie Sanders").first_or_create
+AiPlayer.where(name: "Ted Cruz").first_or_create
 AiPlayer.where(name: "Rosco").first_or_create
+AiPlayer.where(name: "Oscar").first_or_create
+AiPlayer.where(name: "Martha").first_or_create
+AiPlayer.where(name: "Colbert").first_or_create
+AiPlayer.where(name: "Engrid").first_or_create

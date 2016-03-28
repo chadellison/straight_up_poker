@@ -38,7 +38,6 @@ module CardHelper
         end
         place_holder -= 1
       end
-      best_cards
     sorted_cards = card_converter(cards).sort_by(&:value)
     remaining = sorted_cards.reject { |card| best_cards.map(&:value).include?(card.value)}.reverse
     (best_cards.reverse + remaining)[0..4]
