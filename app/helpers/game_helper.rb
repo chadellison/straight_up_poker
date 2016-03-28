@@ -30,18 +30,28 @@ module GameHelper
   end
 
   def declare_winner(game)
-    find_winner(game).name + " wins!"
+    if find_winner(game).size == 1
+      find_winner(game).last.name + " wins!"
+    else
+      find_winner(game).map do |winner|
+        winner.name
+      end.join(" and ") + " split the pot"
+    end
   end
 
   def winning_hand(game)
-    find_winner(game).present_cards
+    find_winner(game).map do |winner|
+      "#{winner.name}: #{winner.present_cards}"
+    end.join(", ")
   end
 
   def find_winner(game)
-    if game.winner.split.last == "user"
-      User.find(game.winner.split.first)
-    else
-      AiPlayer.find(game.winner.split.first)
+    game.winner.split(",").map do |player|
+      if player.split.last == "user"
+        User.find(player.split.first)
+      else
+        AiPlayer.find(player.split.first)
+      end
     end
   end
 end

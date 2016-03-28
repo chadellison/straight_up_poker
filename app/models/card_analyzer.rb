@@ -33,7 +33,12 @@ class FullHouse
   end
 
   def match?
-    [ThreeOfKind.new(cards), TwoOfKind.new(cards)].all?(&:match?)
+    full_house = cards.group_by do |card|
+      card.value
+    end.values.select { |cards| cards.size > 1 }
+
+    full_house.size > 1 &&
+    full_house.any? { |cards| cards.size == 3 }
   end
 end
 
@@ -165,19 +170,31 @@ class CardAnalyzer
     end.sort_by do |player_hand|
       HANDS.index(find_hand(player_hand.last).class)
     end
-
     best_hand = all_players.select do |player_hand|
       index_hand(player_hand.last) == index_hand(all_players.first.last)
     end
-
     if best_hand.size == 1
       best_hand.first.first.take_winnings
     else
-      best_hand.map do |player_hand|
+      winner = best_hand.map do |player_hand|
         [player_hand.first, find_best(player_hand.last)]
       end.sort_by do |best_cards|
         best_cards.last.map(&:value)
-      end.last.first.take_winnings #this needs to handle ties
+      end
+      check_tie(winner) #last.first.take_winnings #this needs to handle ties
+    end
+  end
+
+  def check_tie(winner)
+    final_winner = winner.select do |hands|
+      hands.last.map(&:value) == winner.last.last.map(&:value)
+    end
+    if final_winner.size == 1
+      final_winner.last.first.take_winnings
+    else
+      final_winner.map do |player|
+        player.first.split_pot(final_winner.count)
+      end.join(", ")
     end
   end
 

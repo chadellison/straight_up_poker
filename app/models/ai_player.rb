@@ -57,4 +57,10 @@ class AiPlayer < ActiveRecord::Base
     update(cash: cash + winnings)
     "#{id} ai_player"
   end
+
+  def split_pot(number_of_players)
+    winnings = Game.last.pot / number_of_players.to_f.round(2)
+    update(cash: cash + winnings)
+    "#{id} ai_player"
+  end
 end
