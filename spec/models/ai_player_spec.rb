@@ -42,4 +42,9 @@ RSpec.describe AiPlayer, type: :model do
     expect(AiPlayer.last.total_bet).to eq 0
     expect(AiPlayer.last.cash).to eq 800
   end
+
+  it "can fold" do
+    #make code for ai folding here
+    #include ai bet style (perhaps: always fold)
+  end
 end

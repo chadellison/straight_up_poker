@@ -35,6 +35,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def take_action(user_action = nil, amount = nil)
+    #take bet style into consideration here
     if highest_bet > total_bet
       call(highest_bet - total_bet)
     elsif user_action == "fold"
