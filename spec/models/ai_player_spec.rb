@@ -46,5 +46,6 @@ RSpec.describe AiPlayer, type: :model do
   it "can fold" do
     #make code for ai folding here
     #include ai bet style (perhaps: always fold)
+    #ai will fold based on hand and other bets
   end
 end
