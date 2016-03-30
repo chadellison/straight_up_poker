@@ -6,9 +6,10 @@ RSpec.describe Game, type: :model do
   it {should have_many(:users)}
 
   it "adds players to a game" do
+    user = User.new
     player = AiPlayer.create(name: "Rosco")
     game = Game.create(player_count: 2)
-    game.add_players
+    game.add_players(user)
     expect(game.ai_players.last).to eq player
   end
 

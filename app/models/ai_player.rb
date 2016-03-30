@@ -6,7 +6,7 @@ class AiPlayer < ActiveRecord::Base
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
-    Game.last.update(pot: Game.last.pot + amount.to_i)
+    game.update(pot: game.pot + amount.to_i)
   end
 
   def call(amount)
@@ -18,8 +18,17 @@ class AiPlayer < ActiveRecord::Base
     "#{name} Checks!"
   end
 
+  def fold
+    update(folded: true)
+    folded_players = game.find_players.select { |player| player.folded == false }
+    if folded_players.count == 1
+      winner = folded_players.last
+      game.update(winner: "#{winner.id} #{winner.class}".downcase)
+    end
+  end
+
   def make_snarky_remark
-    "That's what I thought"
+    "That's what I thought" #customize
   end
 
   def present_cards
