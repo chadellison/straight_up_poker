@@ -49,21 +49,28 @@ class AiPlayer < ActiveRecord::Base
     analyze = CardAnalyzer.new
     if game.flop_cards == []
       evaluate_pocket
+    elsif game.turn_card.nil?
+      hand = make_card_objects(cards + game.flop_cards)
+      9 - analyze.index_hand(hand)
     elsif game.river_card.nil?
+      hand = make_card_objects(cards + game.flop_cards + [game.turn_card])
+      9 - analyze.index_hand(hand)
     else
+      hand = make_card_objects(cards + game.flop_cards + [game.turn_card, game.river_card])
+      9 - analyze.index_hand(hand)
     end
   end
 
   def evaluate_pocket
     current_hand = make_card_objects(cards)
     if current_hand.all? { |card| card.value == 2 || card.value == 7 }
-      5
+      3
     elsif CardAnalyzer.new.index_hand(current_hand) == 8
-      8
-    elsif card_converter(current_hand).map(&:value).any? { |value| value > 10 }
-      7
-    else
       6
+    elsif card_converter(current_hand).map(&:value).any? { |value| value > 10 }
+      5
+    else
+      4
     end
   end
 
@@ -81,12 +88,12 @@ class AiPlayer < ActiveRecord::Base
 
   def bet_conservative(user_action, amount)
     risk_factor = rand(1..10)
-    return bet(cash) if risk_factor == 10 && hand > 6
-    if highest_bet > total_bet && hand < 5
+    return bet(cash) if risk_factor == 10 && hand > 4
+    if highest_bet > total_bet && hand < 2
       fold ? risk_factor > 2 : normal_bet
-    elsif highest_bet > total_bet && hand > 7
-      bet((highest_bet - total_bet) * 2) ? risk_factor > 7 : normal_bet
-    elsif highest_bet == total_bet && hand > 6
+    elsif highest_bet > total_bet && hand > 4
+      bet((highest_bet - total_bet) * 2) ? risk_factor > 6 : normal_bet
+    elsif highest_bet == total_bet && hand > 3
       bet(big_blind) ? risk_factor > 5 : normal_bet
     else
       normal_bet
