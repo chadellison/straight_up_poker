@@ -20,9 +20,9 @@ class AiPlayer < ActiveRecord::Base
 
   def fold
     update(folded: true)
-    folded_players = game.find_players.select { |player| player.folded == false }
-    if folded_players.count == 1
-      winner = folded_players.last
+    still_playing = game.find_players.select { |player| player.folded == false }
+    if still_playing.count == 1
+      winner = still_playing.last
       game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
     name + " folds!"
@@ -48,9 +48,9 @@ class AiPlayer < ActiveRecord::Base
     if bet_style == "always fold"
       always_fold
     elsif bet_style == "conservative"
-      bet_conservative
+      # bet_conservative
     elsif bet_style == "aggressive"
-      bet_aggressive
+      # bet_aggressive
     else
       normal_bet(user_action, amount)
     end

@@ -149,11 +149,8 @@ class Game < ActiveRecord::Base
 
   def determine_winner
     players = {}
-    user = [] if users.last.folded == true
-    user = users if users.last.folded == false
-    # all_players = find_players.reject { |player| player.folded == true }
-    #players
-    (ai_players + user).each do |player|
+    all_players = find_players.reject { |player| player.folded == true }
+    all_players.each do |player|
       players[player] = player.cards + game_cards
     end
     CardAnalyzer.new.determine_winner(players)
