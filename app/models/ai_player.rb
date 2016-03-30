@@ -6,7 +6,7 @@ class AiPlayer < ActiveRecord::Base
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
-    Game.last.update(pot: Game.last.pot + amount.to_i)
+    game.update(pot: game.pot + amount.to_i)
   end
 
   def call(amount)
@@ -18,8 +18,18 @@ class AiPlayer < ActiveRecord::Base
     "#{name} Checks!"
   end
 
+  def fold
+    update(folded: true)
+    still_playing = game.find_players.select { |player| player.folded == false }
+    if still_playing.count == 1
+      winner = still_playing.last
+      game.update(winner: "#{winner.id} #{winner.class}".downcase)
+    end
+    name + " folds!"
+  end
+
   def make_snarky_remark
-    "That's what I thought"
+    "That's what I thought" #customize
   end
 
   def present_cards
@@ -35,7 +45,26 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def take_action(user_action = nil, amount = nil)
-    #take bet style into consideration here
+    if bet_style == "always fold"
+      always_fold
+    elsif bet_style == "conservative"
+      # bet_conservative
+    elsif bet_style == "aggressive"
+      # bet_aggressive
+    else
+      normal_bet(user_action, amount)
+    end
+  end
+
+  def always_fold(user_action = nil, amount = nil)
+    if current_bet == 0
+      fold
+    else
+      normal_bet(user_action = nil, amount = nil)
+    end
+  end
+
+  def normal_bet(user_action = nil, amount = nil)
     if highest_bet > total_bet
       call(highest_bet - total_bet)
     elsif user_action == "fold"

@@ -44,8 +44,13 @@ RSpec.describe AiPlayer, type: :model do
   end
 
   it "can fold" do
-    #make code for ai folding here
-    #include ai bet style (perhaps: always fold)
-    #ai will fold based on hand and other bets
+    game = Game.create
+    user = game.users.create(name: "jones", username: "jones", password: "password")
+    ai_player = game.ai_players.create(name: "Jannet")
+    expect(ai_player.folded).to eq false
+
+    ai_player.fold
+
+    expect(ai_player.folded).to eq true
   end
 end

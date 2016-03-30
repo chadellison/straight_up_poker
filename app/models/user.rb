@@ -3,8 +3,7 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, uniqueness: true
   # validates :password, presence: true not sure why this is the case
-  has_many :user_games
-  has_many :games, through: :user_games
+  belongs_to :game
 
   def present_cards
     cards.join(", ")
@@ -16,28 +15,30 @@ class User < ActiveRecord::Base
     update(total_bet: total_bet + amount.to_i)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
-    Game.last.update(pot: Game.last.pot + amount.to_i)
+    game.update(pot: game.pot + amount.to_i)
   end
 
   def check_bet(amount)
-    "Error" if amount.to_i > cash || amount.to_i < Game.last.little_blind
+    "Error" if amount.to_i > cash || amount.to_i < game.little_blind
   end
 
   def fold
     update(folded: true)
-    if games.last.ai_players.count == 1
-      games.last.update(winner: "#{games.last.ai_players.last.id} ai_player")
+    folded_players = game.find_players.select { |player| player.folded == false }
+    if folded_players.count == 1
+      winner = folded_players.last
+      game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
   end
 
   def take_winnings
-    winnings = Game.last.pot
+    winnings = game.pot
     update(cash: cash + winnings)
     "#{id} user"
   end
 
   def split_pot(number_of_players)
-    winnings = Game.last.pot / number_of_players.to_f.round(2)
+    winnings = game.pot / number_of_players.to_f.round(2)
     update(cash: cash + winnings)
     "#{id} user"
   end

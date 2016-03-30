@@ -1,10 +1,10 @@
 class Game < ActiveRecord::Base
   has_many :ai_players
-  has_many :user_games
-  has_many :users, through: :user_games
+  has_many :users
 
-  def set_up_game
-    add_players
+  def set_up_game(current_user)
+    current_user.update(round: 0)
+    add_players(current_user)
     set_blinds
     load_deck
     deal_pocket_cards(find_players)
@@ -33,7 +33,8 @@ class Game < ActiveRecord::Base
     end.join("\n")
   end
 
-  def add_players
+  def add_players(user)
+    users << user.refresh
     players = AiPlayer.first(player_count - 1)
     players.each { |player| ai_players << player.refresh }
   end
@@ -148,9 +149,8 @@ class Game < ActiveRecord::Base
 
   def determine_winner
     players = {}
-    user = [] if users.last.folded == true
-    user = users if users.last.folded == false
-    (ai_players + user).each do |player|
+    all_players = find_players.reject { |player| player.folded == true }
+    all_players.each do |player|
       players[player] = player.cards + game_cards
     end
     CardAnalyzer.new.determine_winner(players)
@@ -163,7 +163,7 @@ class Game < ActiveRecord::Base
       update(flop: true)
     elsif flop && !turn
       update(turn: true)
-    else #make conditional for fold
+    else
       update(river: true)
     end
   end

@@ -4,10 +4,11 @@ RSpec.describe User, type: :model do
   it { validate_presence_of(:username) }
   it { validate_uniqueness_of(:username) }
   # it { validate_presence_of(:password) }
-  it "has many games" do
+  it "belongs to a game" do
     user = User.create(username: "jones", name: "Jones", password: "password")
-    assert user.user_games
-    assert user.games
+    game = Game.create
+    game.users << user
+    assert user.game
   end
 
   it "presents the cards" do

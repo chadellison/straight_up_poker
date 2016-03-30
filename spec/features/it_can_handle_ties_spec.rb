@@ -50,7 +50,8 @@ RSpec.feature "it can handle ties" do
     AiPlayer.find(rosco.id).update(cards: [card10.present_card, card8.present_card])
 
     click_on "Show Winner"
-    expect(page).to have_content "Oscar and jones split the pot"
-    expect(page).to have_content "Oscar: Ace of Clubs, 10 of Hearts, jones: Ace of Spades, 3 of Clubs"
+
+    expect(page).to have_content "jones and Oscar split the pot"
+    expect(page).to have_content "jones: Ace of Spades, 3 of Clubs, Oscar: Ace of Clubs, 10 of Hearts" 
   end
 end
