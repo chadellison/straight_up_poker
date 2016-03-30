@@ -166,7 +166,7 @@ class Game < ActiveRecord::Base
       update(flop: true)
     elsif flop && !turn
       update(turn: true)
-    else #make conditional for fold
+    else
       update(river: true)
     end
   end

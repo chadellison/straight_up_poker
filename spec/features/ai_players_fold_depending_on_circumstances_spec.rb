@@ -15,7 +15,7 @@ RSpec.feature "ai players fold depending on the circumstances" do
 
     click_on "Play"
 
-    select "2", from: "Player count"
+    select "3", from: "Player count"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"

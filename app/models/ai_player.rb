@@ -25,6 +25,7 @@ class AiPlayer < ActiveRecord::Base
       winner = folded_players.last
       game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
+    name + " folds!"
   end
 
   def make_snarky_remark
@@ -44,7 +45,26 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def take_action(user_action = nil, amount = nil)
-    #take bet style into consideration here
+    if bet_style == "always fold"
+      always_fold
+    elsif bet_style == "conservative"
+      bet_conservative
+    elsif bet_style == "aggressive"
+      bet_aggressive
+    else
+      normal_bet(user_action, amount)
+    end
+  end
+
+  def always_fold(user_action = nil, amount = nil)
+    if current_bet == 0
+      fold
+    else
+      normal_bet(user_action = nil, amount = nil)
+    end
+  end
+
+  def normal_bet(user_action = nil, amount = nil)
     if highest_bet > total_bet
       call(highest_bet - total_bet)
     elsif user_action == "fold"
