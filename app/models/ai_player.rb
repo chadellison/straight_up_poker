@@ -78,7 +78,7 @@ class AiPlayer < ActiveRecord::Base
     if bet_style == "always fold"
       always_fold
     elsif bet_style == "conservative"
-      # bet_conservative
+      bet_conservative(user_action, amount)
     elsif bet_style == "aggressive"
       # bet_aggressive
     else
