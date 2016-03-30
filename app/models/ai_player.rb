@@ -1,6 +1,7 @@
 class AiPlayer < ActiveRecord::Base
   belongs_to :game
 
+  include CardHelper
   def bet(amount)
     update(current_bet: amount.to_i)
     update(total_bet: total_bet + amount)
@@ -44,6 +45,28 @@ class AiPlayer < ActiveRecord::Base
     self
   end
 
+  def hand
+    analyze = CardAnalyzer.new
+    if game.flop_cards == []
+      evaluate_pocket
+    elsif game.river_card.nil?
+    else
+    end
+  end
+
+  def evaluate_pocket
+    current_hand = make_card_objects(cards)
+    if current_hand.all? { |card| card.value == 2 || card.value == 7 }
+      5
+    elsif CardAnalyzer.new.index_hand(current_hand) == 8
+      8
+    elsif card_converter(current_hand).map(&:value).any? { |value| value > 10 }
+      7
+    else
+      6
+    end
+  end
+
   def take_action(user_action = nil, amount = nil)
     if bet_style == "always fold"
       always_fold
@@ -53,6 +76,20 @@ class AiPlayer < ActiveRecord::Base
       # bet_aggressive
     else
       normal_bet(user_action, amount)
+    end
+  end
+
+  def bet_conservative(user_action, amount)
+    risk_factor = rand(1..10)
+    return bet(cash) if risk_factor == 10 && hand > 6
+    if highest_bet > total_bet && hand < 5
+      fold ? risk_factor > 2 : normal_bet
+    elsif highest_bet > total_bet && hand > 7
+      bet((highest_bet - total_bet) * 2) ? risk_factor > 7 : normal_bet
+    elsif highest_bet == total_bet && hand > 6
+      bet(big_blind) ? risk_factor > 5 : normal_bet
+    else
+      normal_bet
     end
   end
 

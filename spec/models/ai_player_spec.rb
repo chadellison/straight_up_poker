@@ -53,4 +53,29 @@ RSpec.describe AiPlayer, type: :model do
 
     expect(ai_player.folded).to eq true
   end
+
+  it "evaluates the quality of a current hand" do
+    game = Game.create
+    ai_player = game.ai_players.create(name: "Rosco")
+
+    cards = ["2 of Hearts", "7 of Spades"]
+    game.ai_players.last.update(cards: cards)
+    expect(ai_player.hand).to eq 5
+
+    cards = ["2 of Clubs", "10 of Hearts"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 6
+
+    cards = ["4 of Diamonds", "King of Hearts"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 7
+
+    cards = ["3 of Hearts", "3 of Spades"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 8
+
+    cards = ["Ace of Hearts", "Ace of Spades"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 8
+  end
 end
