@@ -97,7 +97,7 @@ class AiPlayer < ActiveRecord::Base
     elsif highest_bet > total_bet && hand > 4
       risk_factor > 6 ? bet((highest_bet - total_bet) * 2) : normal_bet
     elsif highest_bet == total_bet && hand > 3
-      risk_factor > 5 ? bet(game.big_blind) : normal_bet
+      risk_factor > 5 ? bet(risk_factor * 50) : normal_bet
     else
       normal_bet
     end
