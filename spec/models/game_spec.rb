@@ -83,7 +83,7 @@ RSpec.describe Game, type: :model do
 
   it "can perform an action based on other ais actions" do
     game = Game.create
-    game.users.create(name: "jones", username: "jones", password: "password", round: 2)
+    game.users.create(name: "jones", username: "jones", password: "password")
     game.ai_players.create(name: "Rosco")
     game.ai_players.create(name: "Oscar")
 

@@ -80,6 +80,8 @@ class AiPlayer < ActiveRecord::Base
   def take_action(user_action = nil, amount = nil)
     if bet_style == "always fold"
       always_fold
+    elsif bet_style == "always raise"
+      always_raise
     elsif bet_style == "conservative"
       bet_conservative(user_action, amount)
     elsif bet_style == "aggressive"
@@ -109,6 +111,14 @@ class AiPlayer < ActiveRecord::Base
       fold
     else
       normal_bet(user_action = nil, amount = nil)
+    end
+  end
+
+  def always_raise(user_action = nil, amount = nil)
+    if highest_bet > total_bet
+      bet(highest_bet - total_bet + game.big_blind)
+    else
+      bet(game.big_blind)
     end
   end
 
