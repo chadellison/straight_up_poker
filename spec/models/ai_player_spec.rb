@@ -47,11 +47,13 @@ RSpec.describe AiPlayer, type: :model do
     game = Game.create
     user = game.users.create(name: "jones", username: "jones", password: "password")
     ai_player = game.ai_players.create(name: "Jannet")
+    ai_player2 = game.ai_players.create(name: "Frank")
     expect(ai_player.folded).to eq false
 
     ai_player.fold
 
     expect(ai_player.folded).to eq true
+    expect(ai_player2.folded).to eq false
   end
 
   it "evaluates the quality of a current hand" do

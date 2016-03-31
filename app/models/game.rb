@@ -29,7 +29,7 @@ class Game < ActiveRecord::Base
   def initial_actions
     player_actions = find_range.map do |player|
       player.update(action: true)
-      player.take_action
+      player.take_action if player.folded == false
     end.join("\n")
   end
 
@@ -109,12 +109,14 @@ class Game < ActiveRecord::Base
   end
 
   def ai_action(user_action = nil, amount = nil)
+    #needs to handle raises
+    #also--don't want to see ai actions after clicking on "show winner"
     ai_players.each do |player|
       player.update(action: false) if highest_bet > player.total_bet
     end
 
     find_players.select do |player|
-      player.action == false
+      player.action == false && player.folded == false
     end.map do |player|
       player.update(action: true)
       player.take_action(user_action, amount)

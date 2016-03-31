@@ -2,12 +2,14 @@ class AiPlayer < ActiveRecord::Base
   belongs_to :game
 
   include CardHelper
+
   def bet(amount)
     update(current_bet: amount.to_i)
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
     game.update(pot: game.pot + amount.to_i)
+    "#{name} bet $#{amount}.00"
   end
 
   def call(amount)
@@ -41,6 +43,7 @@ class AiPlayer < ActiveRecord::Base
     update(cards: [],
             current_bet: 0,
             total_bet: 0,
+            folded: false
           )
     self
   end
@@ -88,16 +91,17 @@ class AiPlayer < ActiveRecord::Base
 
   def bet_conservative(user_action, amount)
     risk_factor = rand(1..10)
-    return bet(cash) if risk_factor == 10 && hand > 4
-    if highest_bet > total_bet && hand < 2
-      fold ? risk_factor > 2 : normal_bet
+    return bet(cash) if risk_factor == 10 && hand > 6
+    if highest_bet > total_bet && hand < 1
+      risk_factor > 2 ? fold : normal_bet
     elsif highest_bet > total_bet && hand > 4
-      bet((highest_bet - total_bet) * 2) ? risk_factor > 6 : normal_bet
+      risk_factor > 6 ? bet((highest_bet - total_bet) * 2) : normal_bet
     elsif highest_bet == total_bet && hand > 3
-      bet(big_blind) ? risk_factor > 5 : normal_bet
+      risk_factor > 5 ? bet(game.big_blind) : normal_bet
     else
       normal_bet
     end
+    #still needs to work out kinks with betting / raising
   end
 
   def always_fold(user_action = nil, amount = nil)
