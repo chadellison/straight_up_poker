@@ -18,8 +18,10 @@ module GameHelper
   end
 
   def display_button(game)
-    return nil unless game.find_players.all? do |player|
-      player.action || player.folded
+    unless game.users.last.folded
+      return nil unless game.find_players.all? do |player|
+        player.action || player.folded
+      end
     end
     if game.users.last.total_bet != game.highest_bet && !game.users.last.folded
       nil
