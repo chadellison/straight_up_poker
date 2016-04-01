@@ -47,10 +47,76 @@ RSpec.describe AiPlayer, type: :model do
     game = Game.create
     user = game.users.create(name: "jones", username: "jones", password: "password")
     ai_player = game.ai_players.create(name: "Jannet")
+    ai_player2 = game.ai_players.create(name: "Frank")
     expect(ai_player.folded).to eq false
 
     ai_player.fold
 
     expect(ai_player.folded).to eq true
+    expect(ai_player2.folded).to eq false
+  end
+
+  it "evaluates the quality of a current hand" do
+    game = Game.create
+    ai_player = game.ai_players.create(name: "Rosco")
+
+    cards = ["2 of Hearts", "7 of Spades"]
+    game.ai_players.last.update(cards: cards)
+    expect(ai_player.hand).to eq 3
+
+    cards = ["2 of Clubs", "10 of Hearts"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 4
+
+    cards = ["4 of Diamonds", "King of Hearts"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 5
+
+    cards = ["3 of Hearts", "3 of Spades"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 6
+
+    cards = ["Ace of Hearts", "Ace of Spades"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 6
+
+    flop_cards = ["Ace of Clubs", "Ace of Diamonds", "King of Hearts"]
+    Game.last.update(flop_cards: flop_cards)
+
+    expect(AiPlayer.last.hand).to eq 7
+
+    cards = ["5 of Hearts", "Jack of Clubs"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 1
+
+    cards = ["Ace of Hearts", "King of Diamonds"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 6
+
+    cards = ["Jack of Hearts", "King of Diamonds"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 2
+
+    cards = ["Ace of Hearts", "4 of Diamonds"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 3
+
+    turn_card = "Queen of Clubs"
+    Game.last.update(turn_card: turn_card)
+
+    cards = ["Jack of Hearts", "10 of Diamonds"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 4
+
+    flop_cards = ["Ace of Clubs", "Queen of Clubs", "King of Clubs"]
+    Game.last.update(flop_cards: flop_cards)
+
+    cards = ["3 of Clubs", "10 of Clubs"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 5
+
+    cards = ["Jack of Clubs", "10 of Clubs"]
+    game.ai_players.last.update(cards: cards)
+    expect(AiPlayer.last.hand).to eq 9
   end
 end

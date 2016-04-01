@@ -28,7 +28,7 @@ class GamesController < ApplicationController
     else
       game.game_action
       game.refresh if params["refresh"]
-      flash[:initial_actions] = game.initial_actions
+      flash[:initial_actions] = game.initial_actions unless game.winner
     end
     redirect_to game_path(game.id)
   end

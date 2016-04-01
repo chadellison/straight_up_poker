@@ -11,14 +11,17 @@ class Game < ActiveRecord::Base
   end
 
   def find_range
-    if users.last.folded == true
-      find_players.reject { |player| player.class == User }
-    elsif user_index == 1
+    if user_index == 1
       find_players[2..-1] + find_players[0...user_index]
     elsif user_index == 0
-      find_players[2..-1]
+      big_blind_ai = []
+      big_blind_ai = [find_players[1]] if users.last.folded
+
+      find_players[2..-1] + big_blind_ai
+    elsif user_index == 2
+      []
     else
-      find_players[(user_index + 1)..-1] || find_players[2...user_index]
+      find_players[2...user_index]
     end
   end
 
@@ -27,10 +30,10 @@ class Game < ActiveRecord::Base
   end
 
   def initial_actions
-    player_actions = find_range.map do |player|
+    find_range.map do |player|
       player.update(action: true)
-      player.take_action
-    end.join("\n")
+      player.take_action unless player.folded
+    end.join("\n") unless find_range.empty?
   end
 
   def add_players(user)
@@ -109,16 +112,24 @@ class Game < ActiveRecord::Base
   end
 
   def ai_action(user_action = nil, amount = nil)
-    ai_players.each do |player|
-      player.update(action: false) if highest_bet > player.total_bet
-    end
+    actions = []
+      ai_players.each do |player|
+        player.update(action: false) if highest_bet > player.total_bet
+      end
 
-    find_players.select do |player|
-      player.action == false
-    end.map do |player|
-      player.update(action: true)
-      player.take_action(user_action, amount)
-    end.join("\n")
+      find_players.rotate(-2).select do |player|
+        player.action == false && !player.folded
+      end.each do |player|
+        player.update(action: true)
+        actions << player.take_action(user_action, amount)
+      end
+
+    find_range.select do |player|
+      player.total_bet != highest_bet unless player.folded
+    end.each do |player|
+      actions << player.take_action(user_action, amount)
+    end
+    actions.join("\n")
   end
 
   def highest_bet
