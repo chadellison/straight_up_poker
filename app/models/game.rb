@@ -12,7 +12,7 @@ class Game < ActiveRecord::Base
 
   def find_range
     if user_index == 1
-      find_players[2..-1] + find_players[0...user_index]
+      find_players[2..-1] << find_players.first
     elsif user_index == 0
       big_blind_ai = []
       big_blind_ai = [find_players[1]] if users.last.folded

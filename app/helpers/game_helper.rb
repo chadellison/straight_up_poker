@@ -18,12 +18,11 @@ module GameHelper
   end
 
   def display_button(game)
-    unless game.users.last.folded
-      return nil unless game.find_players.all? do |player|
-        player.action || player.folded
+    if !game.users.last.folded &&
+      [players_updated?(game),
+        game.users.last.total_bet == game.highest_bet].any? do |value|
+        value == false
       end
-    end
-    if game.users.last.total_bet != game.highest_bet && !game.users.last.folded
       nil
     elsif game.pocket_cards && game.flop_cards.empty?
       "Deal Flop"
@@ -33,6 +32,12 @@ module GameHelper
       "Deal River"
     elsif game.river && !game.winner
       "Show Winner"
+    end
+  end
+
+  def players_updated?(game)
+    game.find_players.all? do |player|
+      player.action || player.folded
     end
   end
 
