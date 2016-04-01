@@ -112,35 +112,24 @@ class Game < ActiveRecord::Base
   end
 
   def ai_action(user_action = nil, amount = nil)
-    #needs to handle raises
-    #also--don't want to see ai actions after clicking on "show winner"
     actions = []
       ai_players.each do |player|
         player.update(action: false) if highest_bet > player.total_bet
       end
 
-      find_players.rotate(user_index * -1).select do |player|
+      find_players.rotate(-2).select do |player|
         player.action == false && !player.folded
       end.each do |player|
         player.update(action: true)
         actions << player.take_action(user_action, amount)
       end
 
-      actions.join("\n")
-    #   find_players.select do |player|
-    #     player.action == false && player.folded == false
-    #   end.each do |player|
-    #     player.update(action: true)
-    #     actions << player.take_action(user_action, amount)
-    #   end
-    # find_range.select do |player|
-    #   player.total_bet != highest_bet unless player.folded
-    # end.each do |player|
-    #   player.update(action: true)
-    #   actions << player.take_action(user_action, amount)
-    # end
-    #
-    # actions.join("\n")
+    find_range.select do |player|
+      player.total_bet != highest_bet unless player.folded
+    end.each do |player|
+      actions << player.take_action(user_action, amount)
+    end
+    actions.join("\n")
   end
 
   def highest_bet

@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.feature "user can play many rounds with many players" do
   scenario "user sees blind rotation and actions for all players" do
-    AiPlayer.create(name: "Mary")
-    AiPlayer.create(name: "Frank")
     User.create(name: "jones", username: "jones", password: "password")
+    AiPlayer.create(name: "Frank")
+    AiPlayer.create(name: "Mary")
 
     visit root_path
     click_on "Login"

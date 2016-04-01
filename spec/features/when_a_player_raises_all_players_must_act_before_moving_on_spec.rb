@@ -45,6 +45,9 @@ RSpec.feature "when a player raises all other players must act before moving on"
 
     #rosco, jones, frank, martha
 
+    expect(page).to have_content "Little Blind: Rosco, $100.00"
+    expect(page).to have_content "Big Blind: jones, $200.00"
+
     expect(page).to have_content "Frank Calls!"
     expect(page).to have_content "Martha bet $400.00"
     expect(page).to have_content "Rosco Calls!"
@@ -64,6 +67,9 @@ RSpec.feature "when a player raises all other players must act before moving on"
     click_on "Continue"
 
     #martha, rosco, jones, frank
+
+    expect(page).to have_content "Little Blind: Martha, $100.00"
+    expect(page).to have_content "Big Blind: Rosco, $200.00"
 
     expect(page).not_to have_content "Martha bet $200.00"
     expect(page).not_to have_content "Rosco Calls!"
@@ -141,11 +147,56 @@ RSpec.feature "when a player raises all other players must act before moving on"
     expect(page).to have_content "Big Blind: Martha, $200.00"
     expect(page).to have_content "Rosco Calls!"
     click_on "Call"
-
     expect(page).to have_content "Frank Calls!"
-    expect(page).to have_content "Martha bet $200"
-save_and_open_page
+    expect(page).to have_content "Martha bet $200.00"
     expect(page).to have_content "Rosco Calls!"
     click_on "Call"
+    expect(page).to have_content "Frank Calls!"
+
+    click_on "Deal Flop"
+    expect(page).to have_content "Rosco Checks!"
+
+    click_on "Check"
+    expect(page).to have_content "Frank Checks!"
+    expect(page).to have_content "Martha bet $200.00"
+    expect(page).to have_content "Rosco Calls!"
+
+    click_on "Call"
+    expect(page).to have_content "Frank Calls"
+
+    click_on "Deal Turn"
+
+    expect(page).to have_content "Rosco Checks!"
+
+    click_on "Check"
+
+    expect(page).to have_content "Frank Checks!"
+    expect(page).to have_content "Martha bet $200.00"
+    expect(page).to have_content "Rosco Calls!"
+
+    click_on "Call"
+    expect(page).to have_content "Frank Calls"
+
+    expect(Game.last.find_players.all? do |player|
+      player.total_bet == Game.last.highest_bet
+    end).to eq true
+
+    click_on "Deal River"
+    expect(page).to have_content "Rosco Checks!"
+
+    click_on "Check"
+
+    expect(page).to have_content "Frank Checks!"
+    expect(page).to have_content "Martha bet $200.00"
+    expect(page).to have_content "Rosco Calls!"
+
+    click_on "Call"
+    expect(page).to have_content "Frank Calls"
+
+    expect(Game.last.find_players.all? do |player|
+      player.total_bet == Game.last.highest_bet
+    end).to eq true
+
+    click_on "Show Winner"
   end
 end
