@@ -78,21 +78,21 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def take_action(user_action = nil, amount = nil)
+    risk_factor = rand(1..10)
     if bet_style == "always fold"
       always_fold
     elsif bet_style == "always raise"
       always_raise
     elsif bet_style == "conservative"
-      bet_conservative
+      bet_conservative(risk_factor)
     elsif bet_style == "aggressive"
-      bet_aggressive(user_action, amount)
+      bet_aggressive(risk_factor)
     else
       normal_bet(user_action, amount)
     end
   end
 
-  def bet_conservative
-    risk_factor = rand(1..10)
+  def bet_conservative(risk_factor)
     return bet(cash) if risk_factor == 10 && hand > 6
     if highest_bet > total_bet && hand < 1
       risk_factor > 2 ? fold : normal_bet
@@ -105,8 +105,7 @@ class AiPlayer < ActiveRecord::Base
     end
   end
 
-  def bet_aggressive(user_action, amount)
-    risk_factor = rand(1..10)
+  def bet_aggressive(risk_factor)
     return bet(cash) if risk_factor > 7 && hand > 5
     if highest_bet > total_bet && hand < 1
       risk_factor > 5 ? fold : normal_bet
@@ -146,12 +145,12 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def highest_bet
-    if game.ai_players.maximum(:total_bet) > game.users.maximum(:total_bet)
-      game.ai_players.maximum(:total_bet)
-    else
-      game.users.maximum(:total_bet)
-    end
-    # game.find_players.max_by(&:total_bet).total_bet <-- is this going to make a performance
+    # if game.ai_players.maximum(:total_bet) > game.users.maximum(:total_bet)
+    #   game.ai_players.maximum(:total_bet)
+    # else
+    #   game.users.maximum(:total_bet)
+    # end
+    game.find_players.max_by(&:total_bet).total_bet #<-- is this going to make a performance
     #difference?
   end
 
