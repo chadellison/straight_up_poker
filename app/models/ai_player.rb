@@ -83,15 +83,15 @@ class AiPlayer < ActiveRecord::Base
     elsif bet_style == "always raise"
       always_raise
     elsif bet_style == "conservative"
-      bet_conservative(user_action, amount)
+      bet_conservative
     elsif bet_style == "aggressive"
-      # bet_aggressive
+      bet_aggressive(user_action, amount)
     else
       normal_bet(user_action, amount)
     end
   end
 
-  def bet_conservative(user_action, amount)
+  def bet_conservative
     risk_factor = rand(1..10)
     return bet(cash) if risk_factor == 10 && hand > 6
     if highest_bet > total_bet && hand < 1
@@ -99,22 +99,35 @@ class AiPlayer < ActiveRecord::Base
     elsif highest_bet > total_bet && hand > 4
       risk_factor > 6 ? bet((highest_bet - total_bet) * 2) : normal_bet
     elsif highest_bet == total_bet && hand > 3
-      risk_factor > 5 ? bet(risk_factor * 50) : normal_bet
+      risk_factor > 5 ? bet((risk_factor * 50) + game.little_blind) : normal_bet
     else
       normal_bet
     end
-    #still needs to work out kinks with betting / raising
   end
 
-  def always_fold(user_action = nil, amount = nil)
-    if current_bet == 0
-      fold
+  def bet_aggressive(user_action, amount)
+    risk_factor = rand(1..10)
+    return bet(cash) if risk_factor > 7 && hand > 5
+    if highest_bet > total_bet && hand < 1
+      risk_factor > 5 ? fold : normal_bet
+    elsif highest_bet > total_bet && hand > 2
+      risk_factor > 5 ? bet((highest_bet - total_bet) + game.little_blind) : normal_bet
+    elsif highest_bet == total_bet && hand > 1
+      risk_factor > 4 ? bet(game.little_blind) : normal_bet
     else
-      normal_bet(user_action = nil, amount = nil)
+      normal_bet
     end
   end
 
-  def always_raise(user_action = nil, amount = nil)
+  def always_fold
+    if current_bet == 0
+      fold
+    else
+      normal_bet
+    end
+  end
+
+  def always_raise
     if highest_bet > total_bet
       bet(highest_bet - total_bet + game.big_blind)
     else
@@ -138,6 +151,8 @@ class AiPlayer < ActiveRecord::Base
     else
       game.users.maximum(:total_bet)
     end
+    # game.find_players.max_by(&:total_bet).total_bet <-- is this going to make a performance
+    #difference?
   end
 
   def take_winnings
