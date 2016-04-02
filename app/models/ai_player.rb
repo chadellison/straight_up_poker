@@ -151,7 +151,6 @@ class AiPlayer < ActiveRecord::Base
     else
       game.users.maximum(:total_bet)
     end
-
     # game.find_players.max_by(&:total_bet).total_bet <-- is this going to make a performance
     #difference?
   end
