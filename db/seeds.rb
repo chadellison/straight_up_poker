@@ -6,11 +6,11 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 AiPlayer.where(name: "Hillary Clinton", bet_style: "conservative").first_or_create
-AiPlayer.where(name: "Donald Trump", bet_style: "conservative").first_or_create
-AiPlayer.where(name: "Bernie Sanders").first_or_create
-AiPlayer.where(name: "Ted Cruz").first_or_create
-AiPlayer.where(name: "Rosco").first_or_create
-AiPlayer.where(name: "Oscar").first_or_create
-AiPlayer.where(name: "Martha").first_or_create
-AiPlayer.where(name: "Colbert").first_or_create
-AiPlayer.where(name: "Engrid").first_or_create
+AiPlayer.where(name: "Donald Trump", bet_style: "aggressive").first_or_create
+AiPlayer.where(name: "Bernie Sanders", bet_style: "aggressive").first_or_create
+AiPlayer.where(name: "Ted Cruz", bet_style: "conservative").first_or_create
+AiPlayer.where(name: "Rosco", bet_style: "aggressive").first_or_create
+AiPlayer.where(name: "Oscar", bet_style: "conservative").first_or_create
+AiPlayer.where(name: "Martha", bet_style: "conservative").first_or_create
+AiPlayer.where(name: "Colbert", bet_style: "conservative").first_or_create
+AiPlayer.where(name: "Engrid", bet_style: "aggressive").first_or_create
