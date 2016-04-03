@@ -149,7 +149,7 @@ class Game < ActiveRecord::Base
     end
     ai_players.each { |player| player.update(action: false) }
     update(raise_count: 0)
-    update_game if users.last.folded == true
+    update_game if users.last.folded
   end
 
   def game_cards
