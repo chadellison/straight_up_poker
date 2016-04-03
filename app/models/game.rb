@@ -105,6 +105,7 @@ class Game < ActiveRecord::Base
       bet_amount = highest_bet - user.total_bet
       user.bet(bet_amount)
     elsif action == "bet"
+      update(raise_count: raise_count + 1)
       user.bet(amount[:current_bet])
     elsif action == "fold"
       user.fold
@@ -133,11 +134,6 @@ class Game < ActiveRecord::Base
   end
 
   def highest_bet
-    # if ai_players.maximum(:total_bet) > users.maximum(:total_bet)
-    #   ai_players.maximum(:total_bet)
-    # else
-    #   users.maximum(:total_bet)
-    # end
     find_players.max_by(&:total_bet).total_bet
   end
 
@@ -152,6 +148,7 @@ class Game < ActiveRecord::Base
       update(winner: determine_winner) unless winner
     end
     ai_players.each { |player| player.update(action: false) }
+    update(raise_count: 0)
     update_game if users.last.folded == true
   end
 

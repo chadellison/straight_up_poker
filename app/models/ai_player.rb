@@ -22,9 +22,14 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def raise(amount)
-    call = game.highest_bet - total_bet
-    bet(call + amount)
-    "#{name} Raises $#{amount}.00"
+    if game.raise_count == 3
+      normal_bet
+    else
+      call = game.highest_bet - total_bet
+      bet(call + amount)
+      game.update(raise_count: game.raise_count + 1)
+      "#{name} Raises $#{amount}.00"
+    end
   end
 
   def fold
@@ -133,11 +138,8 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def always_raise
-    if game.highest_bet > total_bet
-      bet(game.highest_bet - total_bet + game.big_blind)
-    else
-      bet(game.big_blind)
-    end
+    #if game.raise_count == 3 ... normal_bet
+    raise(game.big_blind)
   end
 
   def normal_bet(user_action = nil, amount = nil)

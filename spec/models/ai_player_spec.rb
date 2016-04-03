@@ -123,7 +123,7 @@ RSpec.describe AiPlayer, type: :model do
   it "can raise" do
     game = Game.create
     oscar = game.ai_players.create(name: "Oscar")
-    user = game.users.create(name: "Jones")
+    user = game.users.new(name: "Jones")
     user.bet(100)
     expect(oscar.raise(100)).to eq "Oscar Raises $100.00"
     expect(game.users.last.total_bet).to eq 100
