@@ -4,6 +4,7 @@
 <% end %>
 <h3>Little Blind: <%= @game.find_players.first.name %>, $<%= @game.little_blind %>.00</h3>
 <h3>Big Blind: <%= @game.find_players[1].name %>, $<%= @game.big_blind %>.00</h3>
+<h3><%= to_call(@game) %> </h3>
 <h1>Pot: $<%= @game.pot %>.00</h1>
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>

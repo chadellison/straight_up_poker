@@ -87,7 +87,7 @@ RSpec.describe Game, type: :model do
     game.ai_players.create(name: "Rosco")
     game.ai_players.create(name: "Oscar")
 
-    expect(game.ai_action).to eq "Oscar Checks!""\n""Rosco Checks!"
+    expect(game.ai_action).to eq "Rosco Checks!""\n""Oscar Checks!"
   end
 
   it "updates the state of the game" do

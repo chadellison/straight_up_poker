@@ -117,7 +117,7 @@ class Game < ActiveRecord::Base
         player.update(action: false) if highest_bet > player.total_bet
       end
 
-      find_players.rotate(-2).select do |player|
+      find_players.rotate(2).select do |player|
         player.action == false && !player.folded
       end.each do |player|
         player.update(action: true)
@@ -133,11 +133,12 @@ class Game < ActiveRecord::Base
   end
 
   def highest_bet
-    if ai_players.maximum(:total_bet) > users.maximum(:total_bet)
-      ai_players.maximum(:total_bet)
-    else
-      users.maximum(:total_bet)
-    end
+    # if ai_players.maximum(:total_bet) > users.maximum(:total_bet)
+    #   ai_players.maximum(:total_bet)
+    # else
+    #   users.maximum(:total_bet)
+    # end
+    find_players.max_by(&:total_bet).total_bet
   end
 
   def game_action

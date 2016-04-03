@@ -35,6 +35,11 @@ module GameHelper
     end
   end
 
+  def to_call(game)
+    call_amount = game.highest_bet - game.users.last.total_bet
+    "$#{call_amount}.00 to call" unless call_amount == 0
+  end
+
   def players_updated?(game)
     game.find_players.all? do |player|
       player.action || player.folded
