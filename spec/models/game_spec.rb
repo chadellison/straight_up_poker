@@ -87,7 +87,7 @@ RSpec.describe Game, type: :model do
     game.ai_players.create(name: "Rosco")
     game.ai_players.create(name: "Oscar")
 
-    expect(game.ai_action).to eq "Oscar Checks!""\n""Rosco Checks!"
+    expect(game.ai_action).to eq "Rosco Checks!""\n""Oscar Checks!"
   end
 
   it "updates the state of the game" do
@@ -246,5 +246,17 @@ RSpec.describe Game, type: :model do
 
     expect(AiPlayer.last.current_bet).to eq 150
     expect(AiPlayer.last.total_bet).to eq 150
+  end
+
+  it "does not allow players to raise once the raise count is 3" do
+    game = Game.create(little_blind: 100, big_blind: 200)
+    user = game.users.create(name: "jones", username: "jones", password: "password")
+    oscar = game.ai_players.create(name: "Oscar", bet_style: "always raise")
+    rosco = game.ai_players.create(name: "Rosco", bet_style: "always raise")
+    expect(oscar.take_action).to eq "Oscar Raises $200.00"
+    expect(rosco.take_action).to eq "Rosco Raises $200.00"
+    expect(oscar.take_action).to eq "Oscar Raises $200.00"
+    expect(rosco.take_action).to eq "Rosco Calls!"
+    expect(oscar.take_action).to eq "Oscar Checks!"
   end
 end

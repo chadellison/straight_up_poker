@@ -21,6 +21,17 @@ class AiPlayer < ActiveRecord::Base
     "#{name} Checks!"
   end
 
+  def raise(amount)
+    if game.raise_count == 3
+      normal_bet
+    else
+      call = game.highest_bet - total_bet
+      bet(call + amount)
+      game.update(raise_count: game.raise_count + 1)
+      "#{name} Raises $#{amount}.00"
+    end
+  end
+
   def fold
     update(folded: true)
     still_playing = game.find_players.select { |player| player.folded == false }
@@ -93,26 +104,26 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def bet_conservative(risk_factor)
-    return bet(cash) if risk_factor == 10 && hand > 6
-    if highest_bet > total_bet && hand < 1
+    return bet(cash) if risk_factor == 10 && hand > 6 && !game.flop_cards.empty?
+    if game.highest_bet > total_bet && hand < 1
       risk_factor > 2 ? fold : normal_bet
-    elsif highest_bet > total_bet && hand > 4
-      risk_factor > 6 ? bet((highest_bet - total_bet) * 2) : normal_bet
-    elsif highest_bet == total_bet && hand > 3
-      risk_factor > 5 ? bet((risk_factor * 50) + game.little_blind) : normal_bet
+    elsif game.highest_bet > total_bet && hand > 4
+      risk_factor > 6 ? raise((game.highest_bet - total_bet) * 2) : normal_bet
+    elsif game.highest_bet == total_bet && hand > 3
+      risk_factor > 5 ? raise((risk_factor * 50) + game.little_blind) : normal_bet
     else
       normal_bet
     end
   end
 
   def bet_aggressive(risk_factor)
-    return bet(cash) if risk_factor > 7 && hand > 5
-    if highest_bet > total_bet && hand < 1
+    return bet(cash) if risk_factor > 7 && hand > 5 && !game.flop_cards.empty?
+    if game.highest_bet > total_bet && hand < 1
       risk_factor > 5 ? fold : normal_bet
-    elsif highest_bet > total_bet && hand > 2
-      risk_factor > 5 ? bet((highest_bet - total_bet) + game.little_blind) : normal_bet
-    elsif highest_bet == total_bet && hand > 1
-      risk_factor > 4 ? bet(game.little_blind) : normal_bet
+    elsif game.highest_bet > total_bet && hand > 2
+      risk_factor > 5 ? raise((game.highest_bet - total_bet) + game.little_blind) : normal_bet
+    elsif game.highest_bet == total_bet && hand > 1
+      risk_factor > 4 ? raise(game.little_blind) : normal_bet
     else
       normal_bet
     end
@@ -127,31 +138,18 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def always_raise
-    if highest_bet > total_bet
-      bet(highest_bet - total_bet + game.big_blind)
-    else
-      bet(game.big_blind)
-    end
+    #if game.raise_count == 3 ... normal_bet
+    raise(game.big_blind)
   end
 
   def normal_bet(user_action = nil, amount = nil)
-    if highest_bet > total_bet
-      call(highest_bet - total_bet)
+    if game.highest_bet > total_bet
+      call(game.highest_bet - total_bet)
     elsif user_action == "fold"
       make_snarky_remark
     else
       check
     end
-  end
-
-  def highest_bet
-    # if game.ai_players.maximum(:total_bet) > game.users.maximum(:total_bet)
-    #   game.ai_players.maximum(:total_bet)
-    # else
-    #   game.users.maximum(:total_bet)
-    # end
-    game.find_players.max_by(&:total_bet).total_bet #<-- is this going to make a performance
-    #difference?
   end
 
   def take_winnings

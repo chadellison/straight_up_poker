@@ -4,6 +4,7 @@
 <% end %>
 <h3>Little Blind: <%= @game.find_players.first.name %>, $<%= @game.little_blind %>.00</h3>
 <h3>Big Blind: <%= @game.find_players[1].name %>, $<%= @game.big_blind %>.00</h3>
+<h3><%= to_call(@game) %> </h3>
 <h1>Pot: $<%= @game.pot %>.00</h1>
 
 <h3>Cash: $<%= current_user.cash %>.00</h3>
@@ -23,7 +24,7 @@
 <% elsif display_button(@game) %>
   <%= button_to display_button(@game), game_path(@game.id), method: :patch %>
 <% else %>
-  <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get %>
+  <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get if @game.raise_count < 3 %>
   <%= button_to call_or_check(current_user), game_path(game_id: @game.id, user_action: call_or_check(current_user).downcase.to_sym), method: :patch %>
   <%= button_to "Fold", game_path(game_id: @game.id, user_action: :fold), method: :patch %>
 <% end %>
