@@ -23,9 +23,28 @@ RSpec.feature "user can fold vs multiple ais" do
 
     click_on "Fold"
     click_on "Deal Flop"
+
+    expect(page).to have_content "Mary Checks! Rosco Checks! Frank Checks!"
     click_on "Deal Turn"
+    expect(page).to have_content "Mary Checks! Rosco Checks! Frank Checks!"
     click_on "Deal River"
+    expect(page).to have_content "Mary Checks! Rosco Checks! Frank Checks!"
     click_on "Show Winner"
     assert Game.last.winner
+
+    click_on "Continue"
+
+    #click on fold
+    #what should you expect
+    #finish out round
+
+    #click_on Continue
+    #click on fold
+    #what is expected
+    #finish out round
+
+    #click on continue
+    # click on fold
+    #what is expected
   end
 end
