@@ -53,7 +53,7 @@ RSpec.feature "user can win the pot" do
 
     click_on "Show Winner"
 
-    expect(page).to have_content "jones wins!"
+    expect(page).to have_content "jones wins with a Full House!"
     expect(Game.last.pot).to eq 400
     expect(User.last.cash).to eq 1200
 
@@ -112,7 +112,9 @@ RSpec.feature "user can win the pot" do
     Game.last.update(river_card: river)
 
     click_on "Show Winner"
-    expect(page).to have_content "Oscar wins!"
+    expect(page).to have_content "Oscar wins with a Full House!"
+    expect(page).to have_content "Full House"
+    expect(page).to have_content "Oscar: Ace of Clubs, Ace of Hearts"
     expect(User.last.cash).to eq 800
     expect(Game.last.pot).to eq 400
     expect(AiPlayer.last.cash).to eq 1200

@@ -18,7 +18,7 @@
 
 <% if @game.winner %>
   <h1><%= declare_winner(@game) %></h1>
-  <p><%= winning_hand(@game) %></p>
+  <p><%= winning_cards(@game) %></p>
   <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch %>
   <%= button_to "Quit", dashboard_path, method: :get %>
 <% elsif display_button(@game) %>

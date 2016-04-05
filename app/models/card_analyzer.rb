@@ -181,7 +181,7 @@ class CardAnalyzer
       end.sort_by do |best_cards|
         best_cards.last.map(&:value)
       end
-      check_tie(winner) #last.first.take_winnings #this needs to handle ties
+      check_tie(winner)
     end
   end
 
