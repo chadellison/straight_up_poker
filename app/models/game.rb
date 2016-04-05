@@ -11,14 +11,15 @@ class Game < ActiveRecord::Base
   end
 
   def find_range
-    if user_index == 1
+    case user_index
+    when 1
       find_players[2..-1] << find_players.first
-    elsif user_index == 0
+    when 0
       big_blind_ai = []
-      big_blind_ai = [find_players[1]] if users.last.folded
+      big_blind_ai << find_players[1] if users.last.folded
 
       find_players[2..-1] + big_blind_ai
-    elsif user_index == 2
+    when 2
       []
     else
       find_players[2...user_index]
@@ -101,13 +102,15 @@ class Game < ActiveRecord::Base
 
   def user_action(action, amount = nil)
     user = users.last
-    if action == "call"
+
+    case action
+    when "call"
       bet_amount = highest_bet - user.total_bet
       user.bet(bet_amount)
-    elsif action == "bet"
+    when "bet"
       update(raise_count: raise_count + 1)
       user.bet(amount[:current_bet])
-    elsif action == "fold"
+    when "fold"
       user.fold
     end
   end
@@ -140,9 +143,9 @@ class Game < ActiveRecord::Base
   def game_action
     if flop_cards.empty?
       deal_flop
-    elsif !turn_card
+    elsif turn_card.nil?
       deal_turn
-    elsif !river_card
+    elsif river_card.nil?
       deal_river
     else
       update(winner: determine_winner) unless winner

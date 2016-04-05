@@ -61,7 +61,7 @@ RSpec.feature "ai players fold depending on the circumstances" do
 
     click_on "Show Winner"
 
-    expect(page).not_to have_content "Rick wins!"
-    expect(page).to have_content "Frankie wins!"
+    expect(page).not_to have_content "Rick wins with a Full House!"
+    expect(page).to have_content "Frankie wins with a Two Pair!"
   end
 end

@@ -61,7 +61,7 @@ class AiPlayer < ActiveRecord::Base
 
   def hand
     analyze = CardAnalyzer.new
-    if game.flop_cards == []
+    if game.flop_cards.empty?
       evaluate_pocket
     elsif game.turn_card.nil?
       hand = make_card_objects(cards + game.flop_cards)

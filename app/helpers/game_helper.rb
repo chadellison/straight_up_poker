@@ -1,4 +1,6 @@
 module GameHelper
+  include CardHelper
+
   def call_or_check(user)
     if user.total_bet < @game.ai_players.maximum(:total_bet)
       "Call"
@@ -43,23 +45,51 @@ module GameHelper
   def players_updated?(game)
     game.find_players.all? do |player|
       player.action || player.folded
-    end
+    end 
   end
 
   def declare_winner(game)
     if find_winner(game).size == 1
-      find_winner(game).last.name + " wins!"
+      find_winner(game).last.name + " wins with a " + winning_hand(game) + "!"
     else
       find_winner(game).map do |winner|
         winner.name
-      end.join(" and ") + " split the pot"
+      end.join(" and ") + " split the pot with " + winning_hand(game).pluralize(2) + "!"
     end
   end
 
-  def winning_hand(game)
+  def winning_cards(game)
     find_winner(game).map do |winner|
       "#{winner.name}: #{winner.present_cards}"
     end.join(", ")
+  end
+
+  def winning_hand(game)
+    game_cards = game.flop_cards.empty? ? [] : game.game_cards
+    cards = find_winner(game).last.cards + game_cards
+
+    case CardAnalyzer.new.index_hand(make_card_objects(cards))
+    when 0
+      "Royal Flush"
+    when 1
+      "Straight Flush"
+    when 2
+      "Four of a Kind"
+    when 3
+      "Full House"
+    when 4
+      "Flush"
+    when 5
+      "Straight"
+    when 6
+      "Three of a Kind"
+    when 7
+      "Two Pair"
+    when 8
+      "Two of a Kind"
+    else
+      "High Card"
+    end
   end
 
   def find_winner(game)

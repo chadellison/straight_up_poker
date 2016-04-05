@@ -19,6 +19,6 @@ RSpec.feature "user can fold" do
     expect(Game.last.pot).to eq 225
     click_on "Fold"
     expect(page).to have_content "That's what I thought"
-    expect(page).to have_content "Rosco wins!"
+    expect(AiPlayer.find(Game.last.winner.split.first).name).to eq "Rosco"
   end
 end
