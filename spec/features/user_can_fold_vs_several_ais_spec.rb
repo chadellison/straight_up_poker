@@ -39,6 +39,7 @@ RSpec.feature "user can fold vs multiple ais" do
     #finish out round
 
     #click_on Continue
+
     #click on fold
     #what is expected
     #finish out round
@@ -46,5 +47,6 @@ RSpec.feature "user can fold vs multiple ais" do
     #click on continue
     # click on fold
     #what is expected
+    #finish out round
   end
 end
