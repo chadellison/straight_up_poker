@@ -45,7 +45,7 @@ module GameHelper
   def players_updated?(game)
     game.find_players.all? do |player|
       player.action || player.folded
-    end 
+    end
   end
 
   def declare_winner(game)

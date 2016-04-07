@@ -29,19 +29,22 @@ RSpec.feature "user can play multiple ais" do
 
     click_on "Call"
     expect(page).to have_content Game.last.find_players[1].name + " Checks"
-
     click_on "Deal Flop"
-    expect(page).to have_content Game.last.find_players[2].name + " Checks"
-    expect(page).to have_content Game.last.find_players[3].name + " Checks"
-    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
 
     click_on "Check"
     expect(page).to have_content Game.last.find_players[1].name + " Checks"
-
-    click_on "Deal Turn"
     expect(page).to have_content Game.last.find_players[2].name + " Checks"
     expect(page).to have_content Game.last.find_players[3].name + " Checks"
     expect(page).to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Deal Turn"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
 
     click_on "Bet / Raise"
     fill_in "Current bet", with: "200"
@@ -53,13 +56,16 @@ RSpec.feature "user can play multiple ais" do
     expect(page).to have_content Game.last.find_players[4].name + " Calls!"
 
     click_on "Deal River"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
     expect(page).to have_content Game.last.find_players[2].name + " Checks"
     expect(page).to have_content Game.last.find_players[3].name + " Checks"
     expect(page).to have_content Game.last.find_players[4].name + " Checks"
-
-    click_on "Check"
-
-    expect(page).to have_content Game.last.find_players[1].name + " Checks"
 
     refute Game.last.winner
 
@@ -70,7 +76,131 @@ RSpec.feature "user can play multiple ais" do
     expect(Game.last.find_players.first).to eq User.last
 
     click_on "Continue"
-
     expect(Game.last.find_players[1]).to eq User.last
+    expect(page).to have_content Game.last.find_players[2].name + " Calls"
+    expect(page).to have_content Game.last.find_players[3].name + " Calls"
+    expect(page).to have_content Game.last.find_players[4].name + " Calls"
+    expect(page).to have_content Game.last.find_players[0].name + " Calls"
+
+    click_on "Check"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[2].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Calls"
+
+    click_on "Deal Flop"
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+
+    expect(page).not_to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Checks"
+
+    click_on "Deal Turn"
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+
+    expect(page).not_to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Checks"
+
+    click_on "Deal River"
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+
+    expect(page).not_to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Checks"
+
+    click_on "Show Winner"
+
+    click_on "Continue"
+    expect(Game.last.find_players[2]).to eq User.last
+    expect(page).not_to have_content Game.last.find_players[0].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Call"
+    expect(page).to have_content Game.last.find_players[3].name + " Calls"
+    expect(page).to have_content Game.last.find_players[4].name + " Calls"
+    expect(page).to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
+
+    click_on "Deal Flop"
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Calls"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Calls"
+
+    click_on "Deal Turn"
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Calls"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Calls"
+
+    click_on "Deal River"
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[3].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Calls"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[3].name + " Checks"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Calls"
+
+    click_on "Show Winner"
+
+    click_on "Continue"
+    expect(Game.last.find_players[3]).to eq User.last
+    expect(page).to have_content Game.last.find_players[2].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).not_to have_content Game.last.find_players[1].name + " Calls"
+
+    click_on "Call"
+
+    expect(page).to have_content Game.last.find_players[4].name + " Calls"
+    expect(page).to have_content Game.last.find_players[0].name + " Calls"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
+
+    click_on "Deal Flop"
+
+    expect(page).to have_content Game.last.find_players[0].name + " Checks"
+    expect(page).to have_content Game.last.find_players[1].name + " Checks"
+    expect(page).to have_content Game.last.find_players[2].name + " Checks"
+    expect(page).not_to have_content Game.last.find_players[4].name + " Checks"
+
+    click_on "Check"
+    expect(page).to have_content Game.last.find_players[4].name + " Checks"
   end
 end

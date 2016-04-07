@@ -32,7 +32,7 @@ class Game < ActiveRecord::Base
 
   def initial_actions
     find_range.map do |player|
-      player.update(action: true)
+      # player.update(action: true)
       player.take_action unless player.folded
     end.join("\n") unless find_range.empty?
   end
@@ -116,24 +116,80 @@ class Game < ActiveRecord::Base
   end
 
   def ai_action(user_action = nil, amount = nil)
-    actions = []
-      ai_players.each do |player|
-        player.update(action: false) if highest_bet > player.total_bet
-      end
+    # actions = []
+    #   ai_players.each do |player|
+    #     player.update(action: false) if highest_bet > player.total_bet
+    #   end
+    #
+    #   find_players.rotate(2).select do |player|
+    #     player.action == false && !player.folded
+    #   end.each do |player|
+    #     player.update(action: true)
+    #     actions << player.take_action(user_action, amount)
+    #   end
+    #
+    # find_range.select do |player|
+    #   player.total_bet != highest_bet unless player.folded
+    # end.each do |player|
+    #   actions << player.take_action(user_action, amount)
+    # end
+    # actions.join("\n")
 
-      find_players.rotate(2).select do |player|
-        player.action == false && !player.folded
+    if user_action
+      actions = []
+      post_user_action_range.reject do |player|
+        player.class == User || player.updated?
       end.each do |player|
-        player.update(action: true)
         actions << player.take_action(user_action, amount)
       end
 
-    find_range.select do |player|
-      player.total_bet != highest_bet unless player.folded
-    end.each do |player|
-      actions << player.take_action(user_action, amount)
+      unless find_players.all? { |player| player.updated? || player.folded }
+        raiser = find_players.max_by { |player| player.total_bet }
+        if find_players.index(raiser) > user_index
+          actions << take_action((find_players[(find_players.index(raiser) + 1)..-1] + find_players[0...user_index]).reject { |p| p.updated? })
+        elsif flop_cards.empty? && user_index > find_players.index(raiser)
+          players = (find_players[(find_players.index(raiser) + 1)...user_index] + find_players[0...2]).reject { |p| p.updated? || p.class == User }
+          actions << take_action(players)
+        else
+          actions << take_action((find_players[(find_players.index(raiser) + 1)...user_index]).reject { |p| p.updated? })
+        end
+      end
+      actions.join("\n")
+    elsif !pocket_cards
+      initial_actions
+    elsif users.last.folded
+      actions = []
+      find_players.reject { |player| player.class == User }.each do |player|
+        actions << player.take_action
+      end
+      until find_players.all? { |player| player.total_bet == highest_bet || player.folded } do
+        find_players.reject { |player| player.class == User || player.total_bet == highest_bet }.each do |player|
+          actions << player.take_action
+        end
+      end
+      actions.join("\n")
+    else
+      find_players[0...user_index].map do |player|
+        player.take_action
+      end.join("\n") unless user_index == 0
     end
-    actions.join("\n")
+  end
+
+  def take_action(players)
+    players.map { |player| player.take_action }
+  end
+
+  def post_user_action_range
+    if user_index == 0 || user_index == 1
+      find_players
+    elsif !pocket_cards
+      find_players[(user_index + 1).. -1] +
+      find_players[0...user_index]
+    # elsif find_players.last.class == User && !flop_cards
+
+    else
+      find_players[(user_index + 1).. -1]
+    end
   end
 
   def highest_bet

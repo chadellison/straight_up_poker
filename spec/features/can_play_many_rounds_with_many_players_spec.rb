@@ -30,28 +30,28 @@ RSpec.feature "user can play many rounds with many players" do
     expect(page).not_to have_content "Mary Calls!"
 
     click_on "Deal Flop"
-    expect(page).to have_content "Mary Checks"
     expect(page).not_to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks"
     click_on "Check"
 
+    expect(page).to have_content "Mary Checks"
     expect(page).to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks"
 
     click_on "Deal Turn"
-    expect(page).to have_content "Mary Checks"
     expect(page).not_to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks"
     click_on "Check"
 
     expect(page).to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks"
+    expect(page).to have_content "Mary Checks"
 
     click_on "Deal River"
-    expect(page).to have_content "Mary Checks"
     expect(page).not_to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks"
     click_on "Check"
 
     expect(page).to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks"
+    expect(page).to have_content "Mary Checks"
 
     click_on "Show Winner"
 
@@ -78,28 +78,30 @@ RSpec.feature "user can play many rounds with many players" do
     expect(page).not_to have_content "Mary Checks"
 
     click_on "Deal Flop"
-# binding.pry
-    expect(page).to have_content "Frank Checks"
-    expect(page).to have_content "Mary Checks"
-    click_on "Check"
-
     expect(page).not_to have_content "Frank Checks"
+    expect(page).to have_content "Mary Checks"
+
+
+    click_on "Check"
+    expect(page).to have_content "Frank Checks"
     expect(page).not_to have_content "Mary Checks"
 
     click_on "Deal Turn"
-    expect(page).to have_content "Frank Checks"
-    expect(page).to have_content "Mary Checks"
-    click_on "Check"
-
     expect(page).not_to have_content "Frank Checks"
+    expect(page).to have_content "Mary Checks"
+
+    click_on "Check"
     expect(page).not_to have_content "Mary Checks"
 
+    expect(page).to have_content "Frank Checks"
 
     click_on "Deal River"
-    expect(page).to have_content "Frank Checks"
     expect(page).to have_content "Mary Checks"
-    click_on "Check"
+    expect(page).not_to have_content "Frank Checks"
 
+    click_on "Check"
+    expect(page).not_to have_content "Mary Checks"
+    expect(page).to have_content "Frank Checks"
 
     click_on "Show Winner"
 
@@ -116,29 +118,29 @@ RSpec.feature "user can play many rounds with many players" do
     expect(page).to have_content "Mary Checks"
 
     click_on "Deal Flop"
-    expect(page).not_to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks"
-    click_on "Check"
-
     expect(page).to have_content "Frank Checks"
     expect(page).to have_content "Mary Checks"
+    click_on "Check"
+
+    expect(page).not_to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks"
 
     click_on "Deal Turn"
-    expect(page).not_to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks"
+    expect(page).to have_content "Frank Checks"
+    expect(page).to have_content "Mary Checks"
 
     click_on "Check"
 
-    expect(page).to have_content "Frank Checks"
-    expect(page).to have_content "Mary Checks"
+    expect(page).not_to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks"
 
     click_on "Deal River"
-    expect(page).not_to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks"
-    click_on "Check"
-
     expect(page).to have_content "Frank Checks"
     expect(page).to have_content "Mary Checks"
+    click_on "Check"
+
+    expect(page).not_to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks"
 
     click_on "Show Winner"
 
