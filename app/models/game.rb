@@ -142,14 +142,13 @@ class Game < ActiveRecord::Base
       end.each do |player|
         actions << player.take_action(user_action, amount)
       end
-
-      unless find_players.all? { |player| player.updated? || player.folded }
+      unless find_players.all? { |player| player.updated? || player.folded || player.class == User }
         raiser = find_players.max_by { |player| player.total_bet }
         if find_players.index(raiser) > user_index
           actions << take_action((find_players[(find_players.index(raiser) + 1)..-1] + find_players[0...user_index]).reject { |p| p.updated? })
-        elsif flop_cards.empty? && user_index > find_players.index(raiser)
-          players = (find_players[(find_players.index(raiser) + 1)...user_index] + find_players[0...2]).reject { |p| p.updated? || p.class == User }
-          actions << take_action(players)
+        # elsif flop_cards.empty? && user_index > find_players.index(raiser)
+        #   players = (find_players[(find_players.index(raiser) + 1)...user_index] + find_players[0...2]).reject { |p| p.updated? || p.class == User }
+        #   actions << take_action(players)
         else
           actions << take_action((find_players[(find_players.index(raiser) + 1)...user_index]).reject { |p| p.updated? })
         end
@@ -182,8 +181,8 @@ class Game < ActiveRecord::Base
   def post_user_action_range
     if user_index == 0 || user_index == 1
       find_players
-    elsif !pocket_cards
-      find_players[(user_index + 1).. -1] +
+    elsif flop_cards.empty?
+      find_players[(user_index + 1)..-1] +
       find_players[0...user_index]
     # elsif find_players.last.class == User && !flop_cards
 

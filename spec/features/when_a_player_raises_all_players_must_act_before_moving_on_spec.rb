@@ -158,7 +158,7 @@ RSpec.feature "when a player raises all other players must act before moving on"
     expect(page).to have_content "Rosco Calls!"
     click_on "Call"
     expect(page).to have_content "Frank Calls! Martha Raises $200.00 Rosco Calls!"
-#here is the problem still
+
     click_on "Call"
     expect(page).to have_content "Frank Calls!"
 
