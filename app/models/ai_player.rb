@@ -89,6 +89,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def take_action(user_action = nil, amount = nil)
+    update(action: true)
     risk_factor = rand(1..10)
     if bet_style == "always fold"
       always_fold
@@ -138,18 +139,21 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def always_raise
-    #if game.raise_count == 3 ... normal_bet
     raise(game.big_blind)
   end
 
   def normal_bet(user_action = nil, amount = nil)
     if game.highest_bet > total_bet
       call(game.highest_bet - total_bet)
-    elsif user_action == "fold"
-      make_snarky_remark
+    # elsif user_action == "fold"
+    #   make_snarky_remark
     else
       check
     end
+  end
+
+  def updated?
+    total_bet == game.highest_bet && action
   end
 
   def take_winnings

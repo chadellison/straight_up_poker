@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.feature "user can fold vs multiple ais" do
   scenario "user sees the remainder of the game" do
-    AiPlayer.create(name: "Mary")
     AiPlayer.create(name: "Frank")
+    AiPlayer.create(name: "Mary")
     AiPlayer.create(name: "Rosco")
     User.create(name: "jones", username: "jones", password: "password")
 
@@ -22,13 +22,16 @@ RSpec.feature "user can fold vs multiple ais" do
     refute Game.last.winner
 
     click_on "Fold"
+    expect(page).to have_content "Frank Checks"
+    expect(page).not_to have_content "Mary Checks! Rosco Checks!"
+
     click_on "Deal Flop"
 
-    expect(page).to have_content "Mary Checks! Rosco Checks! Frank Checks!"
+    expect(page).to have_content "Frank Checks! Mary Checks! Rosco Checks!"
     click_on "Deal Turn"
-    expect(page).to have_content "Mary Checks! Rosco Checks! Frank Checks!"
+    expect(page).to have_content "Frank Checks! Mary Checks! Rosco Checks!"
     click_on "Deal River"
-    expect(page).to have_content "Mary Checks! Rosco Checks! Frank Checks!"
+    expect(page).to have_content "Frank Checks! Mary Checks! Rosco Checks!"
     click_on "Show Winner"
     assert Game.last.winner
 

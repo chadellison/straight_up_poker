@@ -31,6 +31,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def updated?
+    total_bet == game.highest_bet
+  end
+
   def take_winnings
     winnings = game.pot
     update(cash: cash + winnings)
