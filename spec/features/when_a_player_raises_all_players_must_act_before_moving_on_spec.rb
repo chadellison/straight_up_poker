@@ -163,44 +163,36 @@ RSpec.feature "when a player raises all other players must act before moving on"
     expect(page).to have_content "Frank Calls!"
 
     click_on "Deal Flop"
-    expect(page).to have_content "Rosco Checks!"
 
-    click_on "Check"
-    expect(page).to have_content "Frank Checks!"
-    expect(page).to have_content "Martha Raises $200.00"
-    expect(page).to have_content "Rosco Calls!"
+    expect(page).to have_content "Frank Checks! Martha Raises $200.00 Rosco Calls"
+    expect(page).not_to have_content "Frank Calls"
 
     click_on "Call"
-    expect(page).to have_content "Frank Calls"
+    expect(page).to have_content "Frank Calls!"
+    expect(page).not_to have_content "Martha Raises $200.00"
+    expect(page).not_to have_content "Rosco Calls!"
 
     click_on "Deal Turn"
 
-    expect(page).to have_content "Rosco Checks!"
-
-    click_on "Check"
-
-    expect(page).to have_content "Frank Checks!"
-    expect(page).to have_content "Martha Raises $200.00"
-    expect(page).to have_content "Rosco Calls!"
+    expect(page).to have_content "Frank Checks! Martha Raises $200.00 Rosco Calls"
+    expect(page).not_to have_content "Frank Calls"
 
     click_on "Call"
-    expect(page).to have_content "Frank Calls"
 
-    expect(Game.last.find_players.all? do |player|
-      player.total_bet == Game.last.highest_bet
-    end).to eq true
+    expect(page).to have_content "Frank Calls!"
+    expect(page).not_to have_content "Martha Raises $200.00"
+    expect(page).not_to have_content "Rosco Calls!"
 
     click_on "Deal River"
-    expect(page).to have_content "Rosco Checks!"
 
-    click_on "Check"
-
-    expect(page).to have_content "Frank Checks!"
-    expect(page).to have_content "Martha Raises $200.00"
-    expect(page).to have_content "Rosco Calls!"
+    expect(page).to have_content "Frank Checks! Martha Raises $200.00 Rosco Calls"
+    expect(page).not_to have_content "Frank Calls"
 
     click_on "Call"
-    expect(page).to have_content "Frank Calls"
+
+    expect(page).to have_content "Frank Calls!"
+    expect(page).not_to have_content "Martha Raises $200.00"
+    expect(page).not_to have_content "Rosco Calls!"
 
     expect(Game.last.find_players.all? do |player|
       player.total_bet == Game.last.highest_bet

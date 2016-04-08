@@ -135,6 +135,7 @@ class Game < ActiveRecord::Base
     # end
     # actions.join("\n")
 
+    #if flop_cards.empty? rotate 2, else start normally... < -- consider this
     if user_action
       actions = []
       post_user_action_range.reject do |player|
@@ -146,11 +147,11 @@ class Game < ActiveRecord::Base
         raiser = find_players.max_by { |player| player.total_bet }
         if find_players.index(raiser) > user_index
           actions << take_action((find_players[(find_players.index(raiser) + 1)..-1] + find_players[0...user_index]).reject { |p| p.updated? })
-        # elsif flop_cards.empty? && user_index > find_players.index(raiser)
-        #   players = (find_players[(find_players.index(raiser) + 1)...user_index] + find_players[0...2]).reject { |p| p.updated? || p.class == User }
-        #   actions << take_action(players)
         else
           actions << take_action((find_players[(find_players.index(raiser) + 1)...user_index]).reject { |p| p.updated? })
+          players = []
+          players = find_players[0...(find_players.index(raiser))].reject { |p| p.class == User || p.updated? } if find_players.last.class == User && !flop_cards.empty?
+          actions += take_action(players)
         end
       end
       actions.join("\n")
