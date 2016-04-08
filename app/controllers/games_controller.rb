@@ -6,7 +6,7 @@ class GamesController < ApplicationController
   def create
     game = Game.create(game_params)
     game.set_up_game(current_user)
-    flash[:initial_actions] = game.initial_actions
+    flash[:ai_action] = game.ai_action
     redirect_to game_path(game.id)
   end
 
@@ -28,7 +28,6 @@ class GamesController < ApplicationController
     else
       game.game_action
       game.refresh if params["refresh"]
-      # flash[:initial_actions] = game.initial_actions unless game.winner
       flash[:ai_action] = game.ai_action unless game.winner
     end
     redirect_to game_path(game.id)

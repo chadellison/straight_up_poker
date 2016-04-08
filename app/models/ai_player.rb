@@ -145,15 +145,13 @@ class AiPlayer < ActiveRecord::Base
   def normal_bet(user_action = nil, amount = nil)
     if game.highest_bet > total_bet
       call(game.highest_bet - total_bet)
-    # elsif user_action == "fold"
-    #   make_snarky_remark
     else
       check
     end
   end
 
   def updated?
-    total_bet == game.highest_bet && action
+    action && total_bet == game.highest_bet || folded
   end
 
   def take_winnings
