@@ -97,7 +97,7 @@ class Game < ActiveRecord::Base
   end
 
   def respond_to_user
-    players = post_user_action_range.reject(&:updated?)
+    players = post_user_action_range.reject(&:updated?) 
     actions = take_action(players)
     unless find_players.all? { |player| player.updated? || player.folded }
       if index_raise > user_index
@@ -137,7 +137,7 @@ class Game < ActiveRecord::Base
   end
 
   def take_action(players)
-    players.map { |player| player.take_action unless player.folded }
+    players.map { |player| player.take_action unless player.folded }.compact
   end
 
   def find_range
