@@ -18,7 +18,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def check
-    "#{name} Checks!"
+    "#{name} Checks"
   end
 
   def raise(amount)
@@ -39,7 +39,7 @@ class AiPlayer < ActiveRecord::Base
       winner = still_playing.last
       game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
-    name + " folds!"
+    name + " Folds"
   end
 
   def make_snarky_remark
@@ -131,7 +131,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def always_fold
-    if current_bet == 0
+    if current_bet == 0 || total_bet < game.highest_bet
       fold
     else
       normal_bet

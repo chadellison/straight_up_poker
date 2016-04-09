@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   end
 
   def updated?
-    total_bet == game.highest_bet
+    total_bet == game.highest_bet || folded
   end
 
   def take_winnings
