@@ -97,6 +97,7 @@ class Game < ActiveRecord::Base
   end
 
   def respond_to_user
+    return take_action(find_players.rotate(user_index)[1..-1]).join("\n") if user_index == index_raise
     players = post_user_action_range.reject(&:updated?)
     actions = take_action(players)
     unless find_players.all? { |player| player.updated? }
@@ -104,7 +105,6 @@ class Game < ActiveRecord::Base
         players = rule_out(find_players[(index_raise + 1)..-1] + find_players[0...user_index])
         actions += take_action(players)
       else
-        # add an elsif condition for the user_index == index_raise: make sure all players then act
         actions << take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
         players = []
         players = find_players[0...(index_raise)].reject { |p| p.class == User || p.updated? } if find_players.last.class == User && !flop_cards.empty?
@@ -116,7 +116,7 @@ class Game < ActiveRecord::Base
 
   def ai_action(user_action = nil, amount = nil)
     if user_action
-      respond_to_user #make sure all ais match the user or fold before next deal
+      respond_to_user
     elsif !pocket_cards
       take_action(find_range).join("\n") unless find_range.empty?
     elsif users.last.folded
@@ -144,12 +144,9 @@ class Game < ActiveRecord::Base
   def find_range
     case user_index
     when 1
-      find_players[2..-1] << find_players.first
+      find_players.rotate(1)[1..-1]
     when 0
-      big_blind_ai = []
-      big_blind_ai << find_players[1] if users.last.folded
-
-      find_players[2..-1] + big_blind_ai
+      find_players[2..-1]
     when 2
       []
     else
@@ -158,14 +155,7 @@ class Game < ActiveRecord::Base
   end
 
   def post_user_action_range
-    if user_index == 0 || user_index == 1
-      find_players.reject { |player| player.class == User }
-    elsif flop_cards.empty?
-      find_players[(user_index + 1)..-1] +
-      find_players[0...user_index]
-    else
-      find_players[(user_index + 1).. -1]
-    end
+    find_players.rotate(user_index)[1..-1]
   end
 
   def highest_bet
