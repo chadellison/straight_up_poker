@@ -78,7 +78,7 @@ RSpec.describe Game, type: :model do
     game.ai_players.create(name: "Rosco")
 
     user_action = "check"
-    expect(game.ai_action(user_action)).to eq "Rosco Checks!"
+    expect(game.ai_action(user_action)).to eq "Rosco Checks"
   end
 
   it "can perform an action based on other ais actions" do
@@ -87,7 +87,7 @@ RSpec.describe Game, type: :model do
     game.ai_players.create(name: "Rosco")
     game.ai_players.create(name: "Oscar")
 
-    expect(game.ai_action).to eq "Oscar Checks!""\n""Rosco Checks!"
+    expect(game.ai_action).to eq "Oscar Checks""\n""Rosco Checks"
   end
 
   it "updates the state of the game" do
@@ -257,6 +257,6 @@ RSpec.describe Game, type: :model do
     expect(rosco.take_action).to eq "Rosco Raises $200.00"
     expect(oscar.take_action).to eq "Oscar Raises $200.00"
     expect(rosco.take_action).to eq "Rosco Calls!"
-    expect(oscar.take_action).to eq "Oscar Checks!"
+    expect(oscar.take_action).to eq "Oscar Checks"
   end
 end

@@ -163,7 +163,7 @@ RSpec.feature "when a player raises all other players must act before moving on"
     expect(page).to have_content "Frank Calls!"
 
     click_on "Deal Flop"
-    expect(page).to have_content "Frank Checks! Martha Raises $200.00 Rosco Calls"
+    expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Calls"
     expect(page).not_to have_content "Frank Calls"
 
     click_on "Call"
@@ -172,7 +172,7 @@ RSpec.feature "when a player raises all other players must act before moving on"
     expect(page).not_to have_content "Rosco Calls!"
     click_on "Deal Turn"
 
-    expect(page).to have_content "Frank Checks! Martha Raises $200.00 Rosco Calls"
+    expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Calls"
     expect(page).not_to have_content "Frank Calls"
 
     click_on "Call"
@@ -183,7 +183,7 @@ RSpec.feature "when a player raises all other players must act before moving on"
 
     click_on "Deal River"
 
-    expect(page).to have_content "Frank Checks! Martha Raises $200.00 Rosco Calls"
+    expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Calls"
     expect(page).not_to have_content "Frank Calls"
 
     click_on "Call"

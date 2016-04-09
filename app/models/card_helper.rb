@@ -44,7 +44,7 @@ module CardHelper
   end
 
   def make_card_objects(cards)
-    cards.map do |card|
+    cards.compact.map do |card|
       Card.new(card.split.first, card.split.last)
     end
   end

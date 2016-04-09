@@ -97,13 +97,14 @@ class Game < ActiveRecord::Base
   end
 
   def respond_to_user
-    players = post_user_action_range.reject(&:updated?) 
+    players = post_user_action_range.reject(&:updated?)
     actions = take_action(players)
-    unless find_players.all? { |player| player.updated? || player.folded }
+    unless find_players.all? { |player| player.updated? }
       if index_raise > user_index
         players = rule_out(find_players[(index_raise + 1)..-1] + find_players[0...user_index])
         actions += take_action(players)
       else
+        # add an elsif condition for the user_index == index_raise: make sure all players then act
         actions << take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
         players = []
         players = find_players[0...(index_raise)].reject { |p| p.class == User || p.updated? } if find_players.last.class == User && !flop_cards.empty?
@@ -115,11 +116,11 @@ class Game < ActiveRecord::Base
 
   def ai_action(user_action = nil, amount = nil)
     if user_action
-      respond_to_user
+      respond_to_user #make sure all ais match the user or fold before next deal
     elsif !pocket_cards
       take_action(find_range).join("\n") unless find_range.empty?
     elsif users.last.folded
-      actions = find_players.reject { |player| player.class == User }.map(&:take_action)
+      actions = take_action(find_players.reject { |player| player.class == User })
       until find_players.all? { |player| player.total_bet == highest_bet || player.folded } do
         find_players.reject { |player| player.class == User || player.updated? }.each do |player|
           actions << player.take_action
@@ -127,7 +128,7 @@ class Game < ActiveRecord::Base
       end
       actions.join("\n")
     else
-      find_players[0...user_index].map(&:take_action).join("\n") unless user_index == 0
+      take_action(find_players[0...user_index]).join("\n") unless user_index == 0
     end
   end
 
@@ -213,19 +214,19 @@ class Game < ActiveRecord::Base
 
   def refresh
     update(
-                           winner: nil,
-                           bets: nil,
-                           hands: nil,
-                           pocket_cards: false,
-                           flop: false,
-                           turn: false,
-                           river: false,
-                           pot: 0,
-                           cards: [],
-                           flop_cards: [],
-                           turn_card: nil,
-                           river_card: nil
-                           )
+            winner: nil,
+            bets: nil,
+            hands: nil,
+            pocket_cards: false,
+            flop: false,
+            turn: false,
+            river: false,
+            pot: 0,
+            cards: [],
+            flop_cards: [],
+            turn_card: nil,
+            river_card: nil
+          )
 
     find_players.each { |player| player.refresh }
     load_deck

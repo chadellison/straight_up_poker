@@ -23,15 +23,15 @@ RSpec.feature "user can fold vs multiple ais" do
 
     click_on "Fold"
     expect(page).to have_content "Frank Checks"
-    expect(page).not_to have_content "Mary Checks! Rosco Checks!"
+    expect(page).not_to have_content "Mary Checks Rosco Checks"
 
     click_on "Deal Flop"
 
-    expect(page).to have_content "Frank Checks! Mary Checks! Rosco Checks!"
+    expect(page).to have_content "Frank Checks Mary Checks Rosco Checks"
     click_on "Deal Turn"
-    expect(page).to have_content "Frank Checks! Mary Checks! Rosco Checks!"
+    expect(page).to have_content "Frank Checks Mary Checks Rosco Checks"
     click_on "Deal River"
-    expect(page).to have_content "Frank Checks! Mary Checks! Rosco Checks!"
+    expect(page).to have_content "Frank Checks Mary Checks Rosco Checks"
     click_on "Show Winner"
     assert Game.last.winner
 

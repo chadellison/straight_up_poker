@@ -16,7 +16,7 @@ RSpec.describe AiPlayer, type: :model do
 
   it "can check" do
     ai = AiPlayer.create(name: "Rosco")
-    expect(ai.check).to eq "Rosco Checks!"
+    expect(ai.check).to eq "Rosco Checks"
   end
 
   it "cand make a snarky remark" do
