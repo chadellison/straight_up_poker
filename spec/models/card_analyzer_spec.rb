@@ -133,7 +133,19 @@ RSpec.describe CardAnalyzer do
       Card.new("6", "clubs"),
       Card.new("10", "clubs")
     ]
-    expect(CardAnalyzer.new.find_hand(cards).class).to eq StraightFlush
+
+    not_a_straight_flush = [
+      Card.new("9", "clubs"),
+      Card.new("8", "clubs"),
+      Card.new("7", "Hearts"),
+      Card.new("6", "clubs"),
+      Card.new("10", "spades"),
+      Card.new("Jack", "clubs"),
+      Card.new("Queen", "clubs")
+    ]
+
+    expect(CardAnalyzer.new.find_hand(not_a_straight_flush).class).not_to eq StraightFlush
+    expect(CardAnalyzer.new.find_hand(not_a_straight_flush).class).to eq Flush
   end
 
   it "determines a royal flush" do
@@ -603,6 +615,7 @@ RSpec.describe CardAnalyzer do
       jannet => player2_cards,
       bob => player3_cards
       })
+      # binding.pry
     expect("#{jannet.id} ai_player").to eq winner
   end
 

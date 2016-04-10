@@ -75,6 +75,8 @@ class RoyalFlush
 end
 
 class StraightFlush
+  include CardHelper
+
   attr_reader :cards
 
   def initialize(cards)
@@ -82,7 +84,11 @@ class StraightFlush
   end
 
   def match?
-    [Flush.new(cards), Straight.new(cards)].all?(&:match?)
+    sorted_values = card_converter(cards).sort_by(&:value)
+    all_cards = [sorted_values[0..4], sorted_values[1..5], sorted_values[2..6]]
+    all_cards.any? do |five_cards|
+      [Flush.new(five_cards), Straight.new(five_cards)].all?(&:match?)
+    end
   end
 end
 
@@ -135,7 +141,7 @@ class TwoOfKind
 
   def match?
     cards
-      .group_by(&:value) # {4 => [cards1, cards2]}
+      .group_by(&:value)
       .values.any? { |cards| cards.size == 2 }
   end
 end
@@ -170,13 +176,17 @@ class CardAnalyzer
     end.sort_by do |player_hand|
       HANDS.index(find_hand(player_hand.last).class)
     end
-    best_hand = all_players.select do |player_hand|
+    hands = all_players.select do |player_hand|
       index_hand(player_hand.last) == index_hand(all_players.first.last)
     end
-    if best_hand.size == 1
-      best_hand.first.first.take_winnings
+    best_hand(hands)
+  end
+
+  def best_hand(hands)
+    if hands.size == 1
+      hands.first.first.take_winnings
     else
-      winner = best_hand.map do |player_hand|
+      winner = hands.map do |player_hand|
         [player_hand.first, find_best(player_hand.last)]
       end.sort_by do |best_cards|
         best_cards.last.map(&:value)
