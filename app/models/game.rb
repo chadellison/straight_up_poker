@@ -147,8 +147,6 @@ class Game < ActiveRecord::Base
       find_players.rotate(1)[1..-1]
     when 0
       find_players[2..-1]
-    # when 2
-    #   []
     else
       find_players[2...user_index]
     end
