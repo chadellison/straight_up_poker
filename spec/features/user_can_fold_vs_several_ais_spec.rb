@@ -36,20 +36,135 @@ RSpec.feature "user can fold vs multiple ais" do
     assert Game.last.winner
 
     click_on "Continue"
+  end
 
-    #click on fold
-    #what should you expect
-    #finish out round
+  scenario "All ai players are updated when one of them bets and user has folded" do
+    AiPlayer.create(name: "Frank")
+    AiPlayer.create(name: "Mary", bet_style: "always raise")
+    AiPlayer.create(name: "Rosco", bet_style: "always raise")
+    User.create(name: "jones", username: "jones", password: "password")
 
-    #click_on Continue
+    visit root_path
+    click_on "Login"
+    fill_in "Username", with: "jones"
+    fill_in "Password", with: "password"
+    click_on "Login"
 
-    #click on fold
-    #what is expected
-    #finish out round
+    click_on "Play"
+    select "4", from: "Player count"
+    select "10", from: "Little blind"
+    select "20", from: "Big blind"
+    click_on "Play Poker"
+    #jones Frank Mary Rosco
 
-    #click on continue
-    # click on fold
-    #what is expected
-    #finish out round
+    expect(page).to have_content "Mary Raises $20.00 Rosco Raises $20.00"
+    expect(page).not_to have_content "Frank Calls!"
+
+    click_on "Fold"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+
+    click_on "Deal Flop"
+    expect(page).to have_content "Frank Checks Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+
+    click_on "Deal Turn"
+
+    expect(page).to have_content "Frank Checks Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+
+    click_on "Deal River"
+
+    expect(page).to have_content "Frank Checks Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+
+    click_on "Show Winner"
+
+    click_on "Continue"
+
+    # Rosco jones Frank Mary
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Raises $20.00"
+    click_on "Call"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Calls!"
+    click_on "Call"
+
+    expect(page).to have_content "Frank Calls!"
+    click_on "Deal Flop"
+
+    expect(page).to have_content "Rosco Raises $20.00"
+    click_on "Call"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Raises $20.00"
+
+    click_on "Call"
+    expect(page).to have_content "Frank Calls! Mary Calls!"
+    click_on "Deal Turn"
+    expect(page).to have_content "Rosco Raises $20.00"
+
+    click_on "Fold"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Calls!"
+
+    click_on "Deal River"
+
+    expect(page).to have_content "Rosco Raises $20.00 Frank Calls! Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Calls!"
+    click_on "Show Winner"
+
+    click_on "Continue"
+
+    # Mary Rosco jones Frank
+
+    click_on "Call"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Raises $20.00"
+
+    click_on "Call"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Calls!"
+
+    click_on "Call"
+    expect(page).to have_content "Frank Calls!"
+
+    click_on "Deal Flop"
+
+    expect(page).to have_content "Mary Raises $20.00 Rosco Raises $20.00"
+    expect(page).not_to have_content "Frank Calls!"
+
+    click_on "Fold"
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+    click_on "Deal Turn"
+    expect(page).to have_content "Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+    click_on "Deal River"
+    click_on "Show Winner"
+
+    click_on "Continue"
+
+    # Frank Mary Rosco jones
+
+    expect(page).to have_content "Rosco Raises $20.00"
+    expect(page).not_to have_content "Frank Calls! Mary Raises $20.00"
+
+    click_on "Call"
+
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Raises $20.00"
+    click_on "Call"
+    expect(page).to have_content "Frank Calls! Mary Calls!"
+
+    click_on "Deal Flop"
+
+    expect(page).to have_content "Frank Checks Mary Raises $20.00 Rosco Raises $20.00"
+    click_on "Call"
+    expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Calls!"
+    click_on "Fold"
+
+    expect(page).to have_content "Frank Calls!"
+
+    click_on "Deal Turn"
+
+    expect(page).to have_content "Frank Checks Mary Raises $20.00 Rosco Raises $20.00 Frank Calls! Mary Raises $20.00 Rosco Calls! Frank Calls!"
+
+    click_on "Deal River"
+    click_on "Show Winner"
+
+    click_on "Continue"
   end
 end

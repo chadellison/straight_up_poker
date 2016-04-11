@@ -267,8 +267,53 @@ RSpec.describe CardAnalyzer do
       "2 of Hearts",
       "3 of Hearts"
     ]
-    high_card_winner = CardAnalyzer.new
-    winner = high_card_winner.determine_winner({
+    two_pair_winner = CardAnalyzer.new
+    winner = two_pair_winner.determine_winner({
+      frank => player1_cards,
+      jannet => player2_cards,
+      bob => player3_cards
+      })
+    expect("#{jannet.id} ai_player").to eq winner
+  end
+
+  it "determines the winner between same two pair" do
+    game = Game.create
+    frank = game.ai_players.create(name: "Frank")
+    jannet = game.ai_players.create(name: "Jannet")
+    bob = game.ai_players.create(name: "bob")
+
+    player1_cards = [
+      "Queen of Hearts",
+      "3 of Clubs",
+      "Queen Diamonds",
+      "7 of Spades",
+      "9 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player2_cards = [
+      "Queen of Clubs",
+      "3 Spades",
+      "Queen Spades",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    player3_cards = [
+      "7 of Clubs",
+      "3 Diamonds",
+      "5 Diamonds",
+      "7 of Spades",
+      "10 of Clubs",
+      "2 of Hearts",
+      "3 of Hearts"
+    ]
+
+    two_pair_winner = CardAnalyzer.new
+    winner = two_pair_winner.determine_winner({
       frank => player1_cards,
       jannet => player2_cards,
       bob => player3_cards

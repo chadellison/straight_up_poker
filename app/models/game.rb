@@ -100,15 +100,14 @@ class Game < ActiveRecord::Base
     return take_action(find_players.rotate(user_index)[1..-1]).join("\n") if user_index == index_raise
     players = post_user_action_range.reject(&:updated?)
     actions = take_action(players)
+
     unless find_players.all? { |player| player.updated? }
+      return (actions += respond_to_raise).join("\n") if users.last.folded
       if index_raise > user_index
         players = rule_out(find_players[(index_raise + 1)..-1] + find_players[0...user_index])
         actions += take_action(players)
       else
         actions << take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
-        players = []
-        players = find_players[0...(index_raise)].reject { |p| p.class == User || p.updated? } if find_players.last.class == User && !flop_cards.empty?
-        actions += take_action(players)
       end
     end
     actions.join("\n")
@@ -121,15 +120,18 @@ class Game < ActiveRecord::Base
       take_action(find_range).join("\n") unless find_range.empty?
     elsif users.last.folded
       actions = take_action(find_players.reject { |player| player.class == User })
-      until find_players.all? { |player| player.total_bet == highest_bet || player.folded } do
-        find_players.reject { |player| player.class == User || player.updated? }.each do |player|
-          actions << player.take_action
-        end
-      end
-      actions.join("\n")
+      (actions + respond_to_raise).join("\n")
     else
       take_action(find_players[0...user_index]).join("\n") unless user_index == 0
     end
+  end
+
+  def respond_to_raise
+    actions = []
+    until find_players.all? { |player| player.total_bet == highest_bet || player.folded } do
+      actions += take_action(rule_out(find_players.rotate(index_raise)))
+    end
+    actions
   end
 
   def index_raise
