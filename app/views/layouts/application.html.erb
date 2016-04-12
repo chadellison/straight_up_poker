@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/application.scss">
   <title>StraightUpPoker</title>
-  <%= stylesheet_link_tag    'application' %>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+  <%= render "partials/header" %>
+  <div class="container row">
+      <%= yield %>
+  </div>
+    <%= render "partials/footer" %>
 </body>
 </html>

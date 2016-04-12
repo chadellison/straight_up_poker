@@ -11,7 +11,7 @@ RSpec.feature "user can login" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     expect(page).to have_content "Welcome jones"
     expect(current_path).to eq dashboard_path
@@ -33,11 +33,11 @@ RSpec.feature "user can login" do
 
     click_on "Login"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
     expect(page).to have_content "Invalid login"
 
     fill_in "Username", with: "jones"
-    click_on "Login"
+    click_button "Login"
     expect(page).to have_content "Invalid login"
   end
 end

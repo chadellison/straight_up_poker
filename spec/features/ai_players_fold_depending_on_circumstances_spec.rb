@@ -7,11 +7,10 @@ RSpec.feature "ai players fold depending on the circumstances" do
     ai_player2 = AiPlayer.create(name: "Rick", bet_style: "always fold")
 
     visit root_path
-
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
 
@@ -77,7 +76,7 @@ RSpec.feature "ai players fold depending on the circumstances" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
 

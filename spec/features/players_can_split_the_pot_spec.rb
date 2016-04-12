@@ -10,7 +10,7 @@ RSpec.feature "players can split the pot" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     expect(page).to have_content "Welcome jones"
 

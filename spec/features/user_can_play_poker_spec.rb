@@ -13,7 +13,7 @@ RSpec.feature "user can play poker" do
     fill_in "Name", with: "Jones Smith"
     fill_in "Email", with: "Jones@gamil.com"
     fill_in "Password", with: "password"
-    click_on "Create Account"
+    click_button "Create Account"
 
     expect(page).to have_content "Welcome Jones"
 

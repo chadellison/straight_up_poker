@@ -23,7 +23,7 @@ RSpec.feature "it can handle ties" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
 
@@ -52,6 +52,6 @@ RSpec.feature "it can handle ties" do
     click_on "Show Winner"
 
     expect(page).to have_content "jones and Oscar split the pot"
-    expect(page).to have_content "jones: Ace of Spades, 3 of Clubs, Oscar: Ace of Clubs, 10 of Hearts" 
+    expect(page).to have_content "jones: Ace of Spades, 3 of Clubs, Oscar: Ace of Clubs, 10 of Hearts"
   end
 end
