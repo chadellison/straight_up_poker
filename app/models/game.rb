@@ -97,32 +97,33 @@ class Game < ActiveRecord::Base
   end
 
   def respond_to_user
-    return take_action(find_players.rotate(user_index)[1..-1]).join("\n") if user_index == index_raise
+    return take_action(find_players.rotate(user_index)[1..-1]) if user_index == index_raise
     players = post_user_action_range.reject(&:updated?)
     actions = take_action(players)
 
     unless find_players.all? { |player| player.updated? }
-      return (actions += respond_to_raise).join("\n") if users.last.folded
+      return (actions += respond_to_raise) if users.last.folded
       if index_raise > user_index
         players = rule_out(find_players[(index_raise + 1)..-1] + find_players[0...user_index])
         actions += take_action(players)
       else
-        actions << take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
+        actions += take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
+        #change this ^ to a + instead of << to get rid of []
       end
     end
-    actions.join("\n")
+    actions
   end
 
   def ai_action(user_action = nil, amount = nil)
     if user_action
       respond_to_user
     elsif !pocket_cards
-      take_action(find_range).join("\n") unless find_range.empty?
+      take_action(find_range) unless find_range.empty?
     elsif users.last.folded
       actions = take_action(find_players.reject { |player| player.class == User })
-      (actions + respond_to_raise).join("\n")
+      (actions + respond_to_raise)
     else
-      take_action(find_players[0...user_index]).join("\n") unless user_index == 0
+      take_action(find_players[0...user_index]) unless user_index == 0
     end
   end
 

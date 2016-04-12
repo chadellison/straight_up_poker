@@ -1,5 +1,5 @@
 <%= form_for(@game) do |f| %>
-  <%= f.label :player_count %>
+  <%= f.label :player_count %><br>
   <%= f.select :player_count, [["2", "2"],
                                 ["3", "3"],
                                 ["4", "4"],
@@ -8,8 +8,8 @@
                                 ["7", "7"],
                                 ["8", "8"],
                                 ["9", "9"],
-                                ["10", "10"]] %>
-  <%= f.label :little_blind %>
+                                ["10", "10"]] %><br>
+  <%= f.label :little_blind %><br>
   <%= f.select :little_blind, [["10", "10"],
                                 ["20", "20"],
                                 ["30", "30"],
@@ -17,8 +17,8 @@
                                 ["50", "50"],
                                 ["75", "75"],
                                 ["100", "100"],
-                                ["200", "200"]] %>
-  <%= f.label :big_blind %>
+                                ["200", "200"]] %><br>
+  <%= f.label :big_blind %><br>
   <%= f.select :big_blind, [["20", "20"],
                              ["40", "40"],
                              ["60", "60"],
@@ -26,6 +26,6 @@
                              ["100", "100"],
                              ["150", "150"],
                              ["200", "200"],
-                             ["400", "400"]] %>
-  <%= f.submit "Play Poker" %>
+                             ["400", "400"]] %></br>
+  <%= f.submit "Play Poker", class: "btn btn-success" %><br>
 <% end %>

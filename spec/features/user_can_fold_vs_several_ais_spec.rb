@@ -11,7 +11,7 @@ RSpec.feature "user can fold vs multiple ais" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
     select "4", from: "Player count"
@@ -48,7 +48,7 @@ RSpec.feature "user can fold vs multiple ais" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
     select "4", from: "Player count"
@@ -118,7 +118,6 @@ RSpec.feature "user can fold vs multiple ais" do
     expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Raises $20.00"
 
     click_on "Call"
-
     expect(page).to have_content "Frank Calls! Mary Raises $20.00 Rosco Calls!"
 
     click_on "Call"

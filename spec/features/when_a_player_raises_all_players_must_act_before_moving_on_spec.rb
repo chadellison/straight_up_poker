@@ -11,7 +11,7 @@ RSpec.feature "when a player raises all other players must act before moving on"
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
     select "4", from: "Player count"

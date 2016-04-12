@@ -9,7 +9,7 @@ RSpec.feature "user can fold" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
     select "2", from: "Player count"

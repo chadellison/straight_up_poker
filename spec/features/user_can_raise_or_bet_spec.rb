@@ -10,7 +10,7 @@ RSpec.feature "user can raise or bet" do
     click_on "Login"
     fill_in "Username", with: "oscar"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
 
@@ -43,7 +43,7 @@ RSpec.feature "user can raise or bet" do
     click_on "Login"
     fill_in "Username", with: "jones"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
     select "5", from: "Player count"

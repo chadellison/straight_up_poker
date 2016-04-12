@@ -10,7 +10,7 @@ RSpec.feature "user cannot bet less than little blind or more than total cash" d
     click_on "Login"
     fill_in "Username", with: "oscar"
     fill_in "Password", with: "password"
-    click_on "Login"
+    click_button "Login"
 
     click_on "Play"
 

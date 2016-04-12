@@ -1,0 +1,71 @@
+header {
+  background-image: url('https://dpc1.ftcdn.net/jpg/00/96/30/00/500_F_96300063_vloPQXo5YQWnXadXbOUqI3jbA7g0p7la.jpg');
+}
+
+.game-cards {
+  color: white; text-shadow: black 0.1em 0.1em 0.2em;
+  width: -30%;
+  padding: 10px;
+  font-size: 30px;
+}
+
+.game-stats li {
+  font-size: 30px;
+  color: white; text-shadow: black 0.1em 0.1em 0.2em;
+  margin-left: -15%;
+}
+
+.player-stats {
+  text-align: left;
+  color: white; text-shadow: black 0.1em 0.1em 0.2em;
+  width: 30%;
+  float: left;
+  margin-top: 5%;
+  margin-bottom: 45px;
+  margin-left: -15%;
+}
+
+.player-stats li {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 20px;
+}
+
+.user-stats {
+  width: 100%;
+  clear: both;
+  color: white; text-shadow: black 0.1em 0.1em 0.2em;
+  margin-left: -15%;
+}
+
+.btn {
+  margin: 10px;
+  margin-left: -15%;
+}
+
+.ai-actions {
+  font-size: 30px;
+  color: white; text-shadow: black 0.1em 0.1em 0.2em;
+  margin-left: 36%;
+}
+
+.background-image {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.background {
+  width: 120%;
+  height: 120%;
+  position: absolute;
+  margin-left: -15%;
+  z-index: -1;
+}
+
+.winner {
+  background-color: black;
+  color: red;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+}
