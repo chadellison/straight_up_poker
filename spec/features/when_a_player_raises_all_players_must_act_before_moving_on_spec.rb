@@ -153,6 +153,7 @@ RSpec.feature "when a player raises all other players must act before moving on"
     click_on "Continue"
 
     #frank, martha, rosco, jones
+# <-- have user raise here to catch bug
     expect(page).to have_content "Little Blind: Frank, $100.00"
     expect(page).to have_content "Big Blind: Martha, $200.00"
     expect(page).to have_content "Rosco Calls!"
