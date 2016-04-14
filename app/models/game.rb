@@ -79,7 +79,7 @@ class Game < ActiveRecord::Base
 
   def user_action(action, amount = nil)
     user = users.last
-
+    user.update(action: true)
     case action
     when "call"
       bet_amount = highest_bet - user.total_bet
@@ -108,7 +108,6 @@ class Game < ActiveRecord::Base
         actions += take_action(players)
       else
         actions += take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
-        #change this ^ to a + instead of << to get rid of []
       end
     end
     actions
@@ -173,7 +172,7 @@ class Game < ActiveRecord::Base
     else
       update(winner: determine_winner) unless winner
     end
-    ai_players.each { |player| player.update(action: false) }
+    find_players.each { |player| player.update(action: false) }
     update(raise_count: 0)
     update_game if users.last.folded
   end

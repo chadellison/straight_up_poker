@@ -152,8 +152,6 @@ RSpec.feature "when a player raises all other players must act before moving on"
 
     click_on "Continue"
 
-    #frank, martha, rosco, jones
-# <-- have user raise here to catch bug
     expect(page).to have_content "Little Blind: Frank, $100.00"
     expect(page).to have_content "Big Blind: Martha, $200.00"
     expect(page).to have_content "Rosco Calls!"
@@ -162,26 +160,34 @@ RSpec.feature "when a player raises all other players must act before moving on"
 
     click_on "Call"
     expect(page).to have_content "Frank Calls!"
-
+    Game.last.find_players[2].update(bet_style: "always raise")
     click_on "Deal Flop"
-    expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Calls"
+    expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Raises $200.00"
     expect(page).not_to have_content "Frank Calls"
 
-    click_on "Call"
+    click_on "Bet / Raise"
+    fill_in "Current bet", with: "600"
+    click_on "Submit"
+
     expect(page).to have_content "Frank Calls!"
-    expect(page).not_to have_content "Martha Raises $200.00"
-    expect(page).not_to have_content "Rosco Calls!"
+    expect(page).to have_content "Martha Calls!"
+    expect(page).to have_content "Rosco Calls!"
+
+    Game.last.find_players[2].update(bet_style: "none")
+    Game.last.find_players[1].update(bet_style: "none")
     click_on "Deal Turn"
 
-    expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Calls"
-    expect(page).not_to have_content "Frank Calls"
+    expect(page).to have_content "Frank Checks Martha Checks Rosco Checks"
 
-    click_on "Call"
+    click_on "Bet / Raise"
+    fill_in "Current bet", with: "200"
+    click_on "Submit"
 
     expect(page).to have_content "Frank Calls!"
-    expect(page).not_to have_content "Martha Raises $200.00"
-    expect(page).not_to have_content "Rosco Calls!"
+    expect(page).to have_content "Martha Calls!"
+    expect(page).to have_content "Rosco Calls!"
 
+    Game.last.find_players[1].update(bet_style: "always raise")
     click_on "Deal River"
 
     expect(page).to have_content "Frank Checks Martha Raises $200.00 Rosco Calls"
