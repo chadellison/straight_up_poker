@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
             current_bet: 0,
             total_bet: 0,
             folded: false,
+            action: false
           )
     self
   end

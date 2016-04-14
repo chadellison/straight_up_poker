@@ -9,11 +9,11 @@
 </div>
 <div class="game-cards">
   <h3>Pot: $<%= @game.pot %>.00</h3>
-  <h4>Pocket: <%= @game.users.last.present_cards %></h4>
+  <h4><strong>Pocket:</strong> <%= @game.users.last.present_cards %></h4>
   <ul>
-    <li>Flop: <%= present_flop(@game) %></li>
-    <li>Turn: <%= @game.turn_card %></li>
-    <li>River: <%= @game.river_card %></li>
+    <li><strong>Flop:</strong> <%= present_flop(@game) %></li>
+    <li><strong>Turn:</strong> <%= @game.turn_card %></li>
+    <li><strong>River:</strong> <%= @game.river_card %></li>
   <ul>
 </div>
 <div class="user-stats">
