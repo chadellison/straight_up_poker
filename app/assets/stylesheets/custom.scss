@@ -2,51 +2,59 @@ header {
   background-image: url('https://dpc1.ftcdn.net/jpg/00/96/30/00/500_F_96300063_vloPQXo5YQWnXadXbOUqI3jbA7g0p7la.jpg');
 }
 
-.game-cards {
+.game-stats {
   color: white; text-shadow: black 0.1em 0.1em 0.2em;
-  width: -30%;
   padding: 10px;
   font-size: 30px;
+  width: 45%;
+  margin: auto;
 }
 
-.game-stats li {
-  font-size: 30px;
-  color: white; text-shadow: black 0.1em 0.1em 0.2em;
-  margin-left: -15%;
+h3 {
+  text-align: center;
+  color: #6DBA9C;
+}
+
+h5 {
+  text-align: center;
+  color: #6DBA9C;
 }
 
 .player-stats {
   text-align: left;
-  color: white; text-shadow: black 0.1em 0.1em 0.2em;
-  width: 30%;
+  color: #6DBA9C; text-shadow: black 0.1em 0.1em 0.2em;
   float: left;
-  margin-top: 5%;
   margin-bottom: 45px;
-  margin-left: -15%;
+  padding-right: 5%;
 }
 
 .player-stats li {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-size: 20px;
 }
 
 .user-stats {
   width: 100%;
   clear: both;
-  color: white; text-shadow: black 0.1em 0.1em 0.2em;
-  margin-left: -15%;
+  color: #F7A0A0; text-shadow: black 0.1em 0.1em 0.2em;
+}
+// #F94A00
+// #DA151F
+
+.user-stats p {
+  font-size: 30px;
 }
 
 .btn {
-  margin: 10px;
-  margin-left: -15%;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .ai-actions {
   font-size: 30px;
-  color: white; text-shadow: black 0.1em 0.1em 0.2em;
-  margin-left: 36%;
+  color: #F7A0A0; text-shadow: black 0.1em 0.1em 0.2em;
+  text-align: center;
 }
 
 .background-image {
@@ -55,8 +63,8 @@ header {
 }
 
 .background {
-  width: 120%;
-  height: 120%;
+  width: 100%;
+  height: 100%;
   position: absolute;
   margin-left: -15%;
   z-index: -1;
@@ -64,8 +72,20 @@ header {
 
 .winner {
   background-color: black;
-  color: red;
+  color: #F7A0A0;
   padding: 20px;
   border-radius: 15px;
   text-align: center;
+}
+
+.winner h5 {
+  color: #F7A0A0;
+}
+
+.winner h3 {
+  color: #F7A0A0;
+}
+
+.intro {
+  color: black;
 }
