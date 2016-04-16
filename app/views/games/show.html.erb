@@ -1,48 +1,50 @@
-<img class="background" src="https://dpc2.ftcdn.net/jpg/00/93/89/17/500_F_93891704_AJ55QNyaRC52a1NBrPbJ3r4nQRZPvANw.jpg">
-<div class="s3 m3 player-stats">
-  <h4>Opponents: </h4>
+<body class="game">
+  <img class="background" src="https://dpc2.ftcdn.net/jpg/00/93/89/17/500_F_93891704_AJ55QNyaRC52a1NBrPbJ3r4nQRZPvANw.jpg">
+  <div class="s3 m3 player-stats">
+    <h4>Opponents: </h4>
+      <ul>
+        <% display_opponents(@game).each do |opponent| %>
+          <li><%= opponent.name %>: $<%= opponent.cash %>.00</li>
+        <% end %>
+      </ul>
+  </div>
+  <div class=" s3 m3 game-stats">
+    <h3>Pot: $<%= @game.pot %>.00</h3>
+    <h5>Little Blind: <%= @game.find_players.first.name %>, $<%= @game.little_blind %>.00</h5>
+    <h5>Big Blind: <%= @game.find_players[1].name %>, $<%= @game.big_blind %>.00</h5>
     <ul>
-      <% display_opponents(@game).each do |opponent| %>
-        <li><%= opponent.name %>: $<%= opponent.cash %>.00</li>
-      <% end %>
-    </ul>
-</div>
-<div class=" s3 m3 game-stats">
-  <h3>Pot: $<%= @game.pot %>.00</h3>
-  <h5>Little Blind: <%= @game.find_players.first.name %>, $<%= @game.little_blind %>.00</h5>
-  <h5>Big Blind: <%= @game.find_players[1].name %>, $<%= @game.big_blind %>.00</h5>
-  <ul>
-    <li><strong>Flop:</strong> <%= present_flop(@game) %></li>
-    <li><strong>Turn:</strong> <%= @game.turn_card %></li>
-    <li><strong>River:</strong> <%= @game.river_card %></li>
-  <ul>
-</div>
-<div class=" s3 m3 user-stats">
-  <h4>Cash: $<%= current_user.cash %>.00</h4>
-  <p><strong>Pocket:</strong> <%= @game.users.last.present_cards %></p>
-  <p><%= to_call(@game) unless current_user.folded %></p>
-</div>
+      <li><strong>Flop:</strong> <%= present_flop(@game) %></li>
+      <li><strong>Turn:</strong> <%= @game.turn_card %></li>
+      <li><strong>River:</strong> <%= @game.river_card %></li>
+    <ul>
+  </div>
+  <div class=" s3 m3 user-stats">
+    <h4>Cash: $<%= current_user.cash %>.00</h4>
+    <p><strong>Pocket:</strong> <%= @game.users.last.present_cards %></p>
+    <p><%= to_call(@game) unless current_user.folded %></p>
+  </div>
 
-<div class="ai-actions">
-  <% flash["ai_action"].each do |action| %>
-    <p><%= action %><p>
-  <% end if flash["ai_action"] %>
-</div>
-<%= flash["error"] %>
+  <div class="ai-actions">
+    <% flash["ai_action"].each do |action| %>
+      <p><%= action %><p>
+    <% end if flash["ai_action"] %>
+  </div>
+  <%= flash["error"] %>
 
-<div class="actions">
-  <% if @game.winner %>
-    <div class="winner">
-      <h3><%= declare_winner(@game) %></h3>
-      <h5><%= winning_cards(@game) %></h5>
-    </div>
-    <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch, class: "btn red" %>
-    <%= button_to "Quit", dashboard_path, method: :get, class: "btn red" %>
-  <% elsif display_button(@game) %>
-    <%= button_to display_button(@game), game_path(@game.id), method: :patch, class: "btn red" %>
-  <% else %>
-    <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get, class: "btn red" if @game.raise_count < 3 %>
-    <%= button_to call_or_check(current_user), game_path(game_id: @game.id, user_action: call_or_check(current_user).downcase.to_sym), method: :patch, class: "btn red" %>
-    <%= button_to "Fold", game_path(game_id: @game.id, user_action: :fold), method: :patch, class: "btn red" %>
-  <% end %>
-</div>
+  <div class="actions">
+    <% if @game.winner %>
+      <div class="winner">
+        <h3><%= declare_winner(@game) %></h3>
+        <h5><%= winning_cards(@game) %></h5>
+      </div>
+      <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch, class: "btn red" %>
+      <%= button_to "Quit", dashboard_path, method: :get, class: "btn red" %>
+    <% elsif display_button(@game) %>
+      <%= button_to display_button(@game), game_path(@game.id), method: :patch, class: "btn red" %>
+    <% else %>
+      <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get, class: "btn red" if @game.raise_count < 3 %>
+      <%= button_to call_or_check(current_user), game_path(game_id: @game.id, user_action: call_or_check(current_user).downcase.to_sym), method: :patch, class: "btn red" %>
+      <%= button_to "Fold", game_path(game_id: @game.id, user_action: :fold), method: :patch, class: "btn red" %>
+    <% end %>
+  </div>
+</body>

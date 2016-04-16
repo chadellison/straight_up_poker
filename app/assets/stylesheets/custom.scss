@@ -1,5 +1,10 @@
 header {
   background-image: url('https://dpc1.ftcdn.net/jpg/00/96/30/00/500_F_96300063_vloPQXo5YQWnXadXbOUqI3jbA7g0p7la.jpg');
+  margin-top: -2.18%;
+}
+
+.game {
+  background-color: black;
 }
 
 .game-stats {
@@ -38,11 +43,9 @@ h5 {
 .user-stats {
   width: 100%;
   clear: both;
-  color: #F7A0A0; text-shadow: black 0.1em 0.1em 0.2em;
+  color: #90BDFD; text-shadow: black 0.1em 0.1em 0.2em;
   padding-left: 5%;
 }
-// #F94A00
-// #DA151F
 
 .user-stats p {
   font-size: 30px;
@@ -51,12 +54,12 @@ h5 {
 .btn {
   margin-top: 10px;
   margin-bottom: 10px;
-  padding-left: 5%;
+  margin-left: 5%;
 }
 
 .ai-actions {
   font-size: 30px;
-  color: #F7A0A0; text-shadow: black 0.1em 0.1em 0.2em;
+  color: #90BDFD; text-shadow: black 0.1em 0.1em 0.2em;
   text-align: center;
 }
 
@@ -69,7 +72,6 @@ h5 {
 
 .winner {
   background-color: black;
-  color: #F7A0A0;
   padding: 20px;
   border-radius: 15px;
   text-align: center;
@@ -78,11 +80,11 @@ h5 {
 }
 
 .winner h5 {
-  color: #F7A0A0;
+  color: #90BDFD;
 }
 
 .winner h3 {
-  color: #F7A0A0;
+  color: #90BDFD;
 }
 
 .intro {
