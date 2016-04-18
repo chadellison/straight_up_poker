@@ -10,16 +10,11 @@ class User < ActiveRecord::Base
   end
 
   def bet(amount)
-    return check_bet(amount) if check_bet(amount)
     update(current_bet: amount)
     update(total_bet: total_bet + amount.to_i)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
     game.update(pot: game.pot + amount.to_i)
-  end
-
-  def check_bet(amount)
-    "Error" if amount.to_i > cash || amount.to_i < game.little_blind
   end
 
   def fold

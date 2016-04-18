@@ -28,8 +28,8 @@
     <% flash["ai_action"].each do |action| %>
       <p><%= action %><p>
     <% end if flash["ai_action"] %>
+    <div class="flash-error"><%= flash["error"] %></div>
   </div>
-  <%= flash["error"] %>
 
   <div class="actions">
     <% if @game.winner %>

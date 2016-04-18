@@ -17,7 +17,10 @@ class Game < ActiveRecord::Base
   def add_players(user)
     users << user.refresh
     players = AiPlayer.first(player_count - 1)
-    players.each { |player| ai_players << player.refresh }
+    players.each do |player|
+      player.update(cash: 1000)
+      ai_players << player.refresh
+    end
   end
 
   def set_blinds
@@ -82,14 +85,20 @@ class Game < ActiveRecord::Base
     user.update(action: true)
     case action
     when "call"
-      bet_amount = highest_bet - user.total_bet
-      user.bet(bet_amount)
+      call_amount = highest_bet - user.total_bet
+      user.bet(call_amount)
     when "bet"
+      return "Error" if check_bet(amount[:current_bet])
       update(raise_count: raise_count + 1)
-      user.bet(amount[:current_bet])
+      call_amount = Game.find(id).highest_bet - Game.find(id).users.last.total_bet
+      user.bet(amount[:current_bet].to_i + call_amount)
     when "fold"
       user.fold
     end
+  end
+
+  def check_bet(amount)
+    amount.to_i > users.last.cash || amount.to_i < little_blind
   end
 
   def rule_out(players)
