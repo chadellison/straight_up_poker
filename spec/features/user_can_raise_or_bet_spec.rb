@@ -21,9 +21,8 @@ RSpec.feature "user can raise or bet" do
 
     click_button "Bet / Raise"
     expect(page).to have_content "How much would you like to bet?"
-    fill_in "Current bet", with: "200"
+    fill_in "Current bet", with: "100"
     click_on "Submit"
-
     expect(page).to have_content "Rosco Calls!"
     expect(User.last.cash).to eq 700
     expect(AiPlayer.last.cash).to eq 700
@@ -31,7 +30,7 @@ RSpec.feature "user can raise or bet" do
   end
 
   scenario "user sees each player respond to raise" do
-    User.create(name: "jones", username: "jones", password: "password")
+    User.create(name: "jones", username: "jones", password: "password", cash: 10000)
     ai_player1 = AiPlayer.create(name: "Frank")
     ai_player2 = AiPlayer.create(name: "Martha")
     ai_player3 = AiPlayer.create(name: "Rosco")
@@ -118,13 +117,21 @@ RSpec.feature "user can raise or bet" do
     click_on "Check"
     click_on "Deal Turn"
     click_on "Check"
+
+    Game.last.find_players[2].update(bet_style: "always raise")
+
     click_on "Deal River"
-    expect(page).to have_content "Martha Checks Rosco Checks Zoe Checks"
-    expect(page).not_to have_content "Frank Checks!"
+
+    expect(page).to have_content "Martha Checks Rosco Checks Zoe Raises $100.00"
+    expect(page).not_to have_content "Frank Calls!"
+    Game.last.find_players[2].update(bet_style: "normal")
+
     click_on "Bet / Raise"
     fill_in "Current bet", with: "100"
     click_on "Submit"
+    expect(Game.last.users.last.current_bet).to eq 200
     expect(page).to have_content "Frank Calls! Martha Calls! Rosco Calls! Zoe Calls!"
+    expect(Game.last.find_players.all? { |player| player.total_bet == 300 }).to eq true
     click_on "Show Winner"
 
     click_on "Continue"
@@ -141,7 +148,6 @@ RSpec.feature "user can raise or bet" do
     click_on "Bet / Raise"
     fill_in "Current bet", with: "100"
     click_on "Submit"
-
     expect(page).to have_content "Frank Calls! Martha Calls! Rosco Calls! Zoe Calls!"
     click_on "Deal River"
     click_on "Check"
