@@ -19,13 +19,19 @@ class Game < ActiveRecord::Base
     players = AiPlayer.first(player_count - 1)
     players.each do |player|
       player.update(cash: 1000)
+      player.update(out: false)
       ai_players << player.refresh
     end
   end
 
   def set_blinds
-    find_players[0].bet(little_blind)
-    find_players[1].bet(big_blind)
+    find_players.reject(&:out)
+    players_left[0].bet(little_blind)
+    players_left[1].bet(big_blind)
+  end
+
+  def players_left
+    find_players.reject(&:out)
   end
 
   def load_deck
@@ -149,7 +155,7 @@ class Game < ActiveRecord::Base
   end
 
   def take_action(players)
-    players.map { |player| player.take_action unless player.folded }.compact
+    players.map { |player| player.take_action unless player.updated? }.compact
   end
 
   def find_range
@@ -192,7 +198,7 @@ class Game < ActiveRecord::Base
 
   def determine_winner
     players = {}
-    all_players = find_players.reject { |player| player.folded == true }
+    all_players = find_players.reject { |player| player.folded || player.out }
     all_players.each do |player|
       players[player] = player.cards + game_cards
     end

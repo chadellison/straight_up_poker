@@ -50,6 +50,8 @@ RSpec.feature "user can raise or bet" do
     select "100", from: "Big blind"
     click_on "Play Poker"
 
+    Game.last.find_players.each { |player| player.update(cash: 10000) }
+
     expect(page).to have_content "Martha Calls! Rosco Calls! Zoe Calls!"
     click_on "Call"
 

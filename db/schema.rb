@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160403190745) do
+ActiveRecord::Schema.define(version: 20160420040158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20160403190745) do
     t.string   "cards",       default: [],                 array: true
     t.boolean  "action",      default: false
     t.boolean  "folded",      default: false
+    t.boolean  "out",         default: false
   end
 
   create_table "games", force: :cascade do |t|
@@ -63,11 +64,11 @@ ActiveRecord::Schema.define(version: 20160403190745) do
     t.integer  "current_bet",     default: 0
     t.integer  "total_bet",       default: 0
     t.string   "cards",           default: [],                 array: true
-    t.integer  "integer",         default: 0
-    t.boolean  "action",          default: true
+    t.boolean  "action",          default: false
     t.boolean  "folded",          default: false
     t.integer  "round",           default: 0
     t.integer  "game_id"
+    t.boolean  "out",             default: false
   end
 
 end

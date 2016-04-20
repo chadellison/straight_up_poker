@@ -4,14 +4,14 @@
     <h4>Opponents: </h4>
       <ul>
         <% display_opponents(@game).each do |opponent| %>
-          <li><%= opponent.name %>: $<%= opponent.cash %>.00</li>
+          <li><%= opponent.name %>: $<%= opponent.cash %>.00 <%= "OUT" if opponent.out%></li>
         <% end %>
       </ul>
   </div>
   <div class=" s3 m3 game-stats">
     <h3>Pot: $<%= @game.pot %>.00</h3>
-    <h5>Little Blind: <%= @game.find_players.first.name %>, $<%= @game.little_blind %>.00</h5>
-    <h5>Big Blind: <%= @game.find_players[1].name %>, $<%= @game.big_blind %>.00</h5>
+    <h5>Little Blind: <%= @game.players_left.first.name %>, $<%= @game.little_blind %>.00</h5>
+    <h5>Big Blind: <%= @game.players_left[1].name %>, $<%= @game.big_blind %>.00</h5>
     <ul>
       <li><strong>Flop:</strong> <%= present_flop(@game) %></li>
       <li><strong>Turn:</strong> <%= @game.turn_card %></li>

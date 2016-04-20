@@ -19,9 +19,9 @@ class User < ActiveRecord::Base
 
   def fold
     update(folded: true)
-    folded_players = game.find_players.select { |player| player.folded == false }
-    if folded_players.count == 1
-      winner = folded_players.last
+    still_playing = game.find_players.reject { |player| player.folded || player.out }
+    if still_playing.count == 1
+      winner = still_playing.last
       game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
   end
