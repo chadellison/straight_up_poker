@@ -31,15 +31,15 @@ class Game < ActiveRecord::Base
 
   def players_left
     players = find_players.reject(&:out)
-    if previous_blind && players[1] == find_previous_player(previous_blind)
-      players.rotate(-1)
-    elsif previous_dealer_button && players.last == find_previous_player(previous_dealer_button)
-      players.rotate(-1)
-    elsif previous_small_blind && players.first == find_previous_player(previous_small_blind)
-      players.rotate(-1)
-    else
-      players
+    if previous_blind &&
+       [players[1] == find_previous_player(previous_blind),
+        players.last == find_previous_player(previous_dealer_button),
+        players.first == find_previous_player(previous_small_blind)].any?
+      players = players.rotate(-1)
     end
+    players = players.rotate(-1) if previous_blind &&
+                                    players[1] == find_previous_player(previous_blind)
+    players
   end
 
   def find_previous_player(player_info)
