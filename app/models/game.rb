@@ -183,7 +183,7 @@ class Game < ActiveRecord::Base
     when 0
       players_left[2..-1]
     else
-      players_left[2...user_index]
+      players_left[2...(players_left.index(users.last))]
     end
   end
 
