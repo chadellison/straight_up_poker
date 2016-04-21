@@ -25,13 +25,29 @@ class Game < ActiveRecord::Base
   end
 
   def set_blinds
-    find_players.reject(&:out)
     players_left[0].bet(little_blind)
     players_left[1].bet(big_blind)
   end
 
   def players_left
-    find_players.reject(&:out)
+    players = find_players.reject(&:out)
+    if previous_blind && players[1] == find_previous_player(previous_blind)
+      players.rotate(-1)
+    elsif previous_dealer_button && players.last == find_previous_player(previous_dealer_button)
+      players.rotate(-1)
+    elsif previous_small_blind && players.first == find_previous_player(previous_small_blind)
+      players.rotate(-1)
+    else
+      players
+    end
+  end
+
+  def find_previous_player(player_info)
+    if player_info.split.last == "User"
+      User.find(player_info.split.first)
+    else
+      AiPlayer.find(player_info.split.first)
+    end
   end
 
   def load_deck
@@ -137,7 +153,7 @@ class Game < ActiveRecord::Base
       actions = take_action(find_players.reject { |player| player.class == User })
       (actions + respond_to_raise)
     else
-      take_action(find_players[0...user_index]) unless user_index == 0
+      take_action(players_left[0...user_index]) unless players_left.first.is_a? User
     end
   end
 
@@ -159,13 +175,13 @@ class Game < ActiveRecord::Base
   end
 
   def find_range
-    case user_index
+    case players_left.index(users.last)
     when 1
-      find_players.rotate(1)[1..-1]
+      players_left.rotate(1)[1..-1]
     when 0
-      find_players[2..-1]
+      players_left[2..-1]
     else
-      find_players[2...user_index]
+      players_left[2...user_index]
     end
   end
 
@@ -217,6 +233,11 @@ class Game < ActiveRecord::Base
     end
   end
 
+  def format_player_info(index)
+    players_left[index].id.to_s + " " +
+    players_left[index].class.to_s
+  end
+
   def refresh
     update(
             winner: nil,
@@ -230,7 +251,10 @@ class Game < ActiveRecord::Base
             cards: [],
             flop_cards: [],
             turn_card: nil,
-            river_card: nil
+            river_card: nil,
+            previous_blind: format_player_info(1),
+            previous_dealer_button: format_player_info(-1),
+            previous_small_blind: format_player_info(0)
           )
 
     find_players.each { |player| player.refresh }

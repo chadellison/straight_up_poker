@@ -166,8 +166,6 @@ class AiPlayer < ActiveRecord::Base
     winnings = Game.last.pot
     update(cash: cash + winnings)
     "#{id} ai_player"
-    #if player has 0 cash then - when that player takes winnings it only takes
-    # its total bet * the number of players!
   end
 
   def split_pot(number_of_players)
