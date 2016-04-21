@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
     still_playing = game.find_players.reject { |player| player.folded || player.out }
     if still_playing.count == 1
       winner = still_playing.last
+      winner.take_winnings
       game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
   end

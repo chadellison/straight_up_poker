@@ -135,10 +135,12 @@ class Game < ActiveRecord::Base
     unless find_players.all? { |player| player.updated? }
       return (actions += respond_to_raise) if users.last.folded
       if index_raise > user_index
-        players = rule_out(find_players[(index_raise + 1)..-1] + find_players[0...user_index])
+        players = rule_out(find_players[(index_raise + 1)..-1] +
+        find_players[0...user_index])
         actions += take_action(players)
       else
-        actions += take_action((find_players[(index_raise + 1)...user_index]).reject { |p| p.updated? })
+        actions += take_action((find_players[(index_raise + 1)...user_index])
+        .reject { |p| p.updated? })
       end
     end
     actions
@@ -150,7 +152,7 @@ class Game < ActiveRecord::Base
     elsif !pocket_cards
       take_action(find_range) unless find_range.empty?
     elsif users.last.folded
-      actions = take_action(find_players.reject { |player| player.class == User })
+      actions = take_action(players_left.reject { |player| player.class == User })
       (actions + respond_to_raise)
     else
       take_action(players_left[0...user_index]) unless players_left.first.is_a? User
@@ -159,7 +161,7 @@ class Game < ActiveRecord::Base
 
   def respond_to_raise
     actions = []
-    until find_players.all? { |player| player.total_bet == highest_bet || player.folded } do
+    until players_left.all? { |player| player.updated? } do
       actions += take_action(rule_out(find_players.rotate(index_raise)))
     end
     actions

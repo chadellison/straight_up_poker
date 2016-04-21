@@ -10,7 +10,7 @@ module GameHelper
   end
 
   def display_opponents(game)
-    game.find_players.reject do |player|
+    game.players_left.reject do |player|
       player.class == User
     end
   end

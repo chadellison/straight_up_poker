@@ -268,12 +268,14 @@ RSpec.feature "when a player they are out" do
     click_on "Check"
 
     flop = ["Jack of Spades", "Jack of Clubs", "10 of Hearts"]
-    turn = ["Ace of Diamonds"]
-    river = ["4 of Clubs"]
+    turn = "Ace of Diamonds"
+    river = "4 of Clubs"
 
     Game.last.find_players[1].update(cards: ["5 of Hearts", "2 of Spades"])
     Game.last.find_players[5].update(cards: ["5 of Spades", "2 of Hearts"])
     Game.last.find_players[0].update(cards: ["Jack of Diamonds", "Jack of Hearts"])
+
+    Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 
     click_on "Show Winner"
 
@@ -324,8 +326,10 @@ RSpec.feature "when a player they are out" do
     flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
     turn = "5 of Hearts"
     river = "10 of Clubs"
+
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
     Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+
 
     expect(Game.last.find_players.last.cash).to eq 0
 
@@ -361,11 +365,13 @@ RSpec.feature "when a player they are out" do
     click_on "Check"
 
     flop = ["Jack of Spades", "Jack of Clubs", "10 of Hearts"]
-    turn = ["Ace of Diamonds"]
-    river = ["4 of Clubs"]
+    turn = "Ace of Diamonds"
+    river = "4 of Clubs"
 
     Game.last.players_left[0].update(cards: ["5 of Hearts", "2 of Spades"])
     Game.last.players_left[3].update(cards: ["Jack of Hearts", "Jack of Diamonds"])
+
+    Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 
     click_on "Show Winner"
 
@@ -396,8 +402,10 @@ RSpec.feature "when a player they are out" do
     click_on "Check"
 
     flop = ["Queen of Spades", "Queen of Clubs", "10 of Hearts"]
-    turn = ["Ace of Diamonds"]
-    river = ["4 of Clubs"]
+    turn = "Ace of Diamonds"
+    river = "4 of Clubs"
+
+    Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 
     Game.last.players_left.first.update(cards: ["5 of Hearts", "2 of Spades"])
     Game.last.players_left.last.update(cards: ["2 of Hearts", "7 of Spades"])
