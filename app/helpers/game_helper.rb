@@ -54,6 +54,10 @@ module GameHelper
     end
   end
 
+  def declare_champion(game)
+    "Congratulations #{find_winner(game).last.name}! You are the champion, and also a hoss beast!"
+  end
+
   def winning_cards(game)
     find_winner(game).map do |winner|
       "#{winner.name}: #{winner.present_cards}"

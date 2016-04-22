@@ -36,11 +36,13 @@
 
   <div class="actions">
     <% if @game.winner %>
+      <div class="champion"><%= declare_champion(@game) if @game.champion %></div>
       <div class="winner">
         <h3><%= declare_winner(@game) %></h3>
         <h5><%= winning_cards(@game) %></h5>
       </div>
-      <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch, class: "btn red" %>
+      <%= button_to "Continue", game_path(@game.id, refresh: :refresh), method: :patch, class: "btn red" unless @game.champion%>
+      <%= button_to "Play Again", new_game_path, method: :get, class: "btn green" if @game.champion %>
       <%= button_to "Quit", dashboard_path, method: :get, class: "btn red" %>
     <% elsif display_button(@game) %>
       <%= button_to display_button(@game), game_path(@game.id), method: :patch, class: "btn red" %>

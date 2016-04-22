@@ -204,6 +204,7 @@ class Game < ActiveRecord::Base
       deal_river
     else
       update(winner: determine_winner) unless winner
+      update(champion: winner) if players_left.one? { |player| player.cash > 0 }
     end
     find_players.each { |player| player.update(action: false) }
     update(raise_count: 0)
