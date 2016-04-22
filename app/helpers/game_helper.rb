@@ -10,7 +10,7 @@ module GameHelper
   end
 
   def display_opponents(game)
-    game.find_players.reject do |player|
+    game.players_left.reject do |player|
       player.class == User
     end
   end
@@ -40,7 +40,7 @@ module GameHelper
 
   def players_updated?(game)
     game.find_players.all? do |player|
-      player.updated? && player.action || player.folded
+      player.updated? && player.action || player.folded || player.cash == 0
     end
   end
 

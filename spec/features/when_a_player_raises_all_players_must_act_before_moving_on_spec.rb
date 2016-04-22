@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.feature "when a player raises all other players must act before moving on" do
   scenario "users call, fold, or raise before the next cards are shown" do
-    User.create(name: "jones", username: "jones", password: "password", cash: 10000)
-    AiPlayer.create(name: "Frank", cash: 10000)
-    AiPlayer.create(name: "Martha", bet_style: "always raise", cash: 10000)
-    AiPlayer.create(name: "Rosco", cash: 10000)
+    User.create(name: "jones", username: "jones", password: "password")
+    AiPlayer.create(name: "Frank")
+    AiPlayer.create(name: "Martha", bet_style: "always raise")
+    AiPlayer.create(name: "Rosco")
 
     visit root_path
     click_on "Login"
@@ -18,6 +18,8 @@ RSpec.feature "when a player raises all other players must act before moving on"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"
+
+    Game.last.find_players.each { |player| player.update(cash: 10000)}
 
     expect(page).to have_content "Little Blind: jones, $100.00"
     expect(page).to have_content "Big Blind: Frank, $200.00"

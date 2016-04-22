@@ -11,14 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160418221057) do
+ActiveRecord::Schema.define(version: 20160421025131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "ai_players", force: :cascade do |t|
     t.string   "name"
-    t.integer  "skill"
     t.string   "bet_style"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
@@ -36,21 +35,24 @@ ActiveRecord::Schema.define(version: 20160418221057) do
     t.string   "winner"
     t.integer  "bets"
     t.string   "hands"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "player_count"
-    t.integer  "little_blind", default: 50
-    t.integer  "big_blind",    default: 100
-    t.boolean  "pocket_cards", default: false
-    t.boolean  "flop",         default: false
-    t.boolean  "turn",         default: false
-    t.boolean  "river",        default: false
-    t.integer  "pot",          default: 0
-    t.string   "cards",        default: [],                 array: true
-    t.string   "flop_cards",   default: [],                 array: true
+    t.integer  "little_blind",           default: 50
+    t.integer  "big_blind",              default: 100
+    t.boolean  "pocket_cards",           default: false
+    t.boolean  "flop",                   default: false
+    t.boolean  "turn",                   default: false
+    t.boolean  "river",                  default: false
+    t.integer  "pot",                    default: 0
+    t.string   "cards",                  default: [],                 array: true
+    t.string   "flop_cards",             default: [],                 array: true
     t.string   "turn_card"
     t.string   "river_card"
-    t.integer  "raise_count",  default: 0
+    t.integer  "raise_count",            default: 0
+    t.string   "previous_blind"
+    t.string   "previous_dealer_button"
+    t.string   "previous_small_blind"
   end
 
   create_table "users", force: :cascade do |t|
@@ -68,6 +70,7 @@ ActiveRecord::Schema.define(version: 20160418221057) do
     t.boolean  "folded",          default: false
     t.integer  "round",           default: 0
     t.integer  "game_id"
+    t.boolean  "out",             default: false
   end
 
 end

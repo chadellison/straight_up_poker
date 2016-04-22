@@ -24,7 +24,6 @@ RSpec.feature "user can fold vs multiple ais" do
     click_on "Fold"
     expect(page).to have_content "Frank Checks"
     expect(page).not_to have_content "Mary Checks Rosco Checks"
-
     click_on "Deal Flop"
 
     expect(page).to have_content "Frank Checks Mary Checks Rosco Checks"
@@ -57,6 +56,8 @@ RSpec.feature "user can fold vs multiple ais" do
     click_on "Play Poker"
     #jones Frank Mary Rosco
 
+    Game.last.find_players.each { |player| player.update(cash: 10000) }
+    
     expect(page).to have_content "Mary Raises $20.00 Rosco Raises $20.00"
     expect(page).not_to have_content "Frank Calls!"
 

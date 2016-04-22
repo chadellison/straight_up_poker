@@ -4,15 +4,22 @@ class AiPlayer < ActiveRecord::Base
   include CardHelper
 
   def bet(amount)
+    amount = cash if amount.to_i > cash
     update(current_bet: amount.to_i)
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
     update(cash: new_amount)
     game.update(pot: game.pot + amount.to_i)
-    "#{name} bet $#{amount}.00"
+  end
+
+  def all_in
+    parting_cash = cash
+    bet(cash)
+    "#{name} Goes All In ($#{parting_cash})!"
   end
 
   def call(amount)
+    return all_in if amount >= cash
     bet(amount)
     "#{name} Calls!"
   end
@@ -22,6 +29,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def raise(amount)
+    return all_in if amount >= cash
     if game.raise_count == 3
       normal_bet
     else
@@ -34,9 +42,10 @@ class AiPlayer < ActiveRecord::Base
 
   def fold
     update(folded: true)
-    still_playing = game.find_players.select { |player| player.folded == false }
+    still_playing = game.find_players.reject { |player| player.folded || player.out }
     if still_playing.count == 1
       winner = still_playing.last
+      winner.take_winnings
       game.update(winner: "#{winner.id} #{winner.class}".downcase)
     end
     name + " Folds"
@@ -56,6 +65,7 @@ class AiPlayer < ActiveRecord::Base
             total_bet: 0,
             folded: false
           )
+    update(out: true) if cash == 0
     self
   end
 
@@ -105,7 +115,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def bet_conservative(risk_factor)
-    return bet(cash) if risk_factor == 10 && hand > 6 && !game.flop_cards.empty?
+    return all_in if risk_factor == 10 && hand > 6 && !game.flop_cards.empty?
     if game.highest_bet > total_bet && hand < 1
       risk_factor > 2 ? fold : normal_bet
     elsif game.highest_bet > total_bet && hand > 4
@@ -118,7 +128,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def bet_aggressive(risk_factor)
-    return bet(cash) if risk_factor > 7 && hand > 5 && !game.flop_cards.empty?
+    return all_in if risk_factor > 7 && hand > 5 && !game.flop_cards.empty?
     if game.highest_bet > total_bet && hand < 1
       risk_factor > 5 ? fold : normal_bet
     elsif game.highest_bet > total_bet && hand > 2
@@ -151,7 +161,7 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def updated?
-    action && total_bet == game.highest_bet || folded
+    action && total_bet == game.highest_bet || folded || cash == 0
   end
 
   def take_winnings

@@ -3,8 +3,6 @@ require "rails_helper"
 RSpec.feature "user can play poker" do
   scenario "user sees results of the game" do
     ai = AiPlayer.create(name: "Rosco",
-      skill: 1,
-      bet_style: "overly_safe",
       cash: 1000)
 
     visit root_path
