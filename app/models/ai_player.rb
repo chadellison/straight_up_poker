@@ -4,6 +4,7 @@ class AiPlayer < ActiveRecord::Base
   include CardHelper
 
   def bet(amount)
+    amount = cash if amount.to_i > cash
     update(current_bet: amount.to_i)
     update(total_bet: total_bet + amount)
     new_amount = cash - amount.to_i
