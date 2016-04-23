@@ -18,7 +18,7 @@ class Game < ActiveRecord::Base
     users << user.refresh
     players = AiPlayer.first(player_count - 1)
     players.each do |player|
-      player.update(cash: 1000)
+      player.update(cash: buy_in)
       player.update(out: false)
       ai_players << player.refresh
     end

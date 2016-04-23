@@ -14,6 +14,7 @@ RSpec.feature "user can play many rounds with many players" do
 
     click_on "Play"
     select "3", from: "Player count"
+    select "1000", from: "Buy in"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"
