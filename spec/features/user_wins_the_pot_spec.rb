@@ -77,6 +77,7 @@ RSpec.feature "user can win the pot" do
     click_on "Play"
 
     select "2", from: "Player count"
+    select "3000", from: "Buy in"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"
@@ -117,10 +118,10 @@ RSpec.feature "user can win the pot" do
     expect(page).to have_content "Oscar: Ace of Clubs, Ace of Hearts"
     expect(User.last.cash).to eq 800
     expect(Game.last.pot).to eq 400
-    expect(AiPlayer.last.cash).to eq 1200
+    expect(AiPlayer.last.cash).to eq 3200
 
     click_on "Continue"
 
-    expect(AiPlayer.last.cash).to eq 1000
+    expect(AiPlayer.last.cash).to eq 3000
   end
 end

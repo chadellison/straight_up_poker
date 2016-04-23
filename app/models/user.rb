@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   end
 
   def bet(amount)
+    amount = cash if amount > cash
     update(current_bet: amount)
     update(total_bet: total_bet + amount.to_i)
     new_amount = cash - amount.to_i

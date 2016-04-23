@@ -15,6 +15,7 @@ RSpec.feature "user can raise or bet" do
     click_on "Play"
 
     select "2", from: "Player count"
+    select "5000", from: "Buy in"
     select "100", from: "Little blind"
     select "200", from: "Big blind"
     click_on "Play Poker"
@@ -25,7 +26,7 @@ RSpec.feature "user can raise or bet" do
     click_on "Submit"
     expect(page).to have_content "Rosco Calls!"
     expect(User.last.cash).to eq 700
-    expect(AiPlayer.last.cash).to eq 700
+    expect(AiPlayer.last.cash).to eq 4700
     expect(Game.last.pot).to eq 600
   end
 

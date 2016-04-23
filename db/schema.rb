@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160422153943) do
+ActiveRecord::Schema.define(version: 20160423040819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20160422153943) do
     t.string   "previous_dealer_button"
     t.string   "previous_small_blind"
     t.string   "champion"
+    t.integer  "buy_in",                 default: 1000
   end
 
   create_table "users", force: :cascade do |t|

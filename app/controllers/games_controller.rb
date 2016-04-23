@@ -36,6 +36,6 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(:player_count, :little_blind, :big_blind, :current_bet)
+    params.require(:game).permit(:player_count, :buy_in, :little_blind, :big_blind, :current_bet)
   end
 end
