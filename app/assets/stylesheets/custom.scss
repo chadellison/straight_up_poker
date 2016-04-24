@@ -20,6 +20,14 @@ header {
   margin: auto;
 }
 
+.game_cards {
+  text-align: left;
+  color: white; text-shadow: black 0.1em 0.1em 0.2em;
+  float: left;
+  margin-bottom: 45px;
+  padding-left: 5%;
+}
+
 h3 {
   text-align: center;
   color: #6DBA9C;
@@ -51,7 +59,7 @@ h5 {
 }
 
 .user-stats {
-  width: 100%;
+  width: 30%;
   clear: both;
   color: #90BDFD; text-shadow: black 0.1em 0.1em 0.2em;
   padding-left: 5%;
@@ -108,4 +116,17 @@ h5 {
   padding-left: 25%;
   padding-right: 25%;
   padding-bottom: 30px;
+}
+
+.card {
+  width: 110px;
+  margin: auto;
+}
+
+.pocket {
+  width: 75px;
+}
+
+.space {
+  padding-right: 40px;
 }
