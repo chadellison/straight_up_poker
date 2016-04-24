@@ -15,16 +15,37 @@
     <h3>Pot: $<%= @game.pot %>.00</h3>
     <h5>Little Blind: <%= @game.players_left.first.name %>, $<%= @game.little_blind %>.00</h5>
     <h5>Big Blind: <%= @game.players_left[1].name %>, $<%= @game.big_blind %>.00</h5>
-    <ul>
-      <li><strong>Flop:</strong> <%= present_flop(@game) %></li>
-      <li><strong>Turn:</strong> <%= @game.turn_card %></li>
-      <li><strong>River:</strong> <%= @game.river_card %></li>
-    <ul>
+  </div>
+  <div class="game-stats">
+    <% if !@game.flop_cards.empty? %>
+      <strong class="space">Flop:</strong>
+    <% end %>
+    <% if @game.turn_card %>
+      <strong class="space">Turn:</strong>
+    <% end %>
+    <% if @game.river_card %>
+      <strong class="space">River:</strong>
+    <% end %>
+  </div>
+    <div class="game_cards">
+    <% if !@game.flop_cards.empty? %>
+      <% present_flop(@game).each do |card| %>
+      <img class="card" src="<%= card %>">
+      <% end %>
+    <% end %>
+    <% if @game.turn_card %>
+      <img class="card" src="<%= card_image(@game.turn_card) %>">
+    <% end %>
+    <% if @game.river_card %>
+      <img class="card" src="<%= card_image(@game.river_card) %>">
+    <% end %>
   </div>
   <div class=" s3 m3 user-stats">
     <h4>Cash: $<%= current_user.cash %>.00</h4>
-    <p><strong>Pocket:</strong> <%= @game.users.last.present_cards %></p>
-    <p><%= to_call(@game) unless current_user.folded %></p>
+    <p><strong>Pocket:</strong> <% present_pocket(@game).each do |card| %>
+      <img class="pocket" src="<%= card %>">
+    <% end %></p>
+    <p><%= to_call(@game) unless current_user.updated? %></p>
   </div>
 
   <div class="ai-actions">
