@@ -22,7 +22,7 @@ RSpec.feature "user can play multiple ais" do
     click_on "Play Poker"
 
     expect(Game.last.find_players[0]).to eq User.last
-    expect(User.last.cash).to eq 950
+    expect(User.last.cash).to eq 1950
     expect(Game.last.find_players[1].cash).to eq 2900
     expect(page).to have_content Game.last.find_players[2].name + " Calls!"
     expect(page).to have_content Game.last.find_players[3].name + " Calls!"

@@ -49,17 +49,17 @@ RSpec.feature "user can win the pot" do
     Game.last.update(flop_cards: [ace, king, king2])
     Game.last.update(turn_card: turn)
     Game.last.update(river_card: river)
-    expect(User.last.cash).to eq 800
+    expect(User.last.cash).to eq 1800
 
     click_on "Show Winner"
 
     expect(page).to have_content "jones wins with a Full House!"
     expect(Game.last.pot).to eq 400
-    expect(User.last.cash).to eq 1200
+    expect(User.last.cash).to eq 2200
 
     click_on "Continue"
 
-    expect(User.last.cash).to eq 1000
+    expect(User.last.cash).to eq 2000
   end
 
   scenario "takes the pot" do
@@ -116,7 +116,7 @@ RSpec.feature "user can win the pot" do
     expect(page).to have_content "Oscar wins with a Full House!"
     expect(page).to have_content "Full House"
     expect(page).to have_content "Oscar: Ace of Clubs, Ace of Hearts"
-    expect(User.last.cash).to eq 800
+    expect(User.last.cash).to eq 1800
     expect(Game.last.pot).to eq 400
     expect(AiPlayer.last.cash).to eq 3200
 
