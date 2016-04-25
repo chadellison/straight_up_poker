@@ -54,16 +54,16 @@ RSpec.feature "players can split the pot" do
     Game.last.update(flop_cards: [ace, king, king2])
     Game.last.update(turn_card: turn)
     Game.last.update(river_card: river)
-    expect(User.last.cash).to eq 800
+    expect(User.last.cash).to eq 1800
 
     click_on "Show Winner"
 
     expect(page).to have_content "jones and Oscar split the pot with Two Pairs!"
     expect(Game.last.pot).to eq 600
-    expect(User.last.cash).to eq 1100
+    expect(User.last.cash).to eq 2100
 
     click_on "Continue"
 
-    expect(User.last.cash).to eq 900
+    expect(User.last.cash).to eq 1900
   end
 end

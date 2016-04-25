@@ -21,7 +21,7 @@ RSpec.feature "user can play many rounds with many players" do
 
     expect(Game.last.find_players[0]).to eq User.last
 
-    expect(User.last.cash).to eq 900
+    expect(User.last.cash).to eq 1900
     expect(Game.last.find_players[1].cash).to eq 800
     expect(Game.last.find_players[1].name).to eq "Frank"
     expect(page).to have_content "Mary Calls"

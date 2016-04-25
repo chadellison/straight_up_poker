@@ -23,10 +23,10 @@ RSpec.describe User, type: :model do
     game = Game.create
     user = game.users.create(name: "Jones", username: "jones", password: "password")
     expect(user.total_bet).to eq 0
-    expect(user.cash).to eq 1000
+    expect(user.cash).to eq 2000
     user.bet(50)
     expect(user.total_bet).to eq 50
-    expect(user.cash).to eq 950
+    expect(user.cash).to eq 1950
   end
 
   it "can fold" do

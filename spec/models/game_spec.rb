@@ -22,11 +22,11 @@ RSpec.describe Game, type: :model do
     game.users << user
 
     expect(player.cash).to eq 1000
-    expect(user.cash).to eq 1000
+    expect(user.cash).to eq 2000
     game.set_blinds
     user = User.find(user.id)
     player = AiPlayer.find(player.id)
-    expect(user.cash).to eq 950
+    expect(user.cash).to eq 1950
     expect(player.cash).to eq 900
   end
 

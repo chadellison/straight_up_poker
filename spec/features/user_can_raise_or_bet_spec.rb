@@ -25,7 +25,7 @@ RSpec.feature "user can raise or bet" do
     fill_in "Current bet", with: "100"
     click_on "Submit"
     expect(page).to have_content "Rosco Calls!"
-    expect(User.last.cash).to eq 700
+    expect(User.last.cash).to eq 1700
     expect(AiPlayer.last.cash).to eq 4700
     expect(Game.last.pot).to eq 600
   end
