@@ -55,7 +55,7 @@
     <div class="flash-error"><%= flash["error"] %></div>
   </div>
 
-  <div class="actions">
+  <div>
     <% if @game.winner %>
       <div class="champion"><%= declare_champion(@game) if @game.champion %></div>
       <div class="winner">
