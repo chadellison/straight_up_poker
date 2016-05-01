@@ -26,7 +26,7 @@ RSpec.describe AiPlayer, type: :model do
 
   it "resets ai_players cards and bets" do
     AiPlayer.create(name: "Martha",
-                  cards: ["King of Hearts", "2 of Spades"],
+                  cards: [["KING", "Hearts"], ["2", "Spades"]],
                   cash: 800,
                   current_bet: 200,
                   total_bet: 400,
@@ -60,62 +60,62 @@ RSpec.describe AiPlayer, type: :model do
     game = Game.create
     ai_player = game.ai_players.create(name: "Rosco")
 
-    cards = ["2 of Hearts", "7 of Spades"]
+    cards = [["2", "Hearts"], ["7", "Spades"]]
     game.ai_players.last.update(cards: cards)
     expect(ai_player.hand).to eq 3
 
-    cards = ["2 of Clubs", "10 of Hearts"]
+    cards = [["2", "Clubs"], ["10", "Hearts"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 4
 
-    cards = ["4 of Diamonds", "King of Hearts"]
+    cards = [["4", "Diamonds"], ["KING", "Hearts"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 5
 
-    cards = ["3 of Hearts", "3 of Spades"]
+    cards = [["3", "Hearts"], ["3", "Spades"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 6
 
-    cards = ["Ace of Hearts", "Ace of Spades"]
+    cards = [["ACE", "Hearts"], ["ACE", "Spades"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 6
 
-    flop_cards = ["Ace of Clubs", "Ace of Diamonds", "King of Hearts"]
+    flop_cards = [["ACE", "Clubs"], ["ACE", "Diamonds"], ["KING", "Hearts"]]
     Game.last.update(flop_cards: flop_cards)
 
     expect(AiPlayer.last.hand).to eq 7
 
-    cards = ["5 of Hearts", "Jack of Clubs"]
+    cards = [["5", "Hearts"], ["JACK", "Clubs"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 1
 
-    cards = ["Ace of Hearts", "King of Diamonds"]
+    cards = [["ACE", "Hearts"], ["KING", "Diamonds"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 6
 
-    cards = ["Jack of Hearts", "King of Diamonds"]
+    cards = [["JACK", "Hearts"], ["KING", "Diamonds"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 2
 
-    cards = ["Ace of Hearts", "4 of Diamonds"]
+    cards = [["ACE", "Hearts"], ["4", "Diamonds"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 3
 
-    turn_card = "Queen of Clubs"
+    turn_card = ["QUEEN", "Clubs"]
     Game.last.update(turn_card: turn_card)
 
-    cards = ["Jack of Hearts", "10 of Diamonds"]
+    cards = [["JACK", "Hearts"], ["10", "Diamonds"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 4
 
-    flop_cards = ["Ace of Clubs", "Queen of Clubs", "King of Clubs"]
+    flop_cards = [["ACE", "Clubs"], ["QUEEN", "Clubs"], ["KING", "Clubs"]]
     Game.last.update(flop_cards: flop_cards)
 
-    cards = ["3 of Clubs", "10 of Clubs"]
+    cards = [["3", "Clubs"], ["10", "Clubs"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 5
 
-    cards = ["Jack of Clubs", "10 of Clubs"]
+    cards = [["JACK", "Clubs"], ["10", "Clubs"]]
     game.ai_players.last.update(cards: cards)
     expect(AiPlayer.last.hand).to eq 9
   end

@@ -13,8 +13,8 @@ RSpec.describe User, type: :model do
 
   it "presents the cards" do
     user = User.create(name: "frank", username: "frank", password: "password")
-    card1 = Card.new("7", "Hearts").present_card
-    card2 = Card.new("9", "Spades").present_card
+    card1 = ["7", "Hearts"]
+    card2 = ["9", "Spades"]
     user.update(cards: [card1, card2])
     expect(user.present_cards).to eq "7 of Hearts, 9 of Spades"
   end

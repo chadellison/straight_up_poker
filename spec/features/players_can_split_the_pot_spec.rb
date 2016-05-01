@@ -31,21 +31,21 @@ RSpec.feature "players can split the pot" do
 
     expect(Game.last.pot).to eq 600
 
-    ace = Card.new("Ace", "Spades").present_card
-    ace2 = Card.new("Ace", "Hearts").present_card
+    ace = ["ACE", "Spades"]
+    ace2 = ["ACE", "Hearts"]
 
-    two = Card.new("2", "Hearts").present_card
-    three = Card.new("3", "Hearts").present_card
+    two = ["2", "Hearts"]
+    three = ["3", "Hearts"]
 
-    five = Card.new("5", "Clubs").present_card
-    seven = Card.new("7", "Spades").present_card
+    five = ["5", "Clubs"]
+    seven = ["7", "Spades"]
 
-    ace = Card.new("Ace", "Clubs").present_card
-    king = Card.new("King", "Spades").present_card
-    king2 = Card.new("King", "Diamonds").present_card
+    ace = ["ACE", "Clubs"]
+    king = ["KING", "Spades"]
+    king2 = ["KING", "Diamonds"]
 
-    turn = Card.new("5", "Clubs").present_card
-    river = Card.new("9", "Diamonds").present_card
+    turn = ["5", "Clubs"]
+    river = ["9", "Diamonds"]
 
     User.last.update(cards: [ace, two])
     oscar.update(cards: [ace2, three])

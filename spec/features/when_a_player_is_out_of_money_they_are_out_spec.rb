@@ -49,13 +49,13 @@ RSpec.feature "when a player raises all other players must act before moving on"
 
     expect(page).not_to have_content "Frank Checks"
 
-    Game.last.find_players[1].update(cards: ["2 of Clubs", "7 of Hearts"])
+    Game.last.find_players[1].update(cards: [["2", "Clubs", "7", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.users.last.update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
 
     click_on "Show Winner"
 
@@ -80,19 +80,19 @@ RSpec.feature "when a player raises all other players must act before moving on"
     click_on "Deal River"
     click_on "Check"
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
 
     expect(Game.last.find_players[0].name).to eq "Rosco"
     expect(Game.last.find_players[1].name).to eq "jones"
     expect(Game.last.find_players[2].name).to eq "Frank"
     expect(Game.last.find_players[3].name).to eq "Martha"
 
-    Game.last.find_players[0].update(cards: ["5 of Hearts", "6 of Clubs"])
-    Game.last.find_players[1].update(cards: ["2 of Hearts", "9 of Clubs"])
-    Game.last.find_players[2].update(cards: ["Ace of Hearts", "Ace of Clubs"])
-    Game.last.find_players[3].update(cards: ["King of Hearts", "Jack of Clubs"])
+    Game.last.find_players[0].update(cards: [["5", "Hearts"], ["6", "Clubs"]])
+    Game.last.find_players[1].update(cards: [["2", "Hearts"], ["9", "Clubs"]])
+    Game.last.find_players[2].update(cards: [["ACE", "Hearts"], ["ACE", "Clubs"]])
+    Game.last.find_players[3].update(cards: [["KING", "Hearts"], ["JACK", "Clubs"]])
 
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 

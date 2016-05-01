@@ -119,20 +119,20 @@ RSpec.describe Game, type: :model do
     game = Game.create
     game.load_deck
     expect(game.cards.count).to eq 52
-    refute game.turn_card
+    expect(game.turn_card).to eq []
     game.deal_turn
     expect(game.cards.count).to eq 50
-    assert game.turn_card
+    refute game.turn_card.empty?
   end
 
   it "deals the river" do
     game = Game.create
     game.load_deck
     expect(game.cards.count).to eq 52
-    refute game.river_card
+    expect(game.river_card).to eq []
     game.deal_river
     expect(game.cards.count).to eq 50
-    assert game.river_card
+    refute game.river_card.empty?
   end
 
   it "can determine the winner" do
@@ -195,10 +195,10 @@ RSpec.describe Game, type: :model do
     turn: true,
     river: true,
     pot: 1200,
-    cards: ["Ace of Hearts", "King of Spades", "9 of Diamonds"],
-    flop_cards: ["Three of Hearts", "King of Hearts", "10 of Clubs"],
-    turn_card: "7 of Spades",
-    river_card: "6 of Diamonds"
+    cards: [["Ace", "Hearts"], ["King", "Spades"], ["9", "Diamonds"]],
+    flop_cards: [["3", "Hearts"], ["King", "Hearts"], ["10", "Clubs"]],
+    turn_card: ["7", "Spades"],
+    river_card: ["6", "Diamonds"]
     )
     User.create(name: "Rosco",
                                    username: "Rosco",
@@ -221,8 +221,8 @@ RSpec.describe Game, type: :model do
     expect(Game.last.pot).to eq 1200
     expect(Game.last.cards.count).to eq 3
     expect(Game.last.flop_cards.count).to eq 3
-    expect(Game.last.turn_card).to eq "7 of Spades"
-    expect(Game.last.river_card).to eq "6 of Diamonds"
+    expect(Game.last.turn_card).to eq ["7", "Spades"]
+    expect(Game.last.river_card).to eq ["6", "Diamonds"]
 
     expect(User.last.current_bet).to eq 200
     expect(User.last.total_bet).to eq 400
@@ -233,8 +233,8 @@ RSpec.describe Game, type: :model do
     expect(Game.last.big_blind).to eq 300
     expect(Game.last.pot).to eq 450
     expect(Game.last.flop_cards).to eq []
-    refute Game.last.turn_card
-    refute Game.last.river_card
+    expect(Game.last.turn_card).to eq []
+    expect(Game.last.river_card).to eq []
     refute Game.last.flop
     refute Game.last.turn
     refute Game.last.river

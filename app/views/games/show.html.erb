@@ -20,30 +20,30 @@
     <% if !@game.flop_cards.empty? %>
       <strong class="space">Flop:</strong>
     <% end %>
-    <% if @game.turn_card %>
+    <% if !@game.turn_card.empty? %>
       <strong class="space">Turn:</strong>
     <% end %>
-    <% if @game.river_card %>
+    <% if !@game.river_card.empty? %>
       <strong class="space">River:</strong>
     <% end %>
   </div>
     <div class="game_cards">
     <% if !@game.flop_cards.empty? %>
-      <% present_flop(@game).each do |card| %>
-      <img class="card" src="<%= card %>">
+      <% @game.flop_cards.each do |card| %>
+      <img class="card" src="<%= card.last %>">
       <% end %>
     <% end %>
-    <% if @game.turn_card %>
-      <img class="card" src="<%= card_image(@game.turn_card) %>">
+    <% if !@game.turn_card.empty? %>
+      <img class="card" src="<%= @game.turn_card.last %>">
     <% end %>
-    <% if @game.river_card %>
-      <img class="card" src="<%= card_image(@game.river_card) %>">
+    <% if !@game.river_card.empty? %>
+      <img class="card" src="<%= @game.river_card.last %>">
     <% end %>
   </div>
   <div class=" s3 m3 user-stats">
     <h4>Cash: $<%= current_user.cash %>.00</h4>
-    <p><strong>Pocket:</strong> <% present_pocket(@game).each do |card| %>
-      <img class="pocket" src="<%= card %>">
+    <p><strong>Pocket:</strong> <% @game.users.last.cards.each do |card| %>
+      <img class="pocket" src="<%= card.last %>">
     <% end %></p>
     <p><%= to_call(@game) unless current_user.updated? %></p>
   </div>

@@ -27,13 +27,13 @@ RSpec.feature "players cannot have less than a zero balance" do
     click_on "Deal River"
 
     Game.last.players_left.last.update(cash: 50)
-    Game.last.find_players.last.update(cards: ["2 of Clubs", "7 of Hearts"])
+    Game.last.find_players.last.update(cards: [["2", "Clubs"], ["7", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["Jack", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.users.last.update(cards: ["ACE", "Clubs", "ACE", "Hearts"])
     Game.last.users.last.update(round: 1)
     click_on "Check"
 
@@ -73,13 +73,13 @@ RSpec.feature "players cannot have less than a zero balance" do
     click_on "Deal River"
 
     Game.last.players_left.first.update(cash: 50)
-    Game.last.players_left.first.update(cards: ["2 of Clubs", "7 of Hearts"])
+    Game.last.players_left.first.update(cards: [["2", "Clubs"], ["7", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["Jack", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.players_left.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.players_left.last.update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
     click_on "Check"
 
     click_on "Show Winner"

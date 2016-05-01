@@ -29,13 +29,13 @@ RSpec.feature "there is a champion" do
     click_on "Check"
     click_on "Deal River"
 
-    Game.last.players_left.last.update(cards: ["2 of Clubs", "7 of Hearts"])
+    Game.last.players_left.last.update(cards: [["2", "Clubs"], ["7", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["Ace", "Spades"], ["Ace", "Diamonds"], ["Jack", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.players_left.first.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.players_left.first.update(cards: [["Ace", "Clubs", "Ace", "Hearts"]])
 
     click_on "Check"
 

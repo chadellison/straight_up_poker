@@ -51,12 +51,10 @@ class Game < ActiveRecord::Base
   end
 
   def load_deck
-    values = (2..10).to_a + ["Ace", "King", "Queen", "Jack"]
-    suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
-    values.each do |value|
-      suits.each do |suit|
-        cards << Card.new(value, suit).present_card
-      end
+    url = "http://deckofcardsapi.com/api/deck/new/draw/?count=52"
+    response = Faraday.get(url)
+    cards = JSON.parse(response.body)["cards"].map do |card|
+      [card["value"], card["suit"], card["image"]]
     end
     update(cards: cards)
   end
@@ -77,14 +75,14 @@ class Game < ActiveRecord::Base
 
   def deal_turn
     burn_card
-    turn_card = cards.shuffle!.pop
+    turn_card = cards.pop
     update(turn_card: turn_card)
     update(cards: cards)
   end
 
   def deal_river
     burn_card
-    river_card = cards.shuffle!.pop
+    river_card = cards.pop
     update(river_card: river_card)
     update(cards: cards)
   end
@@ -198,9 +196,9 @@ class Game < ActiveRecord::Base
   def game_action
     if flop_cards.empty?
       deal_flop
-    elsif turn_card.nil?
+    elsif turn_card.empty?
       deal_turn
-    elsif river_card.nil?
+    elsif river_card.empty?
       deal_river
     else
       update(winner: determine_winner) unless winner
@@ -212,7 +210,7 @@ class Game < ActiveRecord::Base
   end
 
   def game_cards
-    flop_cards + [turn_card, river_card]
+    flop_cards + [turn_card] + [river_card]
   end
 
   def determine_winner
@@ -253,8 +251,8 @@ class Game < ActiveRecord::Base
             pot: 0,
             cards: [],
             flop_cards: [],
-            turn_card: nil,
-            river_card: nil,
+            turn_card: [],
+            river_card: [],
             previous_blind: format_player_info(1),
             previous_dealer_button: format_player_info(-1),
             previous_small_blind: format_player_info(0)

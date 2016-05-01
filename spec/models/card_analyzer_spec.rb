@@ -62,16 +62,16 @@ RSpec.describe CardAnalyzer do
     cards = [
       Card.new("9", "clubs"),
       Card.new("10", "hearts"),
-      Card.new("Jack", "hearts"),
-      Card.new("King", "hearts"),
-      Card.new("Queen", "spades")
+      Card.new("JACK", "hearts"),
+      Card.new("KING", "hearts"),
+      Card.new("QUEEN", "spades")
     ]
     expect(CardAnalyzer.new.find_hand(cards).class).to eq Straight
   end
 
   it "determines an ace low straight" do
     cards = [
-      Card.new("Ace", "clubs"),
+      Card.new("ACE", "clubs"),
       Card.new("3", "hearts"),
       Card.new("5", "hearts"),
       Card.new("4", "hearts"),
@@ -82,12 +82,12 @@ RSpec.describe CardAnalyzer do
 
   it "determines an ace high straight" do
     cards = [
-      Card.new("Ace", "clubs"),
+      Card.new("ACE", "clubs"),
       Card.new("10", "hearts"),
-      Card.new("Jack", "hearts"),
-      Card.new("King", "spades"),
-      Card.new("King", "hearts"),
-      Card.new("Queen", "spades"),
+      Card.new("JACK", "hearts"),
+      Card.new("KING", "spades"),
+      Card.new("KING", "hearts"),
+      Card.new("QUEEN", "spades"),
     ]
     expect(CardAnalyzer.new.find_hand(cards).class).to eq Straight
   end
@@ -140,8 +140,8 @@ RSpec.describe CardAnalyzer do
       Card.new("7", "Hearts"),
       Card.new("6", "clubs"),
       Card.new("10", "spades"),
-      Card.new("Jack", "clubs"),
-      Card.new("Queen", "clubs")
+      Card.new("JACK", "clubs"),
+      Card.new("QUEEN", "clubs")
     ]
 
     expect(CardAnalyzer.new.find_hand(not_a_straight_flush).class).not_to eq StraightFlush
@@ -150,10 +150,10 @@ RSpec.describe CardAnalyzer do
 
   it "determines a royal flush" do
     cards = [
-      Card.new("King", "clubs"),
-      Card.new("Ace", "clubs"),
-      Card.new("Queen", "clubs"),
-      Card.new("Jack", "clubs"),
+      Card.new("KING", "clubs"),
+      Card.new("ACE", "clubs"),
+      Card.new("QUEEN", "clubs"),
+      Card.new("JACK", "clubs"),
       Card.new("10", "clubs")
     ]
     expect(CardAnalyzer.new.find_hand(cards).class).to_not eq StraightFlush
@@ -166,23 +166,23 @@ RSpec.describe CardAnalyzer do
     jannet = game.ai_players.create(name: "Jannet")
 
     player1_cards = [
-      "5 of Clubs",
-      "4 of Clubs",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["5", "Clubs", "image"],
+      ["4", "Clubs", "image"],
+      ["QUEEN", "Diamonds", "image"],
+      ["7", "Spades", "image"],
+      ["10", "Clubs", "image"],
+      ["2", "Hearts", "image"],
+      ["3", "Hearts", "image"]
     ]
 
     player2_cards = [
-      "King of Clubs",
-      "5 Clubs",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["KING", "Clubs", "image"],
+      ["5", "Clubs", "image"],
+      ["QUEEN", "Diamonds", "image"],
+      ["7", "Spades", "image"],
+      ["10", "Clubs"],
+      ["2", "Hearts", "image"],
+      ["3", "Hearts"]
     ]
     high_card_winner = CardAnalyzer.new
     expect("#{jannet.id} ai_player").to eq high_card_winner.determine_winner({ frank => player1_cards, jannet => player2_cards })
@@ -195,33 +195,33 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "5 of Clubs",
-      "5 of Hearts",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["5", "Clubs", "image"],
+      ["5", "Hearts", "image"],
+      ["QUEEN", "Diamonds", "image"],
+      ["7", "Spades", "image"],
+      ["10" "Clubs", "image"],
+      ["2", "Hearts", "image"],
+      ["3", "Hearts", "image"]
     ]
 
     player2_cards = [
-      "Queen of Clubs",
-      "5 spades",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["QUEEN", "Clubs", "image"],
+      ["5", "spades", "image"],
+      ["QUEEN", "Diamonds", "image"],
+      ["7", "Spades", "image"],
+      ["10", "Clubs", "image"],
+      ["2", "Hearts", "image"],
+      ["3" "Hearts", "image"]
     ]
 
     player3_cards = [
-      "King of Clubs",
-      "3 Clubs",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["KING", "Clubs", "image"],
+      ["3", "Clubs", "image"],
+      ["QUEEN", "Diamonds", "image"],
+      ["7", "Spades", "image"],
+      ["10", "Clubs", "image"],
+      ["2", "Hearts", "image"],
+      ["3", "Hearts", "image"]
     ]
     pair_winner = CardAnalyzer.new
     winner = pair_winner.determine_winner({
@@ -239,33 +239,33 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "2 of Clubs",
-      "3 of Clubs",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["2", "Clubs"],
+      ["3", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["7", "Spades"],
+      ["10", "Clubs"],
+      ["2", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player2_cards = [
-      "Queen of Clubs",
-      "3 Spades",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["QUEEN", "Clubs"],
+      ["3", "Spades"],
+      ["QUEEN", "Diamonds"],
+      ["7", "Spades"],
+      ["10", "Clubs"],
+      ["2", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player3_cards = [
-      "7 of Clubs",
-      "3 Diamonds",
-      "Queen Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["7", "Clubs"],
+      ["3", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["7", "Spades"],
+      ["10", "Clubs"],
+      ["2", "Hearts"],
+      ["3", "Hearts"]
     ]
     two_pair_winner = CardAnalyzer.new
     winner = two_pair_winner.determine_winner({
@@ -283,33 +283,33 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "Queen of Hearts",
-      "3 of Clubs",
-      "Queen Diamonds",
-      "7 of Spades",
-      "9 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["QUEEN", "Hearts"],
+      ["3", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["7", "Spades"],
+      ["9", "Clubs"],
+      ["2", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player2_cards = [
-      "Queen of Clubs",
-      "3 Spades",
-      "Queen Spades",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["QUEEN", "Clubs"],
+      ["3", "Spades"],
+      ["QUEEN", "Spades"],
+      ["7", "Spades"],
+      ["10", "Clubs"],
+      ["2", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player3_cards = [
-      "7 of Clubs",
-      "3 Diamonds",
-      "5 Diamonds",
-      "7 of Spades",
-      "10 of Clubs",
-      "2 of Hearts",
-      "3 of Hearts"
+      ["7", "Clubs"],
+      ["3", "Diamonds"],
+      ["5", "Diamonds"],
+      ["7", "Spades"],
+      ["10", "Clubs"],
+      ["2", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     two_pair_winner = CardAnalyzer.new
@@ -328,33 +328,33 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "2 of Clubs",
-      "3 of Clubs",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "3 of Hearts"
+      ["2", "Clubs"],
+      ["3", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player2_cards = [
-      "Ace of Clubs",
-      "3 of Diamonds",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "3 of Hearts"
+      ["ACE", "Clubs"],
+      ["3", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player3_cards = [
-      "9 of Spades",
-      "9 of Clubs",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "3 of Hearts"
+      ["9", "Spades"],
+      ["9", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["3", "Hearts"]
     ]
     high_card_winner = CardAnalyzer.new
     winner = high_card_winner.determine_winner({
@@ -372,23 +372,23 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "Ace of Clubs",
-      "3 of Diamonds",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "3 of Hearts"
+      ["ACE", "Clubs"],
+      ["3", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     player2_cards = [
-      "2 of Clubs",
-      "3 of Clubs",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "3 of Hearts"
+      ["2", "Clubs"],
+      ["3", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["3", "Hearts"]
     ]
 
     three_of_a_kind_winner = CardAnalyzer.new
@@ -406,32 +406,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "King of Clubs",
-      "King of Diamonds",
-      "Queen Diamonds",
-      "Ace of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "Ace of Hearts"
+      ["KING", "Clubs"],
+      ["KING", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["ACE", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["ACE", "Hearts"]
     ]
 
     player2_cards = [
-      "King of Clubs",
-      "Ace of Diamonds",
-      "Queen Diamonds",
-      "Ace of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "Ace of Hearts"
+      ["KING", "Clubs"],
+      ["ACE", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["ACE", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["ACE", "Hearts"]
     ]
     player3_cards = [
-      "2 of Clubs",
-      "Ace of Clubs",
-      "Queen Diamonds",
-      "Ace of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "Ace of Hearts"
+      ["2", "Clubs"],
+      ["ACE", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["ACE", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["ACE", "Hearts"]
     ]
 
     three_of_a_kind_winner = CardAnalyzer.new
@@ -450,32 +450,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "7 of Clubs",
-      "8 of Diamonds",
-      "Queen Diamonds",
-      "Ace of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "Jack of Hearts"
+      ["7", "Clubs"],
+      ["8", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["ACE", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["JACK", "Hearts"]
     ]
 
     player2_cards = [
-      "King of Clubs",
-      "Jack of Diamonds",
-      "Queen Diamonds",
-      "8 of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "Jack of Hearts"
+      ["KING", "Clubs"],
+      ["JACK", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["8", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["JACK", "Hearts"]
     ]
     player3_cards = [
-      "2 of Clubs",
-      "Ace of Clubs",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "5 of Hearts",
-      "4 of Hearts"
+      ["2", "Clubs"],
+      ["ACE", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["5", "Hearts"],
+      ["4", "Hearts"]
     ]
 
     straight_winner = CardAnalyzer.new
@@ -494,32 +494,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "6 of Hearts",
-      "3 of Hearts",
-      "Queen Hearts",
-      "Ace of Spades",
-      "10 of Clubs",
-      "9 of Hearts",
-      "Jack of Hearts"
+      ["6", "Hearts"],
+      ["3", "Hearts"],
+      ["QUEEN", "Hearts"],
+      ["ACE", "Spades"],
+      ["10", "Clubs"],
+      ["9", "Hearts"],
+      ["JACK", "Hearts"]
     ]
 
     player2_cards = [
-      "King of Diamonds",
-      "10 of Diamonds",
-      "Queen Diamonds",
-      "8 of Spades",
-      "10 of Diamonds",
-      "9 of Diamonds",
-      "6 of Hearts"
+      ["KING", "Diamonds"],
+      ["10", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["8", "Spades"],
+      ["10", "Diamonds"],
+      ["9", "Diamonds"],
+      ["6", "Hearts"]
     ]
     player3_cards = [
-      "2 of Clubs",
-      "Ace of Clubs",
-      "Queen Diamonds",
-      "3 of Spades",
-      "10 of Clubs",
-      "6 of Clubs",
-      "4 of Clubs"
+      ["2", "Clubs"],
+      ["ACE", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["6", "Clubs"],
+      ["4", "Clubs"]
     ]
 
     flush_winner = CardAnalyzer.new
@@ -538,32 +538,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "6 of Hearts",
-      "3 of Hearts",
-      "Queen Hearts",
-      "3 of Spades",
-      "10 of Clubs",
-      "3 of Spades",
-      "6 of Clubs"
+      ["6", "Hearts"],
+      ["3", "Hearts"],
+      ["QUEEN Hearts"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["3", "Spades"],
+      ["6", "Clubs"]
     ]
 
     player2_cards = [
-      "Queen of Diamonds",
-      "2 of Diamonds",
-      "Queen Diamonds",
-      "8 of Spades",
-      "2 of Clubs",
-      "9 of Diamonds",
-      "2 of Hearts"
+      ["QUEEN", "Diamonds"],
+      ["2", "Diamonds"],
+      ["QUEEN", "Diamonds"],
+      ["8", "Spades"],
+      ["2", "Clubs"],
+      ["9", "Diamonds"],
+      ["2", "Hearts"]
     ]
     player3_cards = [
-      "9 of Clubs",
-      "Ace of Clubs",
-      "Queen Diamonds",
-      "9 of Spades",
-      "10 of Clubs",
-      "10 of Hearts",
-      "10 of Spades"
+      ["9", "Clubs"],
+      ["ACE", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["9", "Spades"],
+      ["10", "Clubs"],
+      ["10", "Hearts"],
+      ["10", "Spades"]
     ]
 
     full_house_winner = CardAnalyzer.new
@@ -582,32 +582,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "6 of Hearts",
-      "6 of Diamonds",
-      "Queen Hearts",
-      "3 of Spades",
-      "10 of Clubs",
-      "6 of Spades",
-      "6 of Clubs"
+      ["6", "Hearts"],
+      ["6", "Diamonds"],
+      ["QUEEN Hearts"],
+      ["3", "Spades"],
+      ["10", "Clubs"],
+      ["6", "Spades"],
+      ["6", "Clubs"]
     ]
 
     player2_cards = [
-      "Queen of Diamonds",
-      "2 of Diamonds",
-      "Queen Clubs",
-      "8 of Spades",
-      "2 of Clubs",
-      "Queen of Spades",
-      "Queen of Hearts"
+      ["QUEEN", "Diamonds"],
+      ["2", "Diamonds"],
+      ["QUEEN", "Clubs"],
+      ["8", "Spades"],
+      ["2", "Clubs"],
+      ["QUEEN", "Spades"],
+      ["QUEEN", "Hearts"]
     ]
     player3_cards = [
-      "10 of Clubs",
-      "Ace of Clubs",
-      "Queen Diamonds",
-      "9 of Spades",
-      "10 of Diamonds",
-      "10 of Hearts",
-      "10 of Spades"
+      ["10", "Clubs"],
+      ["ACE", "Clubs"],
+      ["QUEEN", "Diamonds"],
+      ["9", "Spades"],
+      ["10", "Diamonds"],
+      ["10", "Hearts"],
+      ["10", "Spades"]
     ]
 
     four_of_kind_winner = CardAnalyzer.new
@@ -626,32 +626,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "6 of Hearts",
-      "5 of Hearts",
-      "Queen Hearts",
-      "3 of Hearts",
-      "4 of Hearts",
-      "Ace of Hearts",
-      "2 of Hearts"
+      ["6", "Hearts"],
+      ["5", "Hearts"],
+      ["QUEEN Hearts"],
+      ["3", "Hearts"],
+      ["4", "Hearts"],
+      ["ACE", "Hearts"],
+      ["2", "Hearts"]
     ]
 
     player2_cards = [
-      "Queen of Clubs",
-      "2 of Diamonds",
-      "Jack Clubs",
-      "10 of Clubs",
-      "2 of Clubs",
-      "9 of Clubs",
-      "8 of Clubs"
+      ["QUEEN", "Clubs"],
+      ["2", "Diamonds"],
+      ["JACK", "Clubs"],
+      ["10", "Clubs"],
+      ["2", "Clubs"],
+      ["9", "Clubs"],
+      ["8", "Clubs"]
     ]
     player3_cards = [
-      "10 of Spades",
-      "9 of Spades",
-      "Queen Diamonds",
-      "8 of Spades",
-      "7 of Spades",
-      "10 of Hearts",
-      "6 of Spades"
+      ["10", "Spades"],
+      ["9", "Spades"],
+      ["QUEEN", "Diamonds"],
+      ["8", "Spades"],
+      ["7", "Spades"],
+      ["10", "Hearts"],
+      ["6", "Spades"]
     ]
 
     straight_flush_winner = CardAnalyzer.new
@@ -660,7 +660,6 @@ RSpec.describe CardAnalyzer do
       jannet => player2_cards,
       bob => player3_cards
       })
-      # binding.pry
     expect("#{jannet.id} ai_player").to eq winner
   end
 
@@ -671,32 +670,32 @@ RSpec.describe CardAnalyzer do
     bob = game.ai_players.create(name: "bob")
 
     player1_cards = [
-      "6 of Hearts",
-      "5 of Hearts",
-      "Queen Hearts",
-      "3 of Hearts",
-      "4 of Hearts",
-      "Ace of Hearts",
-      "2 of Hearts"
+      ["6", "Hearts"],
+      ["5", "Hearts"],
+      ["QUEEN Hearts"],
+      ["3", "Hearts"],
+      ["4", "Hearts"],
+      ["ACE", "Hearts"],
+      ["2", "Hearts"]
     ]
 
     player2_cards = [
-      "6 of Clubs",
-      "5 of Clubs",
-      "Queen Clubs",
-      "3 of Clubs",
-      "4 of Clubs",
-      "10 of Clubs",
-      "2 of Clubs"
+      ["6", "Clubs"],
+      ["5", "Clubs"],
+      ["QUEEN Clubs"],
+      ["3", "Clubs"],
+      ["4", "Clubs"],
+      ["10", "Clubs"],
+      ["2", "Clubs"]
     ]
     player3_cards = [
-      "2 of Spades",
-      "4 of Spades",
-      "Queen Diamonds",
-      "9 of Spades",
-      "5 of Spades",
-      "3 of Spades",
-      "6 of Spades"
+      ["2", "Spades"],
+      ["4", "Spades"],
+      ["QUEEN", "Diamonds"],
+      ["9", "Spades"],
+      ["5", "Spades"],
+      ["3", "Spades"],
+      ["6", "Spades"]
     ]
     tie = CardAnalyzer.new
     winner = tie.determine_winner({

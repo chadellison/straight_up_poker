@@ -2,13 +2,13 @@ module CardHelper
   def card_converter(cards)
     cards.map do |card|
       case card.value
-      when "Ace"
+      when "ACE"
         ace_low?(cards) ? Card.new(1, card.suit) : Card.new(14, card.suit)
-      when "King"
+      when "KING"
         Card.new(13, card.suit)
-      when "Queen"
+      when "QUEEN"
         Card.new(12, card.suit)
-      when "Jack"
+      when "JACK"
         Card.new(11, card.suit)
       else
         Card.new(card.value.to_i, card.suit)
@@ -45,7 +45,7 @@ module CardHelper
 
   def make_card_objects(cards)
     cards.compact.map do |card|
-      Card.new(card.split.first, card.split.last)
+      Card.new(card.first, card[1])
     end
   end
 end

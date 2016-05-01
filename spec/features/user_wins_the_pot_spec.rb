@@ -30,18 +30,18 @@ RSpec.feature "user can win the pot" do
 
     expect(Game.last.pot).to eq 400
 
-    ace = Card.new("Ace", "Spades").present_card
-    ace2 = Card.new("Ace", "Hearts").present_card
+    ace = ["ACE", "Spades"]
+    ace2 = ["ACE", "Hearts"]
 
-    two = Card.new("2", "Hearts").present_card
-    three = Card.new("3", "Hearts").present_card
+    two = ["2", "Hearts"]
+    three = ["3", "Hearts"]
 
-    ace = Card.new("Ace", "Clubs").present_card
-    king = Card.new("King", "Spades").present_card
-    king2 = Card.new("King", "Diamonds").present_card
+    ace = ["ACE", "Clubs"]
+    king = ["KING", "Spades"]
+    king2 = ["KING", "Diamonds"]
 
-    turn = Card.new("5", "Clubs").present_card
-    river = Card.new("9", "Diamonds").present_card
+    turn = ["5", "Clubs"]
+    river = ["9", "Diamonds"]
 
     User.last.update(cards: [ace, ace2])
     AiPlayer.last.update(cards: [two, three])
@@ -92,18 +92,18 @@ RSpec.feature "user can win the pot" do
 
     expect(Game.last.pot).to eq 400
 
-    ace = Card.new("Ace", "Spades").present_card
-    ace2 = Card.new("Ace", "Hearts").present_card
+    ace = ["ACE", "Spades"]
+    ace2 = ["ACE", "Hearts"]
 
-    two = Card.new("2", "Hearts").present_card
-    three = Card.new("3", "Hearts").present_card
+    two = ["2", "Hearts"]
+    three = ["3", "Hearts"]
 
-    ace = Card.new("Ace", "Clubs").present_card
-    king = Card.new("King", "Spades").present_card
-    king2 = Card.new("King", "Diamonds").present_card
+    ace = ["ACE", "Clubs"]
+    king = ["KING", "Spades"]
+    king2 = ["KING", "Diamonds"]
 
-    turn = Card.new("5", "Clubs").present_card
-    river = Card.new("9", "Diamonds").present_card
+    turn = ["5", "Clubs"]
+    river = ["9", "Diamonds"]
 
     User.last.update(cards: [two, three])
     AiPlayer.last.update(cards: [ace, ace2])
@@ -115,7 +115,7 @@ RSpec.feature "user can win the pot" do
     click_on "Show Winner"
     expect(page).to have_content "Oscar wins with a Full House!"
     expect(page).to have_content "Full House"
-    expect(page).to have_content "Oscar: Ace of Clubs, Ace of Hearts"
+    expect(page).to have_content "Oscar: ACE of Clubs, ACE of Hearts"
     expect(User.last.cash).to eq 1800
     expect(Game.last.pot).to eq 400
     expect(AiPlayer.last.cash).to eq 3200
