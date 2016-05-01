@@ -46,8 +46,8 @@ RSpec.feature "user can keep playing" do
     expect(Game.last.player_count).to eq 2
     expect(Game.last.pot).to eq 400
     expect(Game.last.flop_cards).to eq []
-    refute Game.last.turn_card
-    refute Game.last.river_card
+    expect(Game.last.turn_card).to eq []
+    expect(Game.last.river_card).to eq []
     refute Game.last.flop
     refute Game.last.turn
     refute Game.last.river

@@ -52,14 +52,14 @@ RSpec.feature "when a player they are out" do
 
     click_on "Check"
 
-    Game.last.find_players[1].update(cards: ["2 of Clubs", "7 of Hearts"])
-    Game.last.find_players[4].update(cards: ["4 of Clubs", "9 of Hearts"])
+    Game.last.find_players[1].update(cards: [["2", "Clubs"], ["7", "Hearts"]])
+    Game.last.find_players[4].update(cards: [["4", "Clubs"], ["9", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.users.last.update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
 
     click_on "Show Winner"
 
@@ -150,13 +150,13 @@ RSpec.feature "when a player they are out" do
     expect(page).to have_content "Martha Calls!"
     expect(page).to have_content "Rosco Goes All In ($200)!"
 
-    Game.last.find_players[0].update(cards: ["4 of Clubs", "9 of Hearts"])
+    Game.last.find_players[0].update(cards: [["4", "Clubs"], ["9", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.users.last.update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
 
     click_on "Show Winner"
 
@@ -267,13 +267,13 @@ RSpec.feature "when a player they are out" do
     click_on "Deal River"
     click_on "Check"
 
-    flop = ["Jack of Spades", "Jack of Clubs", "10 of Hearts"]
-    turn = "Ace of Diamonds"
-    river = "4 of Clubs"
+    flop = [["JACK", "Spades"], ["JACK", "Clubs"], ["10", "Hearts"]]
+    turn = ["ACE", "Diamonds"]
+    river = ["4", "Clubs"]
 
-    Game.last.find_players[1].update(cards: ["5 of Hearts", "2 of Spades"])
-    Game.last.find_players[5].update(cards: ["5 of Spades", "2 of Hearts"])
-    Game.last.find_players[0].update(cards: ["Jack of Diamonds", "Jack of Hearts"])
+    Game.last.find_players[1].update(cards: [["5", "Hearts"], ["2", "Spades"]])
+    Game.last.find_players[5].update(cards: [["5", "Spades"], ["2", "Hearts"]])
+    Game.last.find_players[0].update(cards: [["JACK", "Diamonds"], ["JACK", "Hearts"]])
 
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 
@@ -321,14 +321,14 @@ RSpec.feature "when a player they are out" do
     fill_in "Current bet", with: "200"
     click_on "Submit"
 
-    Game.last.find_players.last.update(cards: ["4 of Clubs", "9 of Hearts"])
+    Game.last.find_players.last.update(cards: [["4", "Clubs"], ["9", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
 
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.users.last.update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
 
 
     expect(Game.last.find_players.last.cash).to eq 0
@@ -364,12 +364,12 @@ RSpec.feature "when a player they are out" do
     click_on "Deal River"
     click_on "Check"
 
-    flop = ["Jack of Spades", "Jack of Clubs", "10 of Hearts"]
-    turn = "Ace of Diamonds"
-    river = "4 of Clubs"
+    flop = [["JACK", "Spades"], ["JACK", "Clubs"], ["10", "Hearts"]]
+    turn = ["ACE", "Diamonds"]
+    river = ["4", "Clubs"]
 
-    Game.last.players_left[0].update(cards: ["5 of Hearts", "2 of Spades"])
-    Game.last.players_left[3].update(cards: ["Jack of Hearts", "Jack of Diamonds"])
+    Game.last.players_left[0].update(cards: [["5", "Hearts"], ["2", "Spades"]])
+    Game.last.players_left[3].update(cards: [["JACK", "Hearts"], ["JACK", "Diamonds"]])
 
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 
@@ -401,15 +401,15 @@ RSpec.feature "when a player they are out" do
     click_on "Deal River"
     click_on "Check"
 
-    flop = ["Queen of Spades", "Queen of Clubs", "10 of Hearts"]
-    turn = "Ace of Diamonds"
-    river = "4 of Clubs"
+    flop = [["QUEEN", "Spades"], ["QUEEN", "Clubs"], ["10", "Hearts"]]
+    turn = ["ACE", "Diamonds"]
+    river = ["4", "Clubs"]
 
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
 
-    Game.last.players_left.first.update(cards: ["5 of Hearts", "2 of Spades"])
-    Game.last.players_left.last.update(cards: ["2 of Hearts", "7 of Spades"])
-    Game.last.users.last.update(cards: ["Queen of Hearts", "Queen of Diamonds"])
+    Game.last.players_left.first.update(cards: [["5", "Hearts"], ["2", "Spades"]])
+    Game.last.players_left.last.update(cards: [["2", "Hearts"], ["7", "Spades"]])
+    Game.last.users.last.update(cards: [["QUEEN", "Hearts"], ["QUEEN", "Diamonds"]])
 
     click_on "Show Winner"
 

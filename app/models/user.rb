@@ -6,7 +6,9 @@ class User < ActiveRecord::Base
   belongs_to :game
 
   def present_cards
-    cards.join(", ")
+    cards.map do |card|
+      "#{card.first} of #{card[1]}"
+    end.join(", ")
   end
 
   def bet(amount)

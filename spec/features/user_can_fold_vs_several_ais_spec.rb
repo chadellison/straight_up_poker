@@ -57,7 +57,7 @@ RSpec.feature "user can fold vs multiple ais" do
     #jones Frank Mary Rosco
 
     Game.last.find_players.each { |player| player.update(cash: 10000) }
-    
+
     expect(page).to have_content "Mary Raises $20.00 Rosco Raises $20.00"
     expect(page).not_to have_content "Frank Calls!"
 

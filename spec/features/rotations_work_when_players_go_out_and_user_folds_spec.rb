@@ -52,14 +52,14 @@ RSpec.feature "Rotations work when players go out and user folds" do
 
     click_on "Check"
 
-    Game.last.find_players[1].update(cards: ["2 of Clubs", "7 of Hearts"])
-    Game.last.find_players[4].update(cards: ["4 of Clubs", "9 of Hearts"])
+    Game.last.find_players[1].update(cards: [["2", "Clubs"], ["7", "Hearts"]])
+    Game.last.find_players[4].update(cards: [["4", "Clubs"], ["9", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
-    Game.last.users.last.update(cards: ["Ace of Clubs", "Ace of Hearts"])
+    Game.last.users.last.update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
 
     click_on "Show Winner"
 
@@ -125,12 +125,12 @@ RSpec.feature "Rotations work when players go out and user folds" do
     expect(page).to have_content "Martha Raises $200.00"
     expect(page).to have_content "Rosco Goes All In ($200)!"
 
-    Game.last.find_players[0].update(cards: ["Ace of Clubs", "Ace of Hearts"])
-    Game.last.players_left[1].update(cards: ["2 of Clubs", "7 of Hearts"])
+    Game.last.find_players[0].update(cards: [["ACE", "Clubs"], ["ACE", "Hearts"]])
+    Game.last.players_left[1].update(cards: [["2", "Clubs"], ["7", "Hearts"]])
 
-    flop = ["Ace of Spades", "Ace of Diamonds", "Jack of Clubs"]
-    turn = "5 of Hearts"
-    river = "10 of Clubs"
+    flop = [["ACE", "Spades"], ["ACE", "Diamonds"], ["JACK", "Clubs"]]
+    turn = ["5", "Hearts"]
+    river = ["10", "Clubs"]
     Game.last.update(flop_cards: flop, turn_card: turn, river_card: river)
     click_on "Show Winner"
 

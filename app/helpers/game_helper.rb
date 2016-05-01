@@ -15,50 +15,14 @@ module GameHelper
     end
   end
 
-  def api_cards
-    url = "http://deckofcardsapi.com/api/deck/new/draw/?count=52"
-    response = Faraday.get(url)
-    JSON.parse(response.body)["cards"]
-  end
-
-  def card_code(card)
-    if card.split.first[0] == "1"
-      "0" + card.split.last[0].upcase
-    else
-      card.split.first[0].upcase + card.split.last[0].upcase
-    end
-  end
-
-  def present_flop(game)
-    flop_codes = game.flop_cards.map { |card| card_code(card) }
-    api_cards.select { |card| flop_codes.include?(card["code"]) }
-    .map do |card|
-      card["image"]
-    end
-  end
-
-  def present_pocket(game)
-    pocket_cards = game.users.last.cards.map { |card| card_code(card) }
-    api_cards.select { |card| pocket_cards.include?(card["code"]) }
-    .map do |card|
-      card["image"]
-    end
-  end
-
-  def card_image(game_card)
-    api_cards.detect do |card|
-      card["code"] == card_code(game_card)
-    end["image"] if game_card
-  end
-
   def display_button(game)
     if !game.users.last.folded && !players_updated?(game)
       nil
     elsif game.pocket_cards && game.flop_cards.empty?
       "Deal Flop"
-    elsif game.flop && game.turn_card.nil?
+    elsif game.flop && game.turn_card.empty?
       "Deal Turn"
-    elsif game.turn && !game.river_card
+    elsif game.turn && game.river_card.empty?
       "Deal River"
     elsif game.river && !game.winner
       "Show Winner"

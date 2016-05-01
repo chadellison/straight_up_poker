@@ -19,16 +19,16 @@ RSpec.feature "ai players fold depending on the circumstances" do
     select "200", from: "Big blind"
     click_on "Play Poker"
 
-    ace1 = "Ace of Hearts"
-    ace2 = "Ace of Clubs"
+    ace1 = ["ACE", "Hearts"]
+    ace2 = ["ACE", "Clubs"]
 
-    two = "2 of Clubs"
-    seven = "7 of Clubs"
+    two = ["2", "Clubs"]
+    seven = ["7", "Clubs"]
 
-    Game.last.ai_players.last.name == "Rick"
-    Game.last.ai_players.first.name == "Frankie"
-    Game.last.ai_players.last.update(cards: [ace1, ace2])
-    Game.last.ai_players.first.update(cards: [two, seven])
+    Game.last.find_players.last.name == "Rick"
+    Game.last.find_players[1].name == "Frankie"
+    Game.last.find_players.last.update(cards: [ace1, ace2])
+    Game.last.find_players[1].update(cards: [two, seven])
 
     expect(page).to have_content "Rick Folds"
 
@@ -41,23 +41,22 @@ RSpec.feature "ai players fold depending on the circumstances" do
 
     click_on "Check"
 
-    flop1 = "Ace of Diamonds"
-    flop2 = "Ace of Spades"
-    flop3 = "7 of Spades"
+    flop1 = ["ACE", "Diamonds"]
+    flop2 = ["ACE", "Spades"]
+    flop3 = ["7", "Spades"]
 
-    turn = "10 of Spades"
+    turn = ["10", "Spades"]
 
-    river = "2 of Spades"
+    river = ["2", "Spades"]
 
-    user_card = "9 of Hearts"
-    user_card2 = "Jack of Hearts"
+    user_card = ["9", "Hearts"]
+    user_card2 = ["JACK", "Hearts"]
 
     Game.last.update(flop_cards: [flop1, flop2, flop3])
     Game.last.update(turn_card: turn)
     Game.last.update(river_card: river)
 
     User.last.update(cards: [user_card, user_card2])
-
     click_on "Show Winner"
 
     expect(page).not_to have_content "Rick wins with a Full House!"

@@ -68,7 +68,8 @@ class RoyalFlush
       cards.size
     end.map(&:value)
 
-    ["Ace", "King", "Queen", "Jack", "10"].all? do |value|
+    # ["Ace", "King", "Queen", "Jack", "10"].all? do |value|
+    ["ACE", "KING", "QUEEN", "JACK", "10"].all? do |value|
       cards.include?(value)
     end
   end

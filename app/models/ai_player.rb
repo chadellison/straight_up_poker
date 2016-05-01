@@ -56,7 +56,10 @@ class AiPlayer < ActiveRecord::Base
   end
 
   def present_cards
-    cards.join(", ")
+    # cards.join(", ")
+    cards.map do |card|
+      "#{card.first} of #{card[1]}"
+    end.join(", ")
   end
 
   def refresh
@@ -73,10 +76,10 @@ class AiPlayer < ActiveRecord::Base
     analyze = CardAnalyzer.new
     if game.flop_cards.empty?
       evaluate_pocket
-    elsif game.turn_card.nil?
+    elsif game.turn_card.empty?
       hand = make_card_objects(cards + game.flop_cards)
       9 - analyze.index_hand(hand)
-    elsif game.river_card.nil?
+    elsif game.river_card.empty?
       hand = make_card_objects(cards + game.flop_cards + [game.turn_card])
       9 - analyze.index_hand(hand)
     else
