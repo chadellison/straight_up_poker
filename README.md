@@ -2,18 +2,18 @@
 
 Overview
 
-[Visit site](https://straight-holdem.herokuapp.com)
+[Visit site here](https://straight-holdem.herokuapp.com)
 This app was designed to create an interface for users to play Texas Holdem against various
-AIs and at some point other users. This app will utilize java script, rails, and active record.
-Users should simply be able to click play poker and then
-select a number of players and click start to play.
+AIs. This app will utilize java script, rails, and active record.
+
+To play, Users must create an account and then simply click play. Users will select
+the number of players, the amount of cash each player will start with, and both the
+little and big blinds.
 
 Users will be able to select a number of opponents, place bets and play hold'em
-just as one would expect. Registered users will have access to a history of all past
-games and the hands of all players' of past games. AI's will make bets according to
+just as one would expect. AI's will make bets according to
 the strength of their hands with a percentage(based on how good or bad a hand is) to
-do something unpredictable. Not all AI's will respond the same, but will have unique
-responses according to their bet styles.
+do something unpredictable. Not all AI's will respond the same in the same situation, but will have unique responses according to their bet styles.
 
 Hosting
 This app will be hosted through Heroku
