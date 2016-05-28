@@ -11,6 +11,7 @@ gem "bcrypt", '~> 3.1.7'
 gem 'rails_12factor', group: :production
 gem 'materialize-sass'
 gem 'faraday'
+gem 'responders', '~> 2.0'
 
 group :development, :test do
   gem "byebug"
@@ -21,6 +22,7 @@ group :development, :test do
   gem "awesome_print"
   gem 'database_cleaner'
   gem 'shoulda-matchers', github: 'thoughtbot/shoulda-matchers'
+  gem 'simplecov', :require => false, :group => :test
 end
 
 group :development do

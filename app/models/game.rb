@@ -51,10 +51,8 @@ class Game < ActiveRecord::Base
   end
 
   def load_deck
-    url = "http://deckofcardsapi.com/api/deck/new/draw/?count=52"
-    response = Faraday.get(url)
-    cards = JSON.parse(response.body)["cards"].map do |card|
-      [card["value"], card["suit"], card["image"]]
+    cards = CardsService.new.deck_of_cards_hash[:cards].map do |card|
+      [card[:value], card[:suit], card[:image]]
     end
     update(cards: cards)
   end
