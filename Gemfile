@@ -21,6 +21,7 @@ group :development, :test do
   gem "awesome_print"
   gem 'database_cleaner'
   gem 'shoulda-matchers', github: 'thoughtbot/shoulda-matchers'
+  gem 'simplecov', :require => false, :group => :test
 end
 
 group :development do
