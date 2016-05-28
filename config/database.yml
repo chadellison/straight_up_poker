@@ -19,11 +19,11 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 5
 
 development:
   <<: *default
   database: straight_up_poker_development
+
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -58,6 +58,7 @@ development:
 test:
   <<: *default
   database: straight_up_poker_test
+  pool: 5
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -83,3 +84,8 @@ production:
   database: straight_up_poker_production
   username: straight_up_poker
   password: <%= ENV['STRAIGHT_UP_POKER_DATABASE_PASSWORD'] %>
+
+  adapter: postgresql
+  database: db/production.postgresql
+  pool: 5
+  timeout: 5000

@@ -68,7 +68,7 @@
     <% elsif display_button(@game) %>
       <%= button_to display_button(@game), game_path(@game.id), method: :patch, class: "btn red" %>
     <% else %>
-      <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get, class: "btn red" if @game.raise_count < 3 %>
+      <%= button_to "Bet / Raise", edit_game_path(@game.id), method: :get, class: "btn red", id: "bet-button" if @game.raise_count < 3 %>
       <%= button_to call_or_check(current_user), game_path(game_id: @game.id, user_action: call_or_check(current_user).downcase.to_sym), method: :patch, class: "btn red" %>
       <%= button_to "Fold", game_path(game_id: @game.id, user_action: :fold), method: :patch, class: "btn red" %>
     <% end %>
