@@ -1,4 +1,4 @@
-<div class="container row">
+<div class="container row edit-form">
   <%= form_for(@game.users.last, url: game_path(@game.id, user_action: :bet)) do |f| %>
     <%= f.label :current_bet %>
     <%= f.text_field :current_bet %>
